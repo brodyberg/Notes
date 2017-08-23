@@ -1,0 +1,100 @@
+8/19/2017
+
+Made a failing syntax test for view_of in 438_
+Switched to 438_t so I can: 
+	- add parseSimple
+	- see what the other tests do when they fail with a natural parse 
+
+*Main> :load IO
+[1 of 1] Compiling IO               ( IO.hs, interpreted )
+Ok, modules loaded: IO.
+*IO> :t parseSimple
+
+ok: 
+
+*IO> parseSimple "tests/schema/error/view_of_nothing.bond"
+Bond {bondImports = [], bondNamespaces = [Namespace {nsLanguage = Nothing, nsName = ["view_not_there"]}], bondDeclarations = [Struct {declNamespaces = [Namespace {nsLanguage = Nothing, nsName = ["view_not_there"]}], declAttributes = [], declName = "SomeStruct", declParams = [], structBase = Nothing, structFields = [Field {fieldAttributes = [], fieldOrdinal = 0, fieldModifier = Optional, fieldType = BT_String, fieldName = "F1", fieldDefault = Nothing},Field {fieldAttributes = [], fieldOrdinal = 1, fieldModifier = Optional, fieldType = BT_String, fieldName = "F2", fieldDefault = Nothing}]},Struct {declNamespaces = [Namespace {nsLanguage = Nothing, nsName = ["view_not_there"]}], declAttributes = [], declName = "DubiousView", declParams = [], structBase = Nothing, structFields = []}]}
+
+so, since this parses, THAT'S the bug, so we'll fix it to not parse...
+
+I learned that if I 'stack ghci' it'll pull in Language.Bond.Parser which we can :browse
+not sure how to get that type signature though for parseBond
+point isn't to use parseSimple or even parseBondFile, point is to slim the call stack to the point 
+where I can figure out the fix
+
+parseSimple "tests/schema/error/view_of_nothing.bond"
+parseBondFile [] "tests/schema/error/view_of_nothing.bond"
+:t parseBond
+parseBond
+  :: Text.Parsec.Pos.SourceName
+     -> String
+     -> FilePath
+     -> ImportResolver
+     -> IO (Either Text.Parsec.Error.ParseError Bond)
+
+-- 212
+-- struct view parser
+view :: Parser Declaration
+view = do
+    attr <- attributes
+    name <- keyword "struct" *> identifier <?> "struct view definition"
+    decl <- keyword "view_of" *> qualifiedName >>= findStruct
+    fields <- braces $ semiOrCommaSepEnd1 identifier
+    namespaces <- asks currentNamespaces
+    Struct namespaces attr name (declParams decl) (structBase decl) (viewFields decl fields) <$ optional semi
+  where
+    viewFields Struct {..} fields = filter ((`elem` fields) . fieldName) structFields
+    viewFields _           _      = error "view/viewFields: impossible happened."
+
+-- 160
+findStruct :: QualifiedName -> Parser Declaration
+findStruct name = doFind <?> "qualified struct name"
+  where
+    doFind = do
+        symb <- findSymbol name
+        case symb of
+            Struct {..} -> return symb
+            _ -> fail $ "The " ++ showPretty symb ++ " is invalid in this context. Expected a struct."
+
+Took these notes: 
+
+-- struct view parser
+view :: Parser Declaration
+view = do
+    attr <- attributes
+    name <- keyword "struct" *> identifier <?> "struct view definition"
+    -- this tells us what we're viewing
+    decl <- keyword "view_of" *> qualifiedName >>= findStruct
+    -- and this says what in what we're viewing we wish to view
+    fields <- braces $ semiOrCommaSepEnd1 identifier
+    -- so at this point we can ask: are (all? some?) fields in the viewed struct?
+    namespaces <- asks currentNamespaces
+    Struct namespaces attr name (declParams decl) (structBase decl) (viewFields decl fields) <$ optional semi
+  where
+    viewFields Struct {..} fields = filter ((`elem` fields) . fieldName) structFields
+    viewFields _           _      = error "view/viewFields: impossible happened."
+
+
+8/18/2017
+
+trying to update my .ghci config and get it to load from %userprofile%
+contents: :set prompt "\x03BB: "
+Command to run ghci with test symbols: stack ghci --test --main-is gbc-tests
+This might be even better: stack ghci tests\TestMain.hs
+	- smaller build
+	- good modules list
+	- less in the prompt (why though?)
+
+Parsing a file directly in ghci: 
+
+stack ghci tests\TestMain.hs
+parseFile [] "tests/schema/value_of.bond"
+
+*Main IO System.IO System.Directory> parseFile [] "tests/schema/value_of.bond"
+Bond {bondImports = [], bondNamespaces = [Namespace {nsLanguage = Nothing, nsName = ["view_not_there"]}], bondDeclarations = [Struct {declNamespaces = [Namespace {nsLanguage = Nothing, nsName = ["view_not_there"]}], declAttributes = [], declName = "SomeStruct", declParams = [], structBase = Nothing, structFields = [Field {fieldAttributes = [], fieldOrdinal = 0, fieldModifier = Optional, fieldType = BT_String, fieldName = "F1", fieldDefault = Nothing},Field {fieldAttributes = [], fieldOrdinal = 1, fieldModifier = Optional, fieldType = BT_String, fieldName = "F2", fieldDefault = Nothing}]},Struct {declNamespaces = [Namespace {nsLanguage = Nothing, nsName = ["view_not_there"]}], declAttributes = [], declName = "ValidView", declParams = [], structBase = Nothing, structFields = [Field {fieldAttributes = [], fieldOrdinal = 1, fieldModifier = Optional, fieldType = BT_String, fieldName = "F2", fieldDefault = Nothing}]}]}
+
+added "parseSimple"
+IO.parseSimple "tests/schema/value_of.bond"
+
+NEXT: Syntax.hs has a "failBadSyntax" which we need to use 
+to create a test for the struct that should fail value_of. Check that out! 
