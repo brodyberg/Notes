@@ -1,3 +1,26 @@
+8/23/2017
+
+What are the functions?
+From which libraries are they from?
+Read those docs
+Play with them in the repl
+
+type Parser a = ParsecT String Symbols (ReaderT Environment IO) a
+
+Loaded Text.Parsec into ghci but the first example from 
+here: https://hackage.haskell.org/package/parsec
+gives: 
+
+Prelude Text.Parsec> let parenSet = char '(' >> many parenSet >> char ')'
+
+<interactive>:9:5:
+    Non type-variable argument in the constraint: Stream s m Char
+    (Use FlexibleContexts to permit this)
+    When checking that `parenSet' has the inferred type
+      parenSet :: forall s u (m :: * -> *).
+                  Stream s m Char =>
+                  ParsecT s u m Char
+
 8/19/2017
 
 Made a failing syntax test for view_of in 438_
