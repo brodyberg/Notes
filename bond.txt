@@ -21,6 +21,11 @@ Prelude Text.Parsec> let parenSet = char '(' >> many parenSet >> char ')'
                   Stream s m Char =>
                   ParsecT s u m Char
 
+Found and commented on the bug for the above: https://github.com/haskell/parsec/issues/56
+
+And the bug report has the fix: let parenSet = char '(' >> many parenSet >> char ')' :: Parsec String () Char
+It'd be interesting when I have time to think about why that's the fix from a type perspective and the error message. 
+
 8/19/2017
 
 Made a failing syntax test for view_of in 438_
