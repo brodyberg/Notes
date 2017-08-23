@@ -1,0 +1,28 @@
+-- GHCI
+
+https://downloads.haskell.org/~ghc/7.4.1/docs/html/users_guide/ghci-commands.html
+-- will go out of whatever context you have back to Prelude
+:m
+-- will go from Prelude to a module: 
+:m Language.Bond.Parser
+:m Text.Parsec
+
+stack ghci
+
+    -- GHCI/Bond
+
+    -- Good
+    stack ghci --test --main-is gbc-tests
+    -- Better
+    stack ghci tests\TestMain.hs
+    -- Best?
+    stack ghci
+
+VS Code
+
+ctrl-shift-p and then type file name to open it 
+
+Bond: 
+
+:load IO
+parseSimple "tests/schema/error/view_of_nothing.bond"
