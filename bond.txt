@@ -1,5 +1,7 @@
 8/24/2017
 
+SENT A PR: for the broken parsec example: https://github.com/haskell/parsec/pull/76
+
 stack new csv1 simple
 stack setup --install-ghc
 
