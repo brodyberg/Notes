@@ -1,3 +1,5 @@
+module Csv1 where
+
 -- file: ch16/csv1.hs
 
 import Text.ParserCombinators.Parsec
