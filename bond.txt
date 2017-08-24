@@ -1,3 +1,120 @@
+8/24/2017
+
+stack new csv1 simple
+stack setup --install-ghc
+
+After I ran this it said this, which might be useful for not running this
+slow command every time I want to ty some code: 
+
+  GHC installed to C:\Users\brodyb\AppData\Local\Programs\stack\x86_64-windows\ghc-8.0.2\
+  stack will use a sandboxed GHC it installed
+  For more information on paths, see 'stack path' and 'stack exec env'
+  To use this GHC and packages outside of a project, consider using:
+  stack ghc, stack ghci, stack runghc, or stack exec
+
+and then?
+
+  C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src\csv1.hs:22:14: error:
+      parse error on input `<-'
+      Perhaps this statement should be within a 'do' block?
+
+  Fix: put all lines in each do block that used <- on
+    the exact same column
+
+and then?
+
+  C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1>stack build
+  csv1-0.1.0.0: build (exe)
+  Preprocessing executable 'csv1' for csv1-0.1.0.0...
+  [1 of 2] Compiling Csv1             ( src\Csv1.hs, .stack-work\dist\ca59d0ab\build\csv1\csv1-tmp\Csv1.o )
+
+  C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src\csv1.hs:5:1: error:
+      Failed to load interface for `Text.ParserCombinators.Parsec'
+      Perhaps you meant
+        Text.ParserCombinators.ReadPrec (from base-4.9.1.0)
+        Text.ParserCombinators.ReadP (from base-4.9.1.0)
+      Use -v to see a list of the files searched for.
+
+  Fix: added parsec to csv.cabal 
+
+and then?
+
+  C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1>stack build
+  mtl-2.2.1: configure
+  mtl-2.2.1: build
+  text-1.2.2.2: configure
+  text-1.2.2.2: build
+  mtl-2.2.1: copy/register
+  text-1.2.2.2: copy/register
+  parsec-3.1.11: configure
+  parsec-3.1.11: build
+  parsec-3.1.11: copy/register
+  csv1-0.1.0.0: configure (exe)
+  Configuring csv1-0.1.0.0...
+  csv1-0.1.0.0: build (exe)
+  Preprocessing executable 'csv1' for csv1-0.1.0.0...
+  [1 of 2] Compiling Csv1             ( src\Csv1.hs, .stack-work\dist\ca59d0ab\build\csv1\csv1-tmp\Csv1.o )
+
+  C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src\csv1.hs:33:16: error:
+      * Expecting one more argument to `GenParser Char String'
+        Expected a type, but `GenParser Char String' has kind `* -> *'
+      * In the type signature:
+          cellContent :: GenParser Char String
+  Completed 4 action(s).
+
+  Fix: 
+    Changed this: cellContent :: GenParser Char String
+    To      this: cellContent :: GenParser Char st String
+
+Then?
+
+  C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1>stack build
+  csv1-0.1.0.0: configure (exe)
+  Configuring csv1-0.1.0.0...
+  csv1-0.1.0.0: build (exe)
+  Preprocessing executable 'csv1' for csv1-0.1.0.0...
+  [1 of 2] Compiling Csv1             ( src\Csv1.hs, .stack-work\dist\ca59d0ab\build\csv1\csv1-tmp\Csv1.o )
+  [2 of 2] Compiling Main             ( src\Main.hs, .stack-work\dist\ca59d0ab\build\csv1\csv1-tmp\Main.o )
+
+  C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src\Main.hs:7:3: error:
+      * Couldn't match type `Either Text.Parsec.Error.ParseError'
+                      with `IO'
+        Expected type: IO [[String]]
+          Actual type: Either Text.Parsec.Error.ParseError [[String]]
+      * In a stmt of a 'do' block: parseCSV "hi\n"
+        In the expression:
+          do { parseCSV "hi\n";
+              putStrLn "hello world" }
+        In an equation for `main':
+            main
+              = do { parseCSV "hi\n";
+                    putStrLn "hello world" }
+
+  Fix: added this to main: 
+
+    case (parseCSV "hi\n") of 
+      Left msg -> putStrLn msg
+      Right output -> putStrLn output
+
+  but even then: 
+
+    C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src\Main.hs:9:30: error:
+      * Couldn't match type `[String]' with `Char'
+        Expected type: String
+          Actual type: [[String]]
+      * In the first argument of `putStrLn', namely `output'
+        In the expression: putStrLn output
+        In a case alternative: Right output -> putStrLn output
+
+  Fix?
+    The [[String]] problem is real of course
+    For now I'm doing this: stack ghci src/csv1.hs
+
+(stack.cabal builds everything in src/) add csv1.hs to that?
+stack build that?
+stack ghci that?
+
+
 8/23/2017
 
 What are the functions?
