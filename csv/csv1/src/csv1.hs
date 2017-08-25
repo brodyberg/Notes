@@ -11,6 +11,20 @@ csvFile =
         eof
         return result
 
+csvFile' :: GenParser Char st [[String]]
+csvFile' = 
+    do 
+        result <- many line2
+        eof
+        return result
+
+line2 :: GenParser Char st [String]
+line2 = 
+    do 
+        result <- many cellContent
+        eol 
+        return result
+
 line :: GenParser Char st [String]
 line = 
     do 
@@ -18,6 +32,17 @@ line =
         eol
         return result
     
+p1 :: GenParser Char () [String] -> String -> Either ParseError [String]
+p1 x input = parse x "(unknown)" input 
+
+p2 :: GenParser Char () [[String]] -> String -> Either ParseError [[String]]
+p2 x input = parse x "(unknown)" input 
+
+-- cell :: GenParser Char st [String]
+-- cell = 
+--     do
+
+
 cells :: GenParser Char st [String]
 cells = 
     do 
