@@ -1,3 +1,56 @@
+8/25/2017 
+
+PR merged!!!
+
+parse cells "(unknown)" "foo"
+Working with csv1.hs in order to: 
+1. understand more about Parsec
+2. understand more about why the example does "cells" 
+   rather than "many cell"
+3. working with csv1.hs in ghci *incrementally* which 
+   means working with tinier pieces of the code than 
+   parseCSV
+
+   ex. parse cells "(unknown)" "foo"
+   need a helper for that... 
+
+Success! Two helpers: 
+
+p1 :: GenParser Char () [String] -> String -> Either ParseError [String]
+p1 x input = parse x "(unknown)" input 
+
+p2 :: GenParser Char () [[String]] -> String -> Either ParseError [[String]]
+p2 x input = parse x "(unknown)" input 
+
+example usage: 
+
+*Csv1> p1 line "foo\n"
+Right ["foo"]
+*Csv1> p2 csvFile "foo\n"
+Right [["foo"]]
+
+Added this: 
+
+csvFile' :: GenParser Char st [[String]]
+csvFile' = 
+    do 
+        result <- many line2
+        eof
+        return result
+
+line2 :: GenParser Char st [String]
+line2 = 
+    do 
+        result <- many cellContent
+        eol 
+        return result
+
+which was to answer my question of why you can't just do "many cellContent": 
+
+*Csv1> p1 line2 "foo\n"
+*** Exception: Text.ParserCombinators.Parsec.Prim.many: combinator 'many' is applied to a parser that accepts an empty string.
+
+
 8/24/2017
 
 SENT A PR: for the broken parsec example: https://github.com/haskell/parsec/pull/76
