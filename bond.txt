@@ -1,3 +1,54 @@
+8/30/2017
+
+Ok, one thing that's confused me is that when I examine documentation on hackage
+for the module at the top of the file I don't see functions I know I am using in
+the source file. 
+
+Example: 
+  This is a module: Text.ParserCombinators.Parsec
+  And this is the hackage doc: https://hackage.haskell.org/package/parsec-3.1.11/docs/Text-ParserCombinators-Parsec.html
+
+But on that page, there's no "string" functions
+BUT, the modules listed at the top contain that function, (the third one belatedly)
+So how would I have found out the third module had this function and gone there more directly?
+
+Try :t in ghci?
+
+*Main> :t string
+string
+  :: Text.Parsec.Prim.Stream s m Char =>
+     String -> Text.Parsec.Prim.ParsecT s u m String
+
+ha! :info!!!
+
+*Main> :show imports
+:module +*Main -- added automatically
+*Main> :info string
+string ::
+  Text.Parsec.Prim.Stream s m Char =>
+  String -> Text.Parsec.Prim.ParsecT s u m String
+        -- Defined in `Text.Parsec.Char'
+
+How to call eol?
+
+*Main> :info parse
+parse ::
+  Text.Parsec.Prim.Stream s Data.Functor.Identity.Identity t =>
+  Text.Parsec.Prim.Parsec s () a
+  -> SourceName -> s -> Either ParseError a
+        -- Defined in `Text.Parsec.Prim'
+*Main> parse eol "" "\n"
+Right "\n"
+
+How to show functions loaded in function: (super cool)
+
+Prelude> :l csv3.hs
+[1 of 1] Compiling Main             ( csv3.hs, interpreted )
+Ok, modules loaded: Main.
+*Main> :browse
+eol :: GenParser Char st [Char]
+eol2 :: GenParser Char st [Char]
+
 8/25/2017 
 
 PR merged!!!
