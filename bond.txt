@@ -1,3 +1,62 @@
+8/31/2017
+
+Am noticing that I can get complicated compile time errors that are really 
+just due to inconsistent columns in do-blocks. 
+
+fooOption3 :: GenParser Char st Char
+fooOption3 = 
+    do char 'a'
+        char 'b' <|> return 'a'
+
+Note the inconsistent column for 'do char' vs. 'char' on next block
+
+This is made worse by Code's auto-indenting rules during copy/paste. You can
+start with working code, paste it and it'll be broken by auto-indent. 
+
+GenParser: http://hackage.haskell.org/package/parsec-3.1.11/docs/src/Text.Parsec.String.html#GenParser
+
+how does do know we're working in the 
+ParsecT monad?
+How does one work with things like this
+and any other value as a parameter?
+myTest2 :: GenParser Char st Char -> Char
+myTest2 c =
+    do char 'a'
+       char 'b' <|> return 'a' 
+
+If you look at this doc: http://hackage.haskell.org/package/parsec-3.1.11/docs/Text-ParserCombinators-Parsec-Prim.html#t:GenParser
+
+I think the reason myTest2 fails to compile is because it's not a thing that 
+parse :: Stream s Identity t => Parsec s () a -> SourceName -> s -> Either ParseError a
+
+can understand. Right? So parse requires a Parsec s () a, while we're defining another
+thing entirely with myTest2
+
+So who's complaining here? I'd have thought it was parse complaining about the 
+signature of myTest2 not being a Parsec but apparently not?
+
+Here's the error: 
+
+Prelude> :l src\csv3.hs
+[1 of 1] Compiling Main             ( src\csv3.hs, interpreted )
+
+src\csv3.hs:37:8: error:
+    * Couldn't match expected type `Char'
+                  with actual type `Text.Parsec.Prim.ParsecT s0 u0 m0 Char'
+    * In a stmt of a 'do' block: char 'a'
+      In the expression:
+        do { char 'a';
+             char 'b' <|> return 'a' }
+      In an equation for `myTest2':
+          myTest2 c
+            = do { char 'a';
+                   char 'b' <|> return 'a' }
+Failed, modules loaded: none.
+
+So maybe the question is not how to make myTest2 take a parameter but 
+rather make GenParser by parameters. Right now our GenParser is totally
+static wrt parameters. What varies is the input from parser. 
+
 8/30/2017
 
 Ok, one thing that's confused me is that when I examine documentation on hackage
