@@ -1,3 +1,5 @@
+module YouCanDoThis where
+
 -- From Real-World Haskell by Brian O'Sullivan etc. 
 import Text.ParserCombinators.Parsec
 

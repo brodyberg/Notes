@@ -1,3 +1,63 @@
+9/7/2017
+
+*YouCanDoThis> :show modules
+YouCanDoThis     ( C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src\csv3.hs, interpreted )
+*YouCanDoThis> x <- return 42
+*YouCanDoThis> x
+42
+*YouCanDoThis> :browse System.IO
+... 
+*YouCanDoThis> :t openFile
+
+<interactive>:1:1: error: Variable not in scope: openFile
+*YouCanDoThis> :t System.IO.openFile
+System.IO.openFile
+  :: FilePath
+     -> GHC.IO.IOMode.IOMode -> IO GHC.IO.Handle.Types.Handle
+<interactive>:17:54: error:
+    Data constructor not in scope: ReadMode :: GHC.IO.IOMode.IOMode
+*YouCanDoThis> x <- System.IO.openFile "..\\thingsToParse\\example.bond" System.IO.ReadMode
+*YouCanDoThis> x
+{handle: ..\thingsToParse\example.bond}
+*YouCanDoThis> import System.IO
+*YouCanDoThis System.IO> y <- openFile "..\\thingsToParse\\example.bond" ReadMode
+*YouCanDoThis System.IO> y
+{handle: ..\thingsToParse\example.bond}
+------------
+
+Briefly see if we can add forwarding items to the ParserCombinators docs. 
+Then get back to learning about parsec generally. 
+
+Ran into this trying to get 'stack haddock --open' to do anything: 
+  (https://github.com/commercialhaskell/stack/issues/1396)
+
+  c:\Users\brodyb\Documents\GitHub\parsec>stack init
+  Looking for .cabal or package.yaml files to use to init the project.
+  Using cabal packages:
+  - parsec.cabal
+
+  Selecting the best among 11 snapshots...
+
+  Downloaded lts-9.3 build plan.
+  Selected mirror https://s3.amazonaws.com/hackage.fpcomplete.com/
+  Downloading timestamp
+  Downloading snapshot
+  Updating index
+  Updated package list downloaded
+  Populated index cache.
+  * Partially matches lts-9.3
+      HUnit version 1.5.0.0 found
+          - parsec requires >=1.2 && <1.4
+
+  Downloaded nightly-2017-09-07 build plan.
+  Unable to parse cabal file: FromString "This package requires at least Cabal version 2.0" Nothing
+
+I can't get anything to work with stack, stack init, stack haddock --open or anything with 
+parsec. It's a confusing, demoralizing waste of time. Back to working with things that I can 
+actually grapple :-)
+
+
+
 8/31/2017
 
 Am noticing that I can get complicated compile time errors that are really 
