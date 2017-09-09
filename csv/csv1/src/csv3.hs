@@ -61,7 +61,4 @@ eol5 =   try (string "\n\r")
      <|> string "\n"
      <|> string "\r"
 
--- how to call this thing?
-
--- parse eol "" "\n"
 

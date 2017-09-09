@@ -1,3 +1,23 @@
+9/9/2017
+
+Wrote my first pair of combinators that do a thing! 
+
+Since the first line of a bond file is a namespace declaration 
+I wrote a thing that concieves of a namespace as blocks of 
+letters separated by dots. It works! Example: 
+
+Prelude> :l parseBond.hs
+[1 of 1] Compiling YouCanDoThis     ( parseBond.hs, interpreted )
+Ok, modules loaded: YouCanDoThis.
+*YouCanDoThis> parse namespace "(unknown)" "foo.bar"
+Right ["foo","bar"]
+
+This is a huge moment because it's a couple of combinators
+rather than a monolithic thing in a monad, and it's my thing
+rather than from the book AND it has bugs :-) the bugs are that
+if you pass it non-letters the parser will return empty strings
+which is confusing to me at this point. But hells yes! 
+
 9/8/2017
 
 I read a whole file!
