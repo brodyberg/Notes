@@ -1,3 +1,117 @@
+9/8/2017
+
+I read a whole file!
+
+https://hackage.haskell.org/package/parsec-3.1.11/docs/Text-Parsec-Char.html
+
+We need to somehow figure out that using all these primitive 
+combinators is using an entire parser as a whole
+
+I say that because I can't get simple stuff to work: 
+
+Prelude>import Text.ParserCombinators.Parsec
+Prelude Text.ParserCombinators.Parsec> char ';'
+
+<interactive>:16:1: error:
+    * Non type-variable argument
+        in the constraint: Text.Parsec.Prim.Stream s m Char
+      (Use FlexibleContexts to permit this)
+    * When checking the inferred type
+        it :: forall (m :: * -> *) u s.
+              Text.Parsec.Prim.Stream s m Char =>
+              Text.Parsec.Prim.ParsecT s u m Char
+Prelude Text.ParserCombinators.Parsec> semicolon = char ';'
+
+also fails: 
+
+Prelude Text.ParserCombinators.Parsec> let semicolon = char ';'
+
+<interactive>:18:5: error:
+    * Non type-variable argument
+        in the constraint: Text.Parsec.Prim.Stream s m Char
+      (Use FlexibleContexts to permit this)
+    * When checking the inferred type
+        semicolon :: forall (m :: * -> *) u s.
+                     Text.Parsec.Prim.Stream s m Char =>
+                     Text.Parsec.Prim.ParsecT s u m Char
+
+do our (really real-world haskell's) eol and Text.Parsec.Char string have the 
+same signature? If they do, then we should be able to run them through 'parse'
+if not.. then think of what next. How would we characterize (pun) the difference?
+
+Totally different, eol is a parser, string is a ...
+
+Prelude Text.ParserCombinators.Parsec> :l parseBond.hs
+[1 of 1] Compiling YouCanDoThis     ( parseBond.hs, interpreted )
+Ok, modules loaded: YouCanDoThis.
+*YouCanDoThis Text.ParserCombinators.Parsec> :browse YouCanDoThis
+eol :: GenParser Char st Char
+*YouCanDoThis Text.ParserCombinators.Parsec> :t eol
+eol :: GenParser Char st Char
+*YouCanDoThis Text.ParserCombinators.Parsec> parse eol "(unknown)" "\n"
+Right '\n'
+
+*YouCanDoThis Text.ParserCombinators.Parsec> :t string
+string
+  :: Text.Parsec.Prim.Stream s m Char =>
+     String -> Text.Parsec.Prim.ParsecT s u m String
+*YouCanDoThis Text.ParserCombinators.Parsec> :t endBy
+endBy
+  :: Text.Parsec.Prim.Stream s m t =>
+     Text.Parsec.Prim.ParsecT s u m a
+     -> Text.Parsec.Prim.ParsecT s u m sep
+     -> Text.Parsec.Prim.ParsecT s u m [a]
+
+So look: eol and what RWH has us writing feels "one level higher" than the things
+in Parsec. eol etc are GenParsers while string etc are functions on ParsecT. 
+
+string signature looks like: ParsecT -> ParsecT -> ParsecT but the items within the ParsecT
+are different: s u m a -> s u m sep -> s u m [a]
+
+so INSIDE of a GenParser we can use the primitives. so what makes a GenParser? 
+something about using a primitive?
+
+*YouCanDoThis Text.ParserCombinators.Parsec> :info GenParser
+type GenParser tok st = Text.Parsec.Prim.Parsec [tok] st :: * -> *
+        -- Defined in `Text.Parsec.String'
+
+  I read this as: there's a type called GenParser constructed with a list of tokens (anything)
+  and an st, whatever that is and is then realized as a one argument to one argument function. 
+
+  so if you :t a thing we've GenParser you'd ... see * -> * somehow?
+  also: how is it that my reading of GenParser says the ctor takes two values when
+  the code from RWH clearly passes in three things?
+
+https://hackage.haskell.org/package/parsec-3.1.11/docs/src/Text.Parsec.String.html#Parser
+
+that shows that Text.Parsec.String gives us
+
+   type Parser = Parsec String ()
+
+   which I describe as "A Parsec whose Stream argument is a String, and whose 
+   user state type is nothing." BUT THIS IS SOMEHOW CURRIED AT THE TYPE LEVEL and 
+   so Parser is left with free type variables that we fill ... 
+
+   eol :: GenParser Char st Char
+
+   means: stream is Char  
+          user state type is st (not used)
+          underlying monad: Char
+          return type: not defined and ... tbd? or *is* defined by the types within 
+            the body of the eol function?
+
+  if I was to guess, the reason we can't do something like: 
+    string "foo"
+    - is because the compiler has no idea what our stream, state, underlying monad and
+      return type is/will be. 
+    - and the key is that wrapping the primitives up with GenParsers supplies all of that
+      missing type information. 
+
+*extremely well written* blog post about typeable: http://chrisdone.com/posts/data-typeable
+
+http://chrisdone.com/posts/fast-haskell-c-parsing-xml
+http://www.serpentine.com/criterion/
+
 9/7/2017
 
 *YouCanDoThis> :show modules
