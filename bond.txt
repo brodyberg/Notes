@@ -1,3 +1,136 @@
+9/12/2017
+
+Ok, so what *is* a bond file?
+a namespace
+followed by (zero?) or more
+  - struct
+  - using
+  - enum
+  - service
+
+struct:
+  - struct
+  - space
+  - Identifier
+  - Zero or more of: 
+    - Angle Brackets
+    - capture Identifier
+  - If this struct is generic
+    - space
+    - colon
+    - Identifier
+  - OR
+  - Zero or one of:  
+    - space
+    - colon
+    - Identifier
+    - Zero or one of:
+      - Angle Brackets
+  - ; 
+  - OR
+  - left curly brace
+  - zero or more of
+    - int (strictly increasing?)
+    - colon
+    - space
+    - TypeThingy
+    - Identifier (of existing)
+      - Zero or more of
+        - Angle Brackets  
+      - space
+      - Name
+      - Zero or more of
+        - space
+        - equal
+        - Identifier
+      - semi-colon
+  - right curly brace
+
+TypeThingy: 
+  - refer to existing type
+  - keyword: ex. nullable
+
+using: 
+  - using
+  - space
+  - Identifier
+  - Angle Brackets
+  - space
+  - equal
+  - Identifier that was in the Angle Brackets
+  - semi-colon
+
+- Should Identifier include the
+  notion of possibly having angle brackets?
+- So Identifier would return the name
+  and an Option for generic?
+
+Angle Brackets: 
+  - Left
+  - Identifier (of existing thing?!)
+  - Right
+
+Identifier:
+  - Capital letters
+  - zero or more letters
+  - ends with non-letter
+  * the letters must refer to create something real
+    * primitives: ex. string
+    * T creating something real in struct Node<T>
+    * 0: nullable<Node<T> referring to something real in 
+
+Name: 
+  - any letter 
+  - any alpha-numeric
+  - ends with non-alphanumeric
+
+What we should do: 
+- finish reading about parsing with Applicative Functors
+- get comfortable with the Applicative style
+- continue parsing real examples from bond files
+- build a parser that can parse the things
+- but how do we traverse what we parsed?
+
+Getting toEnum to work: 
+
+  *YouCanDoThis> :t toEnum
+  toEnum :: Enum a => Int -> a
+  *YouCanDoThis> toEnum 5
+  *** Exception: Prelude.Enum.().toEnum: bad argument
+  *YouCanDoThis> :info toEnum
+  class Enum a where
+    ...
+    toEnum :: Int -> a
+    ...
+          -- Defined in `GHC.Enum'
+  *YouCanDoThis> :t 5
+  5 :: Num t => t
+  *YouCanDoThis> toEnum (5::Int)
+  *** Exception: Prelude.Enum.().toEnum: bad argument
+  *YouCanDoThis> :t (5::Int)
+  (5::Int) :: Int
+  *YouCanDoThis> toEnum True
+
+  <interactive>:10:8: error:
+      * Couldn't match expected type `Int' with actual type `Bool'
+      * In the first argument of `toEnum', namely `True'
+        In the expression: toEnum True
+        In an equation for `it': it = toEnum True
+  *YouCanDoThis> toEnum 1
+  *** Exception: Prelude.Enum.().toEnum: bad argument
+  *YouCanDoThis> (toEnum 1)::String
+
+  <interactive>:12:2: error:
+      * No instance for (Enum String) arising from a use of `toEnum'
+      * In the expression: (toEnum 1) :: String
+        In an equation for `it': it = (toEnum 1) :: String
+  *YouCanDoThis> (toEnum 1)::Bool
+  True
+  *YouCanDoThis> (toEnum 1)::Int
+  1
+  *YouCanDoThis> (toEnum 5)::Int
+  5
+
 9/9/2017
 
 Wrote my first pair of combinators that do a thing! 
