@@ -1,3 +1,63 @@
+9/15/2017
+
+Reading this: https://hackage.haskell.org/package/base-4.10.0.0/docs/src/GHC.Base.html
+I ran into 'go' which led me to this: 
+https://stackoverflow.com/questions/5844653/haskell-why-the-convention-to-name-a-helper-function-go
+who pointed me to this: 
+http://book.realworldhaskell.org/read/profiling-and-optimization.html#id678845
+
+moral of the story: keep reading rwh and profile profile profile! 
+
+Using the applicative p_pair: 
+
+  [1 of 1] Compiling YouCanDoThis     ( C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src\queryString.hs, interpreted )
+  Ok, modules loaded: YouCanDoThis.
+  Loaded GHCi configuration from C:\Users\brodyb\AppData\Local\Temp\ghci8648\ghci-script
+  *YouCanDoThis> :l queryString.hs
+  [1 of 1] Compiling YouCanDoThis     ( queryString.hs, interpreted )
+  Ok, modules loaded: YouCanDoThis.
+  *YouCanDoThis> :browse
+  p_query :: CharParser () [(String, Maybe String)]
+  p_pair :: CharParser () (String, Maybe String)
+  p_pair_app1 :: CharParser () (String, Maybe String)
+  urlBaseChars :: [Char]
+  p_char :: CharParser () Char
+  p_ha :: CharParser () Char
+  p_hab :: CharParser () (Char, Char)
+  p_hex :: CharParser () Char
+  *YouCanDoThis> :info p_pair_app1
+  p_pair_app1 :: CharParser () (String, Maybe String)
+          -- Defined at queryString.hs:19:1
+  *YouCanDoThis> parseTest p_pair_app1 "a=b"
+  ("a",Just "b")
+  *YouCanDoThis> parseTest p_pair_app1 "a%21=b+c"
+  ("a!",Just "b c")
+  *YouCanDoThis> :info ap
+
+  <interactive>:1:1: error: Not in scope: `ap'
+  *YouCanDoThis> :import Control.Applicative
+  unknown command ':import'
+  use :? for help.
+  *YouCanDoThis> :module Control.Applicative
+  Prelude Control.Applicative> :info ap
+
+  <interactive>:1:1: error: Not in scope: `ap'
+  Prelude Control.Applicative> :module Control.Monad
+  Prelude Control.Monad> :info ap
+  ap :: Monad m => m (a -> b) -> m a -> m b       -- Defined in `GHC.Base'
+  Prelude Control.Monad> :info mplus
+  class (GHC.Base.Alternative m, Monad m) =>
+        MonadPlus (m :: * -> *) where
+    ...
+    mplus :: m a -> m a -> m a
+          -- Defined in `GHC.Base'
+  Prelude Control.Monad> :info mplus
+  class (GHC.Base.Alternative m, Monad m) =>
+        MonadPlus (m :: * -> *) where
+    ...
+    mplus :: m a -> m a -> m a
+          -- Defined in `GHC.Base'
+
 9/12/2017
 
 Ok, so what *is* a bond file?
