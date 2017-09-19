@@ -1,3 +1,116 @@
+9/19/2017
+
+  *YouCanDoThis> parse (char '%' *> hexDigit) "" "%f"
+  Right 'f'
+  *YouCanDoThis> :info (*>)
+  class Functor f => Applicative (f :: * -> *) where
+    ...
+    (*>) :: f a -> f b -> f b
+    ...
+          -- Defined in `GHC.Base'
+  infixl 4 *>
+
+With our version of Haskell do we need to do the Applicative
+thing that Real World Haskell does? Doesn't the version we 
+use set all that up? How would we prove this?
+
+  *YouCanDoThis> :t readHex $ []
+  readHex $ [] :: (Num a, Eq a) => [(a, String)]
+  *YouCanDoThis> :t ($)
+  ($) :: (a -> b) -> a -> b
+  *YouCanDoThis> -- $ fmap readHex across our list
+  *YouCanDoThis> :t fmap
+  fmap :: Functor f => (a -> b) -> f a -> f b
+  *YouCanDoThis> -- *map* readHex across our list
+  *YouCanDoThis> :t readHex $ ['9','a']
+  readHex $ ['9','a'] :: (Num a, Eq a) => [(a, String)]
+  *YouCanDoThis> readHex $ ['9','a']
+  [(154,"")]
+  *YouCanDoThis> readHex $ ['9','a','c']
+  [(2476,"")]
+  *YouCanDoThis> x b = b * 2
+  *YouCanDoThis> x $ [1,2]
+
+  <interactive>:64:1: error:
+      * Non type-variable argument in the constraint: Num [t]
+        (Use FlexibleContexts to permit this)
+      * When checking the inferred type
+          it :: forall t. (Num [t], Num t) => [t]
+  *YouCanDoThis> :t x
+  x :: Num a => a -> a
+  *YouCanDoThis> x $ [1,2] :: Int
+
+  <interactive>:66:1: error:
+      * Couldn't match expected type `Int' with actual type `[t0]'
+      * In the expression: x $ [1, 2] :: Int
+        In an equation for `it': it = x $ [1, 2] :: Int
+  *YouCanDoThis> x $ [1,2] :: Num
+
+  <interactive>:67:14: error:
+      * Expecting one more argument to `Num'
+        Expected a type, but `Num' has kind `* -> Constraint'
+      * In an expression type signature: Num
+        In the expression: x $ [1, 2] :: Num
+        In an equation for `it': it = x $ [1, 2] :: Num
+  *YouCanDoThis> :t [1,2]
+  [1,2] :: Num t => [t]
+  *YouCanDoThis> x $ [1,2]
+
+  <interactive>:69:1: error:
+      * Non type-variable argument in the constraint: Num [t]
+        (Use FlexibleContexts to permit this)
+      * When checking the inferred type
+          it :: forall t. (Num [t], Num t) => [t]
+  *YouCanDoThis> x 4
+  8
+  *YouCanDoThis> fmap x [1,2]
+  [2,4]
+  *YouCanDoThis> :t readHex $ ['9','a']
+  readHex $ ['9','a'] :: (Num a, Eq a) => [(a, String)]
+  *YouCanDoThis>
+
+What I'm trying to do is understand the use of $ with readHex. I thought 
+it was fmap but really it's just map. But I still don't completely get it. 
+
+9/18/2017
+
+What are our types here: 
+
+p_pair_app1 :: CharParser () (String, Maybe String)
+p_pair_app1 = 
+    liftM2 (,) (many1 p_char) (optionMaybe (char '=' >> many p_char))
+
+:t many1
+many1
+  :: Text.Parsec.Prim.Stream s m t =>
+     Text.Parsec.Prim.ParsecT s u m a
+     -> Text.Parsec.Prim.ParsecT s u m [a]
+
+So the return value of many1 is a Text.Parsec.Prim.ParsecT s u m [a] 
+how the F do we extract [a] out of that for our LiftM2 (,) operation?
+
+:t p_char 
+p_char :: CharParser () Char
+
+ok, so the return value of p_char falls into the types for ParsecT. 
+
+I wonder if there's a thing with Monad Transformers where when we run
+them under Monad operations we "just" get a "certain" monad within the 
+stack of monads in the transformer. 
+
+*YouCanDoThis> :t optionMaybe
+optionMaybe
+  :: Text.Parsec.Prim.Stream s m t =>
+     Text.Parsec.Prim.ParsecT s u m a
+     -> Text.Parsec.Prim.ParsecT s u m (Maybe a)
+
+So optionMaybe is just a function which accepts a parser and possibly 
+returns the Nothing rather than failure. 
+
+Back to liftM2, so it's lifting *by* an operation. An operation is a thing
+like (+) or in our case (,). So depending on the incoming monad (list, Maybe
+or whatever) we apply our arguments *left to right* to (,)
+
 9/15/2017
 
 Reading this: https://hackage.haskell.org/package/base-4.10.0.0/docs/src/GHC.Base.html

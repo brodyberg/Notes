@@ -15,6 +15,20 @@ p_pair = do
     value <- optionMaybe (char '=' >> many p_char)
     return (name, value)
 
+-- liftM2 
+--    first argument is a function with two arguments
+--    and here we use tuple constructor so the types
+--    of the left and right can be different (where in 
+--    examples of liftM2 which use (+) the types have
+--    to agree. So the first argument to (,) is String
+--    and the second is Maybe String. We can see this
+--    clearly from the type signature of p_pair_app1 
+--    anyway. 
+--    And the monad wrappers for our arguments are: 
+--    String on the left and Maybe on the right?
+--    liftM2 :: Monad m => (a1 -> a2 -> r) -> m a1 -> m a2 -> m r
+--   
+
 p_pair_app1 :: CharParser () (String, Maybe String)
 p_pair_app1 = 
     liftM2 (,) (many1 p_char) (optionMaybe (char '=' >> many p_char))
@@ -50,6 +64,12 @@ p_hex = do
     b <- hexDigit
     let ((d, _):_) = readHex [a,b]
     return . toEnum $ d
+
+hexify :: Char -> Char -> Char
+hexify a b = toEnum . fst . head . readHex $ [a,b]
+
+a_hex :: CharParser () Char
+a_hex = hexify <$> (char '%' *> hexDigit) <*> hexDigit
 
 -- CharParser: https://hackage.haskell.org/package/parsec-3.1.11/docs/Text-ParserCombinators-Parsec-Char.html
 -- CharParser is just GenParser Char st 
