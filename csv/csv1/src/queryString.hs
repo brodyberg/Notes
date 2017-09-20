@@ -1,6 +1,7 @@
 module YouCanDoThis where
 
 import Control.Monad (liftM2)
+import Control.Applicative (liftA2)
 import Text.ParserCombinators.Parsec
 import Numeric (readHex)
 
@@ -45,6 +46,12 @@ p_char = oneOf urlBaseChars
                                  -- not a base-char
                                  -- not a + sign
                                  -- all that's left is % so we go into hex parsing
+
+a_char :: CharParser () Char
+a_char = oneOf urlBaseChars <|> (' ' <$ char '+') <|> a_hex
+
+a_pair :: CharParser () (String, Maybe String)
+a_pair = liftA2 (,) (many1 a_char) (optionMaybe (char '=' *> many a_char))
 
 p_ha :: CharParser () Char
 p_ha = do

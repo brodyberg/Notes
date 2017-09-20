@@ -182,7 +182,15 @@ things and still get the <$> to apply (,) for our <*> result.
 oh, I think the reason we match the text with % first is because <*> applies
 LEFT to RIGHT. 
 
+Now just typing in a_pair and watching it work: 
 
+  *YouCanDoThis> parse a_pair "" "foo"
+  Right ("foo",Nothing)
+  *YouCanDoThis> parse a_pair "" "f+o"
+  Right ("f o",Nothing)
+  *YouCanDoThis> parse a_pair "" "f+o=%21"
+  Right ("f o",Just "!")
+  *YouCanDoThis>
 
 9/18/2017
 
