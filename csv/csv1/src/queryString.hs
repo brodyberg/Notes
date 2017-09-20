@@ -68,6 +68,9 @@ p_hex = do
 hexify :: Char -> Char -> Char
 hexify a b = toEnum . fst . head . readHex $ [a,b]
 
+mine :: Char -> Char -> String
+mine a b = [a,b]
+
 a_hex :: CharParser () Char
 a_hex = hexify <$> (char '%' *> hexDigit) <*> hexDigit
 

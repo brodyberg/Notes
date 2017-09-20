@@ -72,6 +72,118 @@ use set all that up? How would we prove this?
 What I'm trying to do is understand the use of $ with readHex. I thought 
 it was fmap but really it's just map. But I still don't completely get it. 
 
+readHex $ [a,b] is just saying "readhex is a function (a->b) that we're going
+to apply to a value. How do we read readHex as a value?
+  *YouCanDoThis> :info readHex
+  readHex :: (Eq a, Num a) => ReadS a     -- Defined in `Numeric'
+  *YouCanDoThis> :info ReadS a
+
+  <interactive>:1:1: error: Not in scope: `a'
+  *YouCanDoThis> :info ReadS
+  type ReadS a = String -> [(a, String)]
+          -- Defined in `Text.ParserCombinators.ReadP'
+
+this shows that readHex is a ReadS a which is String -> [(a, String)]
+so readHex $ [a,b] is 
+   (String -> [(a, String)]) $ [Char,Char] which is the same as: 
+   (String -> [(a, String)]) $ String -- specifically, a two Char string
+
+well jesus, hex is two digits so we go to all this effort [a,b] to 
+construct a two-digit string and then process it into hex. Woo. 
+
+--- 
+
+considering: 
+
+  a_hex :: CharParser () Char
+  a_hex = hexify <$> (char '%' *> hexDigit) <*> hexDigit
+
+what's the order of evaluation? 
+  1. pass by a '%'
+  2. parse and keep a hexDigit
+  3. parse and keep a hexDigit
+  4. apply hexify to (which?) applicative functor? list?
+
+Making rando parsers using combinators: 
+
+  *YouCanDoThis> parse (char 'a' *> char 'b') "" "a"
+  Left (line 1, column 2):
+  unexpected end of input
+  expecting "b"
+  *YouCanDoThis> parse (char 'a' *> char 'b') "" "ab"
+  Right 'b'
+  *YouCanDoThis> parse (char 'a' <*> char 'b') "" "ab"
+
+  <interactive>:31:8: error:
+      * Couldn't match type `Char' with `Char -> a'
+        Expected type: Text.Parsec.Prim.ParsecT
+                        [Char] () Data.Functor.Identity.Identity (Char -> a)
+          Actual type: Text.Parsec.Prim.ParsecT
+                        [Char] () Data.Functor.Identity.Identity Char
+      * In the first argument of `(<*>)', namely char 'a'
+        In the first argument of `parse', namely `(char 'a' <*> char 'b')'
+        In the expression: parse (char 'a' <*> char 'b') "" "ab"
+      * Relevant bindings include
+          it :: Either ParseError a (bound at <interactive>:31:1)
+  *YouCanDoThis> parse (char 'a' <* char 'b') "" "ab"
+  Right 'a'
+  *YouCanDoThis> parse (char 'a' <* char 'b') "" "ac"
+  Left (line 1, column 2):
+  unexpected "c"
+  expecting "b"
+
+seems harder to use <*> than <* or *> why is that? why does the <*> version 
+produce a function while the <* *> appear to not?
+
+  *YouCanDoThis> :info (*>)
+  class Functor f => Applicative (f :: * -> *) where
+    ...
+    (*>) :: f a -> f b -> f b
+    ...
+          -- Defined in `GHC.Base'
+  infixl 4 *>
+  *YouCanDoThis> :info (<*)
+  class Functor f => Applicative (f :: * -> *) where
+    ...
+    (<*) :: f a -> f b -> f a
+          -- Defined in `GHC.Base'
+  infixl 4 <*
+  *YouCanDoThis> :info (<*>)
+  class Functor f => Applicative (f :: * -> *) where
+    ...
+    (<*>) :: f (a -> b) -> f a -> f b
+    ...
+          -- Defined in `GHC.Base'
+  infixl 4 <*>
+
+You can see that <*> requires a functor containing a function, 
+not just a functor. so we have to do this: 
+
+  *YouCanDoThis> parse ((,) <$> (char 'a') <*> char 'b') "" "ab"
+  Right ('a','b')
+
+What that does is say: I have a tuple constructor, which takes two things and
+I want to apply that constructor as a function to the following two functors. 
+
+Intuition was just that I need a functor to gather all the results of <*> up. 
+And the one functor I know of that takes two things is (,) so I tried to use
+it with <$> and it worked. 
+
+  *YouCanDoThis> parse ((,) <$> (char 'a' <* char '%') <*> char 'b') "" "ab"
+  Left (line 1, column 2):
+  unexpected "b"
+  expecting "%"
+  *YouCanDoThis> parse ((,) <$> (char 'a' <* char '%') <*> char 'b') "" "a%b"
+  Right ('a','b')
+
+And this shows that we can further bracket parsers to require and then ignore
+things and still get the <$> to apply (,) for our <*> result. 
+
+oh, I think the reason we match the text with % first is because <*> applies
+LEFT to RIGHT. 
+
+
+
 9/18/2017
 
 What are our types here: 
