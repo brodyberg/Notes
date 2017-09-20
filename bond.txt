@@ -1,3 +1,109 @@
+9/20/2017
+
+Having a tough time reading this: 
+
+  p_series :: Char -> CharParser () a -> Char -> CharParser () [a]
+  p_series left parser right = 
+      between (char left <* spaces) (char right) $
+              (parser <* spaces) `sepBy` (char ',' <* spaces)
+
+Problem is: 
+  between is just a function: 
+    *YouCanDoThis> :info between
+    between ::
+      Text.Parsec.Prim.Stream s m t =>
+      Text.Parsec.Prim.ParsecT s u m open
+      -> Text.Parsec.Prim.ParsecT s u m close
+      -> Text.Parsec.Prim.ParsecT s u m a
+      -> Text.Parsec.Prim.ParsecT s u m a
+            -- Defined in `Text.Parsec.Combinator'
+  but i can't curry it: 
+
+*YouCanDoThis> k = between (char '[')
+
+  <interactive>:68:1: error:
+      * Non type-variable argument
+          in the constraint: Text.Parsec.Prim.Stream s m Char
+        (Use FlexibleContexts to permit this)
+      * When checking the inferred type
+          k :: forall a close (m :: * -> *) u s.
+              Text.Parsec.Prim.Stream s m Char =>
+              Text.Parsec.Prim.ParsecT s u m close
+              -> Text.Parsec.Prim.ParsecT s u m a
+              -> Text.Parsec.Prim.ParsecT s u m a
+
+  But I got it to work!!!!
+  I had to do this in ghci: 
+  *YouCanDoThis> :set -XFlexibleContexts
+  *YouCanDoThis> k = between (char '[')
+  *YouCanDoThis>
+
+  *YouCanDoThis> k = between (char '[')
+  *YouCanDoThis> :t k
+  k :: Text.Parsec.Prim.Stream s m Char =>
+      Text.Parsec.Prim.ParsecT s u m close
+      -> Text.Parsec.Prim.ParsecT s u m a
+      -> Text.Parsec.Prim.ParsecT s u m a
+  *YouCanDoThis> l = between (char '[') (char ']')
+  *YouCanDoThis> :t l
+  l :: Text.Parsec.Prim.Stream s m Char =>
+      Text.Parsec.Prim.ParsecT s u m a
+      -> Text.Parsec.Prim.ParsecT s u m a
+  *YouCanDoThis> :browse
+  p_query :: CharParser () [(String, Maybe String)]
+  p_pair :: CharParser () (String, Maybe String)
+  p_pair_app1 :: CharParser () (String, Maybe String)
+  urlBaseChars :: [Char]
+  p_char :: CharParser () Char
+  a_char :: CharParser () Char
+  a_pair :: CharParser () (String, Maybe String)
+  p_ha :: CharParser () Char
+  p_hab :: CharParser () (Char, Char)
+  p_hex :: CharParser () Char
+  hexify :: Char -> Char -> Char
+  mine :: Char -> Char -> String
+  a_hex :: CharParser () Char
+  *YouCanDoThis> :t l a_pair
+  l a_pair
+    :: Text.Parsec.Prim.ParsecT
+        [Char] () Data.Functor.Identity.Identity (String, Maybe String)
+  *YouCanDoThis> m = l a_pair
+  *YouCanDoThis> parse m "" "[f]"
+  Right ("f",Nothing)
+  *YouCanDoThis> parse m "" "[f=%21]"
+  Right ("f",Just "!")
+
+Explanation of FlexibleContexts: 
+  https://stackoverflow.com/questions/31251163/what-is-the-flexiblecontexts-extension-is-good-for-could-you-please-explain-it
+
+Ok, so huge: we got currying to work for parsers, which will allow us to 
+build them up incrementally which we couldn't before which made them seem 
+more mysterious than they needed to be. 
+
+Now: how and why are these different: 
+
+  m :: Text.Parsec.Prim.ParsecT
+          [Char] () Data.Functor.Identity.Identity (String, Maybe String)
+
+  p_series :: Char -> CharParser () a -> Char -> CharParser () [a]
+  p_series left parser right = 
+      between (char left <* spaces) (char right) $
+              (parser <* spaces) `sepBy` (char ',' <* spaces)
+
+m is curried between. 
+p_series is 
+  a function on three arguments, left and right are chars, parser is a parser
+  which then *calls* between, 
+    wrapping left and right in parsers and a space-eater
+    and then applying sepBy to the argument passed to the function this whole shebang creates
+      and then passes the result of *that* as the third argument to between. 
+  So the reason i was confused about $:
+    I was forgetting we're creating a function to be returned
+    we need to feed that function
+    when we're done feeding that function, we'll need $ in order to run it and feed the 
+      result value as parameter three of between. 
+ 
+
 9/19/2017
 
   *YouCanDoThis> parse (char '%' *> hexDigit) "" "%f"
