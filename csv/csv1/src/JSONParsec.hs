@@ -13,6 +13,10 @@ p_text = spaces *> text <?> "JSON text (p_text)"
 -- Parse an object and then apply JObject, or 
 -- Parse an array and then apply JArray to it
 
+data JValue = JString | JNumber | JObject | JArray | JBool | JNull
+data JAry a = X [JValue]
+data JObj a = O (JValue)
+
 p_series :: Char -> CharParser () a -> Char -> CharParser () [a]
 p_series left parser right = 
     between (char left <* spaces) (char right) $
