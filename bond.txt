@@ -1,3 +1,44 @@
+9/22/2017
+
+Keep on Brody. You are getting this. It's work and it's tiring, but you are totally doing it 
+and will get to your goal with this work of every day chipping away. 
+
+Question: how do I read this type signature into understanding there are two required parameters?
+
+  Prelude> :m Numeric
+  Prelude Numeric> :info showHex
+  showHex :: (Integral a, Show a) => a -> ShowS
+          -- Defined in `Numeric'
+  Prelude Numeric> showHex 4
+
+  <interactive>:9:1: error:
+      * No instance for (Show ShowS) arising from a use of `print'
+          (maybe you haven't applied a function to enough arguments?)
+      * In a stmt of an interactive GHCi command: print it
+  Prelude Numeric> showHex 4 ""
+  "4"
+
+So you have to pass "" along with 4 to get showHex to work. But the type of showHex 
+appears to only require one parameter: a which has two typeclass constraints. 
+
+here's the answer: ShowS is a thing. If we look at the source for showHex we see 
+https://hackage.haskell.org/package/base-4.10.0.0/docs/src/Numeric.html#showHex
+https://hackage.haskell.org/package/base-4.10.0.0/docs/Text-Show.html#t:ShowS
+
+  Prelude Numeric> showHex 4 ""
+  "4"
+  Prelude Numeric> :t showHex
+  showHex :: (Show a, Integral a) => a -> ShowS
+  Prelude Numeric> x = showHex 4
+  Prelude Numeric> :t x
+  x :: ShowS
+  Prelude Numeric> :info ShowS
+  type ShowS = String -> String   -- Defined in `GHC.Show'
+  Prelude Numeric> x ""
+  "4"
+  Prelude Numeric> x "a"
+  "4a"
+
 9/20/2017
 
 Having a tough time reading this: 

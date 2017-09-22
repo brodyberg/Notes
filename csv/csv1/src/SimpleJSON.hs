@@ -1,0 +1,13 @@
+module SimpleJSON where
+
+data JValue = JString String
+            | JNumber Double
+            | JBool Bool
+            | JNull
+            | JObject [(String, JValue)]
+            | JArray [JValue]
+              deriving (Eq, Ord, Show)
+
+putJValue :: JValue -> IO ()
+putJValue v = putStrLn (renderJValue v)
+

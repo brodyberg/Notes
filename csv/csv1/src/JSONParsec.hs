@@ -3,31 +3,51 @@ module JSONParsec where
 import Text.ParserCombinators.Parsec
 import Numeric (readHex)
 
-p_text :: CharParser () JValue
-p_text = spaces *> text <?> "JSON text (p_text)"
-    where text = JObject <$> p_object <|> JArray <$> p_array
+data JValue = JString String
+            | JNumber Double
+            | JObject [(String, JValue)] 
+            | JArray [JValue]
+            | JBool Bool
+            | JNull
+            deriving (Eq, Ord, Show)
+
+--data F = JAry | JObj
+
+-- data Intermediates = JAry JValue 
+--                    | JObj JValue                   
+-- | JObj [(String, JValue)]
+
+-- data JValue = JString | JNumber | JObject | JArray | JBool | JNull
+--data JAry a = X [JValue]
+-- data JObj a = O (JValue)
 
 -- burn through spaces, then parse and save text
 -- or fail with "JSON text"
 -- text is: 
 -- Parse an object and then apply JObject, or 
 -- Parse an array and then apply JArray to it
-
-data JValue = JString | JNumber | JObject | JArray | JBool | JNull
-data JAry a = X [JValue]
-data JObj a = O (JValue)
+p_text :: CharParser () JValue
+p_text = spaces *> text <?> "JSON text (p_text)"
+    where text = JObject <$> p_object <|> JArray <$> p_array
 
 p_series :: Char -> CharParser () a -> Char -> CharParser () [a]
 p_series left parser right = 
     between (char left <* spaces) (char right) $
             (parser <* spaces) `sepBy` (char ',' <* spaces)
 
-p_array :: CharParser () (JAry JValue)
-p_array = JAry <$> p_series '[' p_value ']'
+-- p_array :: CharParser () (JAry JValue)
+-- p_array = JAry <$> p_series '[' p_value ']'
 
-p_object :: CharParser () (JObj JValue)
-p_object = JObj <$> p_series '{' p_field '}'
+p_array :: CharParser () [JValue]
+p_array = p_series '[' p_value ']'
+
+p_object :: CharParser () [(String, JValue)]
+p_object = p_series '{' p_field '}'
     where p_field = (,) <$> (p_string <* char ':' <* spaces) <*> p_value
+
+-- p_object :: CharParser () (JObj JValue)
+-- p_object = JObj <$> p_series '{' p_field '}'
+--     where p_field = (,) <$> (p_string <* char ':' <* spaces) <*> p_value
 
 p_value :: CharParser () JValue
 p_value = value <* spaces
