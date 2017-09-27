@@ -8,17 +8,34 @@ data JValue = JString String
             | JArray [JValue]
               deriving (Eq, Ord, Show)
 
-putJValue :: JValue -> IO ()
-putJValue v = putStrLn (renderJValue v)
+printItems :: Show a => [a] -> String
+printItems [] = ""
+printItems (x:xs) = (show x) ++ printItems xs
 
-renderJValue :: JValue -> String
-renderJValue (JString s) = s
-renderJValue (JNumber d) = show d
-renderJValue (JBool b) = show b
-renderJValue JNull = "null"
+-- printItems (x:xs) = (show x) ++ printItems xs
+-- printItems x = show x
+-- *SimpleJSON> printItems [1]
+-- "1[]"
+-- *SimpleJSON> printItems [1,2]
+-- "12[]"
+-- *SimpleJSON> printItems [1,2,3]
+-- "123[]"
+-- *SimpleJSON> :t printItems
+-- printItems :: Show a => [a] -> String
+-- *SimpleJSON> printItems []
+-- "[]"
 
--- renderJValue (JArray [a]) = undefined -- renderJValue [a] : renderJValue [as]
-renderJValue (JArray [a:as]) = renderJValue [a] : renderJValue [as]
+-- putJValue :: JValue -> IO ()
+-- putJValue v = putStrLn (renderJValue v)
+
+-- renderJValue :: JValue -> String
+-- renderJValue (JString s) = s
+-- renderJValue (JNumber d) = show d
+-- renderJValue (JBool b) = show b
+-- renderJValue JNull = "null"
+
+-- -- renderJValue (JArray [a]) = undefined -- renderJValue [a] : renderJValue [as]
+-- renderJValue (JArray [a:as]) = renderJValue [a] : renderJValue [as]
 -- renderJValue (JArray [JValue a]) = undefined -- renderJValue [a] : renderJValue [as]
 -- renderJValue (JArray [JString s]) = undefined -- renderJValue [a] : renderJValue [as]
 
