@@ -2,6 +2,33 @@
 
 We are on this level
 
+compact $ renderJValue (JObject [("name",JString "value")])
+"{\"name\": \"value\"\n}"
+*PrettyJSON Prelude> compact $ renderJValue (JBool True)
+"true"
+*PrettyJSON Prelude> compact $ renderJValue (JArray [(JBool True)])
+"[true\n]"
+*PrettyJSON Prelude> compact $ renderJValue (JArray [(JBool True), (JBool False)])
+"[true,\nfalse\n]"
+*PrettyJSON Prelude> compact $ renderJValue (JObject [("name",JArray [(JBool True), (JString "foo")])])
+"{\"name\": [true,\n\"foo\"\n]\n}"
+
+*PrettyJSON Prelude> thing = compact $ renderJValue (JObject [("name",JArray [(JBool True), (JString "foo")])])
+*PrettyJSON Prelude> :t thing
+thing :: String
+*PrettyJSON Prelude> thing2 = renderJValue (JObject [("name",JArray [(JBool True), (JString "foo")])])
+*PrettyJSON Prelude> :t thing2
+thing2 :: Doc
+
+*PrettyJSON> char 'f' <> string "oo"
+Concat (Char 'f') (Concat (Concat (Char '"') (Concat (Char 'o') (Char 'o'))) (Char '"'))
+*PrettyJSON> char 'f' <> text "oo"
+Concat (Char 'f') (Text "oo")
+*PrettyJSON> :t text
+text :: String -> Doc
+*PrettyJSON> :t string
+string :: String -> Doc
+
 9/22/2017
 
 Keep on Brody. You are getting this. It's work and it's tiring, but you are totally doing it 
