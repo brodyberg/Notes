@@ -113,9 +113,10 @@ compact x = transform [x]
     where transform [] = ""
           transform (d:ds) = 
               case d of 
-                Empty -> transform ds
-                Char c -> c : transform ds
-                Text s -> s ++ transform ds
-                Line -> '\n' : transform ds
+                Empty        -> transform ds
+                Char c       -> c : transform ds
+                Text s       -> s ++ transform ds
+                Line         -> '\n' : transform ds
                 a `Concat` b -> transform (a:b:ds)
-                _ `Union` b -> transform (b:ds)
+                _ `Union` b  -> transform (b:ds)
+
