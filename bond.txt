@@ -1,3 +1,8 @@
+10/3/2017
+
+We're ready to check this out: https://mail.haskell.org/pipermail/beginners/2017-October/017832.html
+with response here: https://mail.haskell.org/pipermail/beginners/2017-October/017833.html
+ 
 10/2/2017
 
 We are on this level
