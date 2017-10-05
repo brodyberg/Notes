@@ -39,6 +39,11 @@ Questions:
       parentheses is found. 
     * Can we read this, as the author recommends? http://belle.sourceforge.net/doc/hughes95design.pdf
 
+10/3/2017
+
+We're ready to check this out: https://mail.haskell.org/pipermail/beginners/2017-October/017832.html
+with response here: https://mail.haskell.org/pipermail/beginners/2017-October/017833.html
+ 
 10/2/2017
 
 We are on this level
