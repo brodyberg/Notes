@@ -1,3 +1,44 @@
+10/5/2017
+
+Considering Chapter 5 of Real World Haskell. There are things I still don't 
+quite get. 
+  * Wasn't super sure about this | syntax: 
+          nicest col a b | (width - least) `fits` a = a
+                         | otherwise                = b
+                         where least = min width col
+    But that's pretty clear to be simple case syntax and each
+    clause in a | is simply looking for True in order to 
+    return the RHS
+  * Not super 100% sure about the unicode stuff
+  * The author really likes infix for stuff like this: 
+      fits :: Int -> String -> Bool
+      w `fits` _ | w < 0 = False
+      w `fits` ""        = True
+      w `fits` ('\n':_)  = True
+      w `fits` (c:cs)    = (w - 1) `fits` cs
+    I think it feels awkward
+  * The author made interesting choices as far as which little 
+    functions to make and how to combine them. It's strange though
+    because now that I read through the whole file for chapter 5 
+    aka Prettify it feels so clear and straightforward... 
+  
+I think I *do* like infix syntax for some operators: 
+   foo <> bar
+   bar </> baz
+but less for things like 
+   x `Concat` y
+maybe because of the backticks
+
+Questions: 
+  * Can we answer the practice questions?
+    * fill :: Int -> Doc -> Doc 
+      adds spaces to a doc until it is the given number of columns wide
+    * nest :: Int -> Doc -> Doc
+      When we open a parentheses the following lines should be indented by Int  
+      so they are aligned with the opening character until a matching closing
+      parentheses is found. 
+    * Can we read this, as the author recommends? http://belle.sourceforge.net/doc/hughes95design.pdf
+
 10/2/2017
 
 We are on this level
