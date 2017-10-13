@@ -1,6 +1,9 @@
 module PrettyJSON 
     (
-        renderJValue
+        renderJValue,
+        compact,
+        pretty,
+        nest
     ) where
 
 import Numeric (showHex)
@@ -8,7 +11,7 @@ import Data.Char (ord)
 import Data.Bits (shiftR, (.&.))
 
 import SimpleJSON (JValue(..))
-import Prettify (Doc, (<>), char, string, double, fsep, hcat, punctuate, text, compact, series)
+import Prettify (Doc, (<>), char, string, double, fsep, hcat, punctuate, text, compact, series, pretty, nest)
 
 renderJValue :: JValue -> Doc
 renderJValue (JBool True)  = text "true"

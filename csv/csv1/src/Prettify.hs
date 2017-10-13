@@ -139,3 +139,12 @@ w `fits` _ | w < 0 = False
 w `fits` ""        = True
 w `fits` ('\n':_)  = True
 w `fits` (c:cs)    = (w - 1) `fits` cs
+
+-- I think this thing is recursive and we pass around the 
+-- nesting level and doc as we go more deeply and then 
+-- up and down in the tree
+nest :: Int -> Doc -> Doc
+nest = undefined
+-- Pass it a doc, and it'll read each element type and return a 
+-- new set of elements possibly union'd which take Int (tab)
+-- into account. 

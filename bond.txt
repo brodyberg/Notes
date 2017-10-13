@@ -1,3 +1,38 @@
+10/13/2017
+
+Work up a sufficiently complicated example in ordre to motivate 'nest'
+
+*TestingNest> putStrLn $ compact $ renderJValue jvalue
+[{"Oathbreaker": "Sink Into Sin I",
+"Fallujah": "Starlit Path",
+"Agoraphobic Nosebleed": "Not a Daughter",
+"Lut": "BoyToy"
+},
+[{"Mechanicum": ["Thanatar Siege Automaton",
+"Mars Pattern Reaver Titan"
+],
+"Vlka Fenryka": ["Leman Russ",
+true
+]
+}
+]
+]
+
+*TestingNest> putStrLn $ pretty 80 $ renderJValue jvalue
+[{"Oathbreaker": "Sink Into Sin I", "Fallujah": "Starlit Path",
+"Agoraphobic Nosebleed": "Not a Daughter", "Lut": "BoyToy" },
+[{"Mechanicum": ["Thanatar Siege Automaton", "Mars Pattern Reaver Titan" ],
+"Vlka Fenryka": ["Leman Russ", true ] } ] ]
+
+For nest, we have a choice, which level would we like to work?
+  - Char?
+  - Doc?
+  - JValue?
+
+Does the suggestion from the author to call it nest and use the parameters
+Int -> Doc -> Doc imply placing the function in prettify.hs and then having
+it be one step lower in abstraction than renderJValue :: JValue -> Doc?
+
 10/5/2017
 
 Considering Chapter 5 of Real World Haskell. There are things I still don't 
