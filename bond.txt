@@ -33,6 +33,19 @@ Does the suggestion from the author to call it nest and use the parameters
 Int -> Doc -> Doc imply placing the function in prettify.hs and then having
 it be one step lower in abstraction than renderJValue :: JValue -> Doc?
 
+10/6/2017
+
+Wow, today I forgot my PC at work so I rolled forward by converting the PrettyJSON
+project to Haskell for Mac and it just worked. I was able to calmly and confidently
+work through each error I faced in turn and solve all of them directly and with 
+puzzling focused specifically on a set of likely solutions as opposed to getting 
+huge bewildering errors whose solution could be anything. 
+
+It was a very, very cool feeling to know how much I'd learned and how I could 
+handle the situations presented to me by Haskell. The issues I faced were all 
+exposing certain symbols through module imports and I was totally able to 
+figure that out. 
+
 10/5/2017
 
 Considering Chapter 5 of Real World Haskell. There are things I still don't 
