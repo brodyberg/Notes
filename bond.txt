@@ -1,3 +1,160 @@
+10/17/2017
+
+Ok, so I think the key here is adding a new constructor for Doc, Tab. 
+
+nest:: Int -> Doc -> Doc will transform a Doc into one that has Tabs
+
+And, because we've added a constructor for Doc, we need to update all 
+places that have Doc matches to ensure that they continue to be correct
+and complete. 
+
+My concern is how to add Tab within a "correct" context, ie. not in the
+middle of a concat or union - but type safety should play a role here. 
+
+Also, we should defer questions about adding a tab within a string for 
+once this prototype is done. 
+
+Also there's an opportunity here to do this with unit tests! 
+
+http://documentup.com/feuerbach/tasty
+
+do we need to import hunit? (yes: tasty-hunit)
+
+After I added tasty to my cabal here's what stack ghci looked like: 
+
+PS C:\Users\brodyb\Documents\GitHub\Notes> cd "c:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src"
+PS C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src> stack ghci --ghci-options test.hs
+clock-0.7.2: configure
+stm-2.4.4.1: configure
+clock-0.7.2: build
+stm-2.4.4.1: build
+regex-base-0.93.2: configure
+regex-base-0.93.2: build
+base-compat-0.9.3: configure
+base-compat-0.9.3: build
+stm-2.4.4.1: copy/register
+regex-base-0.93.2: copy/register
+async-2.1.1.1: configure
+clock-0.7.2: copy/register
+transformers-compat-0.5.1.4: download
+async-2.1.1.1: build
+regex-tdfa-1.2.2: configure
+regex-tdfa-1.2.2: build
+transformers-compat-0.5.1.4: configure
+async-2.1.1.1: copy/register
+transformers-compat-0.5.1.4: build
+unbounded-delays-0.1.1.0: configure
+transformers-compat-0.5.1.4: copy/register
+unbounded-delays-0.1.1.0: build
+tagged-0.8.5: download
+tagged-0.8.5: configure
+base-compat-0.9.3: copy/register
+unbounded-delays-0.1.1.0: copy/register
+tagged-0.8.5: build
+ansi-terminal-0.6.3.1: configure
+ansi-terminal-0.6.3.1: build
+tagged-0.8.5: copy/register
+ansi-terminal-0.6.3.1: copy/register
+ansi-wl-pprint-0.6.7.3: configure
+ansi-wl-pprint-0.6.7.3: build
+ansi-wl-pprint-0.6.7.3: copy/register
+optparse-applicative-0.13.2.0: download
+optparse-applicative-0.13.2.0: configure
+optparse-applicative-0.13.2.0: build
+optparse-applicative-0.13.2.0: copy/register
+regex-tdfa-1.2.2: copy/register
+tasty-0.11.2.5: download
+tasty-0.11.2.5: configure
+tasty-0.11.2.5: build
+tasty-0.11.2.5: copy/register
+csv1-0.1.0.0: configure (exe)
+Configuring csv1-0.1.0.0...
+csv1-0.1.0.0: initial-build-steps (exe)
+Completed 14 action(s).
+Configuring GHCi with the following packages: csv1
+Using main module: 1. Package `csv1' component exe:csv1 with main-is file: C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src\Main.hs
+GHCi, version 8.0.2: http://www.haskell.org/ghc/  :? for help
+[1 of 2] Compiling Csv1             ( C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src\Csv1.hs, interpreted )
+[2 of 2] Compiling Main             ( C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src\Main.hs, interpreted )
+
+C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src\Main.hs:8:26: error:
+    * Couldn't match type `Text.Parsec.Error.ParseError' with `[Char]'
+      Expected type: String
+        Actual type: Text.Parsec.Error.ParseError
+    * In the first argument of `putStrLn', namely `msg'
+      In the expression: putStrLn msg
+      In a case alternative: Left msg -> putStrLn msg
+
+C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src\Main.hs:9:30: error:
+    * Couldn't match type `[String]' with `Char'
+      Expected type: String
+        Actual type: [[String]]
+    * In the first argument of `putStrLn', namely `output'
+      In the expression: putStrLn output
+      In a case alternative: Right output -> putStrLn output
+Failed, modules loaded: Csv1.
+Loaded GHCi configuration from C:\Users\brodyb\AppData\Local\Temp\ghci9724\ghci-script
+[1 of 3] Compiling SimpleJSON       ( C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src\SimpleJSON.hs, interpreted )
+[2 of 3] Compiling Prettify         ( C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src\Prettify.hs, interpreted )
+
+C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src\Prettify.hs:123:17: error:
+    Not in scope: data constructor `Tab'
+
+C:\Users\brodyb\Documents\GitHub\Notes\csv\csv1\src\Prettify.hs:135:17: error:
+    Not in scope: data constructor `Tab'
+Failed, modules loaded: SimpleJSON.
+
+
+10/16/2017
+
+nest is: Int -> Doc -> Doc whereas 
+pretty is Int -> Doc -> String so it's like pretty 
+could call nest optionally and nest merely modifies
+a doc, rather than creates a final representation 
+of it (String)
+
+So, if we read a Doc, how would we see a milemarker
+from which to introduce a nesting. 
+
+nest might feel a little like punctuate, 
+is Doc -> [Doc] -> [Doc]
+or group, or flatten
+
+We need to be clear on how { is represented in a Doc. 
+What is the difference, if any, between the left curly 
+which opens an Object and one that is within a Doc
+
+*TestingNest> renderJValue jvalue''
+Concat (Concat (Char '{') (Concat (Concat (Concat (Concat (Concat (Char '"') (Concat (Char 'O') (Concat (Char 'a') (Concat (Char 't') (Concat (Char 'h') (Concat
+(Char 'b') (Concat (Char 'r') (Concat (Char 'e') (Concat (Char 'a') (Concat (Char 'k') (Concat (Char 'e') (Char 'r')))))))))))) (Char '"')) (Text ": ")) (Concat
+(Concat (Char '"') (Concat (Char 'S') (Concat (Char 'i') (Concat (Char 'n') (Concat (Char 'k') (Concat (Char ' ') (Concat (Char '{') (Concat (Char 'I') (Concat (
+Char 'n') (Concat (Char 't') (Concat (Char 'o') (Concat (Char '}') (Concat (Char ' ') (Concat (Char 'S') (Concat (Char 'i') (Concat (Char 'n') (Concat (Char ' ')
+ (Char 'I')))))))))))))))))) (Char '"'))) (Union (Char ' ') Line))) (Char '}')
+*TestingNest> compact $ renderJValue jvalue''
+"{\"Oathbreaker\": \"Sink {Into} Sin I\"\n}"
+*TestingNest> putStrLn $ compact $ renderJValue jvalue''
+{"Oathbreaker": "Sink {Into} Sin I"
+}
+
+I can't figure out how to key off of JValue because Doc isn't at that level. 
+I can't figure out how to key off of Char because at the point when a pretty/compact 
+or nest is working on a Char there's no context about whether it's in a value or 
+the formatting to start an Object. 
+
+*TestingNest> renderJValue jvalue2
+Concat (Concat (Char '{') (Concat (Concat (Concat (Concat (Concat (Concat (Concat (Char '"') (Char 'k')) (Char '"')) (Text ": ")) (Concat (Concat (Char '"') (Con
+cat (Char '{') (Concat (Char 'v') (Char '}')))) (Char '"'))) (Char ',')) (Union (Char ' ') Line)) (Concat (Concat (Concat (Concat (Concat (Char '"') (Concat (Cha
+r 'k') (Char '2'))) (Char '"')) (Text ": ")) (Text "2.0")) (Union (Char ' ') Line)))) (Char '}')
+*TestingNest> compact $ renderJValue jvalue2
+"{\"k\": \"{v}\",\n\"k2\": 2.0\n}"
+*TestingNest> putStrLn $ compact $ renderJValue jvalue2
+{"k": "{v}",
+"k2": 2.0
+}
+
+Wait, what about escaped double quotes?
+or, maybe what I mean is: are we in a string? because if we're not and this Char is a '{' the thing after is indented. 
+
 10/13/2017
 
 Work up a sufficiently complicated example in ordre to motivate 'nest'

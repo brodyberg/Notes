@@ -19,5 +19,7 @@ executable csv1
   default-language:    Haskell2010
   build-depends:       base >= 4.7 && < 5,
                        parsec,
-                       bytestring
+                       bytestring,
+                       tasty,
+                       tasty-hunit
                        

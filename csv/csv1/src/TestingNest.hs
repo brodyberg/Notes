@@ -23,3 +23,21 @@ jvalue =
                 ])
             ])
         ])])
+
+jvalue' = 
+        (JObject [
+            ("Oathbreaker", (JString "Sink Into Sin I")), 
+            ("Fallujah", (JString "Starlit Path")), 
+            ("Agoraphobic Nosebleed", (JString "Not a Daughter")), 
+            ("Lut", (JString "BoyToy"))
+            ])
+
+jvalue'' = 
+    (JObject [
+        ("k", (JString "{v}"))
+        ])
+
+jvalue2 = 
+    (JObject [
+        ("k", (JString "{v}")), 
+        ("k2", (JNumber 2))])

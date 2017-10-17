@@ -1,16 +1,14 @@
-module Main where
+import Test.Tasty
+import Test.Tasty.HUnit 
 
-import Csv1
+import SimpleJSON (JValue(..))
+import Prettify (Doc, (<>), char, string, double, fsep, hcat, punctuate, text, compact, series, pretty) -- , nest)
 
-main :: IO ()
-main = do
-  case (parseCSV "hi\n") of 
-    Left msg -> putStrLn msg
-    Right output -> putStrLn output
+main = defaultMain tests
 
-  putStrLn "hello world"
+tests :: TestTree
+tests = testGroup "tests" [unitTests]
 
--- putList :: [[String]] -> IO ()
--- putList [] = ()
--- putList (x:xs) = do
---   putStr x
+unitTests = testGroup "Unit tests"
+  [ testCase "Compact of char is the char" $
+      (compact $ char 's') @?= "s" ]

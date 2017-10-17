@@ -19,11 +19,9 @@ renderJValue (JBool False) = text "false"
 renderJValue JNull         = text "null"
 renderJValue (JNumber num) = double num
 renderJValue (JString str) = string str
-
-renderJValue (JArray ary) = series '[' ']' renderJValue ary
-
+renderJValue (JArray ary)  = series '[' ']' renderJValue ary
 renderJValue (JObject obj) = series '{' '}' field obj
-    where field (name,value) = string name
-                             <> text ": "
-                             <> renderJValue value
+    where field (name, value) = string name
+                              <> text ": "
+                              <> renderJValue value
 

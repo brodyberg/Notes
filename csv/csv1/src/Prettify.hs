@@ -9,6 +9,8 @@ data Doc = Empty
          | Char Char
          | Text String
          | Line
+         | Tab
+         | Indent
          | Concat Doc Doc
          | Union Doc Doc
          deriving (Show)
@@ -101,6 +103,10 @@ flatten Line           = Char ' '
 flatten (Union x _)    = flatten x
 flatten other          = other
 
+-- nest :: Int -> Doc -> Doc
+-- nest (Concat x y) = Concat (nest x) (nest y)
+
+
 punctuate :: Doc -> [Doc] -> [Doc]
 punctuate p []     = []
 punctuate p [d]    = [d]
@@ -115,6 +121,7 @@ compact x = transform [x]
                 Char c       -> c : transform ds
                 Text s       -> s ++ transform ds
                 Line         -> '\n' : transform ds
+                Tab          -> transform ds -- so, ignore tab in compact
                 a `Concat` b -> transform (a:b:ds)
                 _ `Union` b  -> transform (b:ds)
 
@@ -126,6 +133,7 @@ pretty width x = best 0 [x]
                 Char c       -> c : best (col + 1) ds
                 Text s       -> s ++ best (col + length s) ds
                 Line         -> '\n' : best 0 ds
+                Tab          -> ' ' : ' ' : best (col + 2) ds -- here we say tab is 2 chars
                 a `Concat` b -> best col (a:b:ds)
                 a `Union` b  -> nicest col (best col (a:ds))
                                           (best col (b:ds))
@@ -139,12 +147,3 @@ w `fits` _ | w < 0 = False
 w `fits` ""        = True
 w `fits` ('\n':_)  = True
 w `fits` (c:cs)    = (w - 1) `fits` cs
-
--- I think this thing is recursive and we pass around the 
--- nesting level and doc as we go more deeply and then 
--- up and down in the tree
-nest :: Int -> Doc -> Doc
-nest = undefined
--- Pass it a doc, and it'll read each element type and return a 
--- new set of elements possibly union'd which take Int (tab)
--- into account. 
