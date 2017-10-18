@@ -41,3 +41,5 @@ jvalue2 =
     (JObject [
         ("k", (JString "{v}")), 
         ("k2", (JNumber 2))])
+
+simplest = (JObject [("k", (JString "v"))])
