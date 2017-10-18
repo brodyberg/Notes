@@ -9,7 +9,6 @@ data Doc = Empty
          | Char Char
          | Text String
          | Line
-         | Tab
          | Indent
          | Concat Doc Doc
          | Union Doc Doc
@@ -43,8 +42,8 @@ x <> Empty = x
 -- where Concat is in Doc
 x <> y = x `Concat` y
 
-concat :: [[a]] -> [a]
-concat = foldr (++) []
+concat' :: [[a]] -> [a]
+concat' = foldr (++) []
 
 hcat :: [Doc] -> Doc
 hcat = fold (<>)
@@ -112,6 +111,22 @@ punctuate p []     = []
 punctuate p [d]    = [d]
 punctuate p (d:ds) = (d <> p) : punctuate p ds
 
+-- int isn't depth, but a suggestion for 
+-- how many spaces our tab is.. >_<
+nest :: Int -> Doc -> Doc
+nest t (Char c) = 
+    case c of 
+        -- 1. we need to know here # of Tabs
+        -- 2. ohhh and since we're aware here
+        -- of how many spaces our tab is we
+        -- don't need a Tab constructor
+        -- since we can just add n spaces
+        -- 3. No idea here about why I'm using
+        -- Concat vs anything else
+--        '{' -> (Concat (replicate t (Char ' ')) (Char c))
+        '{' -> hcat ((Char '\n') : (replicate t (Char ' ')) ++ [(Char c)])
+        _   -> (Char c)
+
 compact :: Doc -> String
 compact x = transform [x]
     where transform [] = ""
@@ -121,7 +136,6 @@ compact x = transform [x]
                 Char c       -> c : transform ds
                 Text s       -> s ++ transform ds
                 Line         -> '\n' : transform ds
-                Tab          -> transform ds -- so, ignore tab in compact
                 a `Concat` b -> transform (a:b:ds)
                 _ `Union` b  -> transform (b:ds)
 
@@ -133,7 +147,6 @@ pretty width x = best 0 [x]
                 Char c       -> c : best (col + 1) ds
                 Text s       -> s ++ best (col + length s) ds
                 Line         -> '\n' : best 0 ds
-                Tab          -> ' ' : ' ' : best (col + 2) ds -- here we say tab is 2 chars
                 a `Concat` b -> best col (a:b:ds)
                 a `Union` b  -> nicest col (best col (a:ds))
                                           (best col (b:ds))

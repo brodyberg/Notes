@@ -3,7 +3,7 @@ import Test.Tasty.HUnit
 
 import PrettyJSON
 import SimpleJSON (JValue(..))
-import Prettify (Doc, (<>), char, string, double, fsep, hcat, punctuate, text, compact, series, pretty) -- , nest)
+-- import Prettify (Doc, (<>), char, string, double, fsep, hcat, punctuate, text, compact, series, pretty) -- , nest)
 
 main = defaultMain tests
 
@@ -18,6 +18,8 @@ unitTests = testGroup "Unit tests"
       --(compact $ char 's') @?= "s",
     testCase "Compact of simplest untouched" $
       (compact $ renderJValue simplest) @?= "{\"k\": \"v\"\n}",
-    testCase "Pretty of simplest tabs once" $
-      (pretty 80 $ renderJValue simplest) @?= "{\n\t\"k\": \"v\"\n}"
+    testCase "Nest of simplest tabs once" $
+      (pretty 80 $ nest 2 $ renderJValue simplest) @?= "{\n  \"k\": \"v\" }",
+    testCase "Passthrough implementation does nothing" $
+      (pretty 80 $ renderJValue simplest) @?= "{\"k\": \"v\" }"
   ]

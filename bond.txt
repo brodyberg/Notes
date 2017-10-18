@@ -1,3 +1,22 @@
+10/18/2017
+
+Interesting - the Line constructor of Doc is used only
+in prettify, not in PrettyJSON. PrettyJSON for renderJValue
+really only consumes visible constructors, not things like
+line, which makes me think that Tab is totally fine as an 
+idea and will only be used inside of Prettify. 
+
+Took my first really real stab at nest!
+Realized so many things: 
+- no need for Tab ctor since nest takes # of spaces
+- need to figure out my recursive thing?
+- need exhaustive pattern match
+- use of replicate
+- use of hcat
+- is anyone using Prettify.concat?
+- VS Code ghci command dies sometimes with lots of 
+  ghc.exes listed in taskmanager
+
 10/17/2017
 
 Ok, so I think the key here is adding a new constructor for Doc, Tab. 
