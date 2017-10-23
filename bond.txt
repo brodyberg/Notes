@@ -1,3 +1,9 @@
+10/23/2017
+
+I'm also going through Haskell Programming from First Principles
+so I've added learn.hs from Chapter 2. 
+
+
 10/18/2017
 
 Interesting - the Line constructor of Doc is used only
