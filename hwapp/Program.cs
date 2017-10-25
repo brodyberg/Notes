@@ -1,16 +1,27 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using static System.Console;
+using System.Linq;
 
-namespace hwapp
+namespace EitherTest
 {
-    public class Either<T,E> where T : class
+    public static class Either
+    {
+        public static Either<T, E> Right<T, E>(T t) where T : class => Either<T, E>.Right(t);
+        public static Either<T, E> Left<T, E>(E e) where T : class => Either<T, E>.Left(e);
+    }
+
+    public class Either<T, E> where T : class
     {
         private readonly T t;
         private readonly E e;
 
-        private readonly bool isSuccess; 
+        private readonly bool isSuccess;
 
-        public Either(T t, E e)
+        public static Either<T, E> Right(T t) => new Either<T, E>(t, default(E));
+        public static Either<T, E> Left(E e) => new Either<T, E>(default(T), e);
+
+        private Either(T t, E e)
         {
             if (t == null &&
                 e == null)
@@ -41,8 +52,8 @@ namespace hwapp
         public T Success => t;
         public E Error => e;
 
-        public static Either<T,E> Bind(
-            Either<T, E> first, 
+        public static Either<T, E> Bind(
+            Either<T, E> first,
             Func<T, Either<T, E>> f)
         {
             if (first.isSuccess)
@@ -51,7 +62,7 @@ namespace hwapp
             }
             else
             {
-                return new Either<T, E>(default(T), first.Error); 
+                return new Either<T, E>(default(T), first.Error);
             }
         }
 
@@ -61,7 +72,8 @@ namespace hwapp
             {
                 return Success.ToString();
             }
-            else{
+            else
+            {
                 return Error.ToString();
             }
         }
@@ -69,9 +81,12 @@ namespace hwapp
 
     public static class EitherExtensions
     {
-       public static Either<T,E> Bind<T,E>(
-            this Either<T, E> first, 
-            Func<T, Either<T, E>> f) where T : class
+        // allows for the transformation of T to B through f
+        public static Either<B, E> Bind<T, E, B>(
+            this Either<T, E> first,
+            Func<T, Either<B, E>> f)
+            where T : class
+            where B : class
         {
             if (first.IsSuccess)
             {
@@ -79,12 +94,12 @@ namespace hwapp
             }
             else
             {
-                return new Either<T, E>(default(T), first.Error); 
+                return Either.Left<B, E>(first.Error);
             }
         }
     }
 
-    public class IntWrapper 
+    public class IntWrapper
     {
         private readonly int i;
 
@@ -109,19 +124,17 @@ namespace hwapp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Either.Right<IntWrapper, string>(new IntWrapper(100));
 
-            Either<IntWrapper, string> x = new Either<IntWrapper, string>(new IntWrapper(100), null);
+            var blue =
+                Either.Right<IntWrapper, string>(new IntWrapper(100))
+                    .Bind(n => Either.Right<List<IntWrapper>, string>(new List<IntWrapper>() { n, new IntWrapper(101) }));
 
-            var blue = 
-                (new Either<IntWrapper, string>(new IntWrapper(100), null))
-                    .Bind(n => new Either<IntWrapper, string>(new IntWrapper(n.Value + 1), null));
+            var yellow =
+                Either.Left<IntWrapper, string>("Boom!")
+                    .Bind(n => Either.Right<IntWrapper, string>(new IntWrapper(1)));
 
-            var yellow = 
-                (new Either<IntWrapper, string>(null, "Boom!"))
-                    .Bind(n => new Either<IntWrapper, string>(new IntWrapper(n.Value + 1), null));
-
-            WriteLine("Blue: {0}", blue.ToString());
+            WriteLine("Blue: {0}", string.Join(", ", blue.Success.Select(s => s.Value)));
             WriteLine("Blue: {0}", yellow.ToString());
         }
     }
