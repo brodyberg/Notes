@@ -1,3 +1,12 @@
+10/30/2017
+
+Spent the week: thinking about the Either Monad as a model for operations 
+that need to be sequenced but are in the context of failure. 
+
+Spent the weekend: first heard and began reading about Indexed Monads
+which appear to be Monad sequencing operations in the context of a
+state-machine representing the states of some external system. 
+
 10/23/2017
 
 I'm also going through Haskell Programming from First Principles
