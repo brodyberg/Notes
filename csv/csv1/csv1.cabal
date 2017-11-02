@@ -21,7 +21,8 @@ executable csv1
                        parsec,
                        bytestring,
                        tasty,
-                       tasty-hunit
+                       tasty-hunit,
+                       mtl >= 2.2 && < 3
 
 test-suite tests
   type:                exitcode-stdio-1.0
