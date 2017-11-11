@@ -1,3 +1,39 @@
+11/10/2017
+
+Playing around with forM and mapM: 
+
+<interactive>:1:1: error: Variable not in scope: forM
+*Main> :m Control.Monad
+Prelude Control.Monad> forM [1,2,3] (\n -> Some n)
+
+<interactive>:3:21: error:
+    Data constructor not in scope: Some :: Integer -> m b
+Prelude Control.Monad> :t Maybe
+
+<interactive>:1:1: error:
+    * Data constructor not in scope: Maybe
+    * Perhaps you meant variable `maybe' (imported from Prelude)
+Prelude Control.Monad> :m +Data.Maybe
+Prelude Control.Monad Data.Maybe> forM [1,2,3] (\n -> Some n)
+
+<interactive>:6:21: error:
+    Data constructor not in scope: Some :: Integer -> m b
+Prelude Control.Monad Data.Maybe> :browse Data.Maybe
+catMaybes :: [Maybe a] -> [a]
+fromJust :: Maybe a -> a
+fromMaybe :: a -> Maybe a -> a
+isJust :: Maybe a -> Bool
+isNothing :: Maybe a -> Bool
+listToMaybe :: [a] -> Maybe a
+mapMaybe :: (a -> Maybe b) -> [a] -> [b]
+maybe :: b -> (a -> b) -> Maybe a -> b
+maybeToList :: Maybe a -> [a]
+data Maybe a = Nothing | Just a
+Prelude Control.Monad Data.Maybe> forM [1,2,3] (\n -> Just n)
+Just [1,2,3]
+Prelude Control.Monad Data.Maybe> mapM (\n -> Just n) [1,2,3]
+Just [1,2,3]
+
 11/5/2017
 
 Prelude> :show bindings
