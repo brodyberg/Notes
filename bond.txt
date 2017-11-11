@@ -1,3 +1,16 @@
+11/10/2017 later...
+
+Multi-line in ghci: 
+
+Prelude> :{
+Prelude| let trip :: Integer -> Integer
+Prelude|     trip = \x -> x * 3
+Prelude| :}
+Prelude> :t trip
+trip :: Integer -> Integer
+
+bonkers! 
+
 11/10/2017
 
 Playing around with forM and mapM: 
