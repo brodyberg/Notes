@@ -1,3 +1,45 @@
+11/11/2017
+
+:browse! will tell you where you might import something from
+
+Super valuable: 
+
+*Matching> :browse Data.Maybe
+Data.Maybe.catMaybes :: [Maybe a] -> [a]
+Data.Maybe.fromJust :: Maybe a -> a
+Data.Maybe.fromMaybe :: a -> Maybe a -> a
+Data.Maybe.isJust :: Maybe a -> Bool
+Data.Maybe.isNothing :: Maybe a -> Bool
+Data.Maybe.listToMaybe :: [a] -> Maybe a
+Data.Maybe.mapMaybe :: (a -> Maybe b) -> [a] -> [b]
+maybe :: b -> (a -> b) -> Maybe a -> b
+Data.Maybe.maybeToList :: Maybe a -> [a]
+data Maybe a = Nothing | Just a
+*Matching> :browse! Data.Maybe
+-- not currently imported
+Data.Maybe.catMaybes :: [Maybe a] -> [a]
+Data.Maybe.fromJust :: Maybe a -> a
+Data.Maybe.fromMaybe :: a -> Maybe a -> a
+Data.Maybe.isJust :: Maybe a -> Bool
+Data.Maybe.isNothing :: Maybe a -> Bool
+Data.Maybe.listToMaybe :: [a] -> Maybe a
+Data.Maybe.mapMaybe :: (a -> Maybe b) -> [a] -> [b]
+Data.Maybe.maybeToList :: Maybe a -> [a]
+-- imported via Prelude
+maybe :: b -> (a -> b) -> Maybe a -> b
+Just :: a -> Maybe a
+data Maybe a = Nothing | Just a
+Nothing :: Maybe a
+
+Also, here's the ghci command to show what we've defined at 
+the console: 
+
+*Matching> :show bindings
+isItTwo :: Integer -> Bool = _
+it :: Maybe Integer = Just 4
+
+What's interesting there is it which I didn't even give a name to. 
+
 11/10/2017 later...
 
 Multi-line in ghci: 
