@@ -22,7 +22,9 @@ executable csv1
                        bytestring,
                        tasty,
                        tasty-hunit,
-                       mtl >= 2.2 && < 3
+                       mtl >= 2.2 && < 3,
+                       pipes
+
 
 test-suite tests
   type:                exitcode-stdio-1.0
