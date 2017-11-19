@@ -1,3 +1,11 @@
+11/18/2017
+
+I think there should be a way to use expertise built around XPath in Haskell. Right now
+I can't find a way to use XPath but instead I see libraries built on their own combinators
+etc. Theoretically what we could do is provide an api accepting strings in XPath format
+which we then parse using Parsec but which themselves create Parsec parsers which 
+implement the intention of the XPath. 
+
 11/11/2017
 
 :browse! will tell you where you might import something from
