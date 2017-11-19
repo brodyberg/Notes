@@ -1,3 +1,10 @@
+11/19/2017
+
+Essentially I'm saying: I'll use a parser I built to parse your XPath to build a parser for 
+XML that will implement your XPath. Maybe I could even figure out how to eliminate the intermediate
+step of parsing their XPath into an AST I then read in order to build a parser which implements
+the semantics of their XPath. 
+
 11/18/2017
 
 I think there should be a way to use expertise built around XPath in Haskell. Right now
