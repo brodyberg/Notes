@@ -23,8 +23,9 @@ executable csv1
                        tasty,
                        tasty-hunit,
                        mtl >= 2.2 && < 3,
-                       pipes
-
+                       pipes,
+                       hxt,
+                       hxt-xpath
 
 test-suite tests
   type:                exitcode-stdio-1.0

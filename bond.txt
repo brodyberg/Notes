@@ -1,3 +1,57 @@
+11/20/2017
+
+We could write, with Parsec a parser for .gitignore files
+such that if you provided a file tree, and zero or more
+.gitignore files we could provide you with a tree that 
+represents all the items that are not ignored. 
+
+The goal though would be to use that returned tree, in my 
+case, for a buildtime validator. So maybe for that you 
+could then call a function which yields all the files 
+stored within the result tree.
+
+comment: #
+multi-line comment start/end: ###
+wildcard: *
+alternation: [] - we could generate the alternations
+directory: /
+glob: **
+I think it's case-sensitive
+rooting: starting with /
+this is a folder: anything and /
+  folder means: walk into tree
+  file means:
+barenames for file anywhere: msbuild.log
+
+every rule is: 
+  walk 
+    zero 
+    every
+    specific 
+    exact, fuzzy or alternating named directories into tree
+  and delete
+    exact, fuzzy or alternating name
+  where name is file or directory
+
+** not sure if .gitignore cares whether the thing is a 
+  file or directory. 
+
+
+So we get the given tree (how to users make this? and what is
+it?) Then we get the [GitIgnore] and generate the list of 
+items we'll slice out of our tree. We will then traverse the
+tree, and each item in our list is an item to remove from the 
+tree. And then the user needs to not only expect but be 
+looking forward to using the return value. That could just
+be a Rose Tree.
+
+MVP: 
+take path and one .gitignore with just names
+generate tree
+parse gitignore for the filenames
+traverse the tree, removing each instance of name
+return RoseTree representing pruned tree
+
 11/11/2017
 
 :browse! will tell you where you might import something from
