@@ -16,15 +16,25 @@ myLines s = go s []
             _  -> takeWhile (/= '\n') s : 
                   go (dropWhile (== '\n') $ dropWhile (/= '\n') s) acc
 
+myLines' :: Char -> String -> [String]
+myLines' c s = go c s []
+  where go c s acc = 
+          case s of
+            [] -> acc
+            _  -> takeWhile (/= c) s : 
+                  go c (dropWhile (== c) $ dropWhile (/= c) s) acc
+                  
 shouldEqual = 
   [ "Tyger, Tyger, burning bright"
   , "In the forests of the night"
   , "What immortal hand or eye"
-  , "Could frame they fearful symmetry?"
+  , "Could frame thy fearful symmetry?"
   ]
 
 main :: IO ()
 main = 
   print $ 
-  "Are they equal? "
+  "Is myLines working? "
   ++ show (myLines sentences == shouldEqual)
+  ++ " Is myLines' working? "
+  ++ show (myLines' '\n' sentences == shouldEqual)

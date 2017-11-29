@@ -18,7 +18,16 @@ myWords x = [first, second, third]
     part3 = dropWhile (/= ' ') part2
     third = dropWhile (== ' ') part3
 
--- myWords :: [Char] -> [[Char]]
+myWords' :: Char -> [Char] -> [[Char]]
+myWords' c x = [first, second, third]
+  where
+    first = "wallfish"
+    part1 = dropWhile (/= c) x
+    part2 = dropWhile (== c) part1
+    second = takeWhile (/= c) part2
+    part3 = dropWhile (/= c) part2
+    third = dropWhile (== c) part3
+    -- myWords :: [Char] -> [[Char]]
 -- myWords x = [first, "second", "third"]
 --   where
 --     first = "wallfish"
