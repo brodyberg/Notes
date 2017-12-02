@@ -1,3 +1,7 @@
+12/2/2017
+
+Haskell PDBs: https://ghc.haskell.org/trac/ghc/ticket/12397
+
 11/30/2017
 
 Prelude> mySqr = [x^2 | x <- [1..10]]
