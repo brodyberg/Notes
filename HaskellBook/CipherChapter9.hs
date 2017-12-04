@@ -8,14 +8,15 @@ brody = "brody"
 -- "rheto"
 -- caesar 10 "rheto"
 -- "brody"
+-- caesar 10 $ caesar (-10) brody
+-- "brody"
 
 caesar :: Integer -> [Char] -> [Char]
-caesar _ [] = []
-caesar shift cs = map mapper cs
+caesar shift = map mapper
   where 
-    modShift = mod shift 26
-    charMod n =
-      case n > (ord 'z') of 
-        True -> n - (ord 'z' - ord 'a') - 1 
-        False -> n
-    mapper c = chr . charMod $ (ord c) + fromIntegral(modShift)
+    modShift  = fromIntegral $ mod shift 26
+    wrapOrd n = n - (ord 'z' - ord 'a') - 1
+    charMod n
+      | n > ord 'z' = wrapOrd n
+      | otherwise   = n
+    mapper c = chr . charMod $ (ord c) + modShift
