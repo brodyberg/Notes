@@ -1,3 +1,7 @@
+12/4/2017
+
+https://futtetennismo.me/posts/docker/2017-11-24-docker-haskell-executables.html
+
 12/2/2017
 
 Haskell PDBs: https://ghc.haskell.org/trac/ghc/ticket/12397
