@@ -116,26 +116,8 @@ squishAgain lists =
 -- and return the greatest element based on the last
 -- value that the comparison returned GT
 
--- Data.List (maximumBy)
--- Not total, docs say "... of a non-empty structure"
-
--- run f on every item
--- last item *it* says GT about 
--- is the one
-
--- uhh start with head
--- then call f with head and next
--- save result
--- the last item labeled GT is the one
-
--- how do we go "two by two"
--- how do we return the last item
-
--- if we get a GT, save left item and 
--- use it to compare with rest of list
 maximumBy' :: (a -> a -> Ordering)
            -> [a] -> a
---maximumBy' f [] = undefined
 maximumBy' f (x:xs) = go f x xs
   where 
     go _ left [] = left
@@ -144,19 +126,5 @@ maximumBy' f (x:xs) = go f x xs
       | otherwise = go f m ms
 
 values = [1, 0, 9001, 89]
-
-
--- _maximumBy' :: (a -> a -> Ordering)
---            -> [a] -> a
--- _maximumBy' f (x:y:xs) = go biggerOfFirstTwo f xs
---   where
---     -- this is an ordering, not the actual thing... 
---     biggerOfFirstTwo = f x y
---     go lastGT f [] = lastGT    
---     go lastGT f (x:y:xs) =  
-
---            -- maximumBy' f  = go f list
--- --   where 
--- --     appliedList = map f x y            
-
--- -- compare
+-- *Standard> maximumBy' compare values
+-- 9001
