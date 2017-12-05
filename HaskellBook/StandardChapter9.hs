@@ -128,3 +128,27 @@ maximumBy' f (x:xs) = go f x xs
 values = [1, 0, 9001, 89]
 -- *Standard> maximumBy' compare values
 -- 9001
+
+-- problem 9 
+
+-- minimumBy' takes a comparison function and a 
+-- list and returns the least element in the list 
+-- based on the last value for which the comparison
+-- returned LT
+
+minimumBy' :: (a -> a -> Ordering) 
+           -> [a] -> a
+minimumBy' f (x:xs) = go f x xs
+  where 
+    go _ left [] = left
+    go f left (m:ms)
+      | f left m == LT = go f left ms
+      | otherwise = go f m ms
+        
+-- problem 10
+
+maximum' :: (Ord a) => [a] -> a
+maximum' list = maximumBy' compare list
+
+minimum' :: (Ord a) => [a] -> a
+minimum' list = minimumBy' compare list
