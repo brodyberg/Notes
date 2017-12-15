@@ -1,3 +1,55 @@
+12/14/2017
+
+Prelude> let xs = [1..3] ++ undefined
+Prelude> (const 1 (const 2 (const 3 (const undefined 0))))
+1
+Prelude> xs
+[1,2,3*** Exception: Prelude.undefined
+CallStack (from HasCallStack):
+  error, called at libraries\base\GHC\Err.hs:79:14 in base:GHC.Err
+  undefined, called at <interactive>:1:20 in interactive:Ghci1
+Prelude> (const 1 (const 2 (const 3 0)))
+1
+Prelude> foldr const 0 xs
+1
+Prelude> (const 1 (const 2 (const 3 (const undefined 0))))
+1
+Prelude> (const 1 (const 2 (const 3 (const 5 0))))
+1
+Prelude> const 1 undefined
+1
+Prelude> const undefined 1
+*** Exception: Prelude.undefined
+CallStack (from HasCallStack):
+  error, called at libraries\base\GHC\Err.hs:79:14 in base:GHC.Err
+  undefined, called at <interactive>:11:7 in interactive:Ghci8
+Prelude> (const 1 (const undefined 3))
+1
+Prelude> (const 1 (const undefined undefined))
+1
+Prelude> 2^2^3
+256
+Prelude> 2^(2^3)
+256
+Prelude> (2^2)^3
+64
+Prelude> const 1 (const undefined undefined)
+1
+Prelude> :i const
+const :: a -> b -> a    -- Defined in `GHC.Base'
+Prelude> fc = flip const
+Prelude> fc undefined 1
+1
+Prelude> (fc 1 (fc 2 (fc 3 4)))
+4
+Prelude> (fc 1 (fc 2 (fc 3 undefined)))
+*** Exception: Prelude.undefined
+CallStack (from HasCallStack):
+  error, called at libraries\base\GHC\Err.hs:79:14 in base:GHC.Err
+  undefined, called at <interactive>:25:19 in interactive:Ghci17
+Prelude> (fc undefined (fc 2 (fc 3 4)))
+4
+Prelude>
 
 
 12/4/2017
