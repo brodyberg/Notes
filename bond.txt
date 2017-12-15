@@ -1,3 +1,44 @@
+12/15/2017
+
+Observe: 
+
+Prelude> c 3 $ c 4 $ c 5 $ c 6 7
+3
+
+The idea here is: 
+
+3 + 4 + 5 + 6
+
+as opposed to 
+
+3 * 4 + 5 * 6 where the different operators (+) and (*) are competing for precedence. 
+
+Furthermore, the idea is that, if we're in a foldr situation, and we evaluate from the 
+left side because all the precedences are the same between all the functions since all 
+the functions are const, then when we go to do this, the output is 1: 
+
+xs = [1..5] ++ undefined
+foldr const 0 xs
+
+which *incorrectly* written out looks like: 
+
+(const 1 (const 2 (const 3 (const 4 (const 5 (const ..? 0))))))
+
+If you wrote it out this way, and I have many times, you'd assume the result would be: 
+
+const ..? 0 which is exception
+
+but if we instead look at it like 
+
+const :: a -> b -> a
+const x _ = x
+
+and: 
+
+const 1 _ 
+
+Then the answer should be 1. 
+
 12/14/2017
 
 Prelude> let xs = [1..3] ++ undefined
