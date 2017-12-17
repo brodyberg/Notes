@@ -21,7 +21,10 @@ theDatabase =
 -- 1. filters for DbDate values and returns a 
 -- list of UTCTime values inside them
 filterDbDate :: [DatabaseItem] -> [UTCTime]
-filterDbDate = undefined
+filterDbDate = foldr filterDate []
+  where 
+    filterDate (DbDate x) acc = x : acc
+    filterDate _          acc = acc 
 
 -- 2. filters for DbNumber values and returns a
 -- list of Integer values inside them
