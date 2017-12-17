@@ -16,7 +16,8 @@ theDatabase =
   , DbString "Hello, World!"
   , DbDate (UTCTime
             (fromGregorian 1921 7 4)
-            (secondsToDiffTime 34123))]
+            (secondsToDiffTime 34123))
+  , DbNumber 891]
 
 -- 1. filters for DbDate values and returns a 
 -- list of UTCTime values inside them
@@ -29,17 +30,22 @@ filterDbDate = foldr filterDate []
 -- 2. filters for DbNumber values and returns a
 -- list of Integer values inside them
 filterDbNumber :: [DatabaseItem] -> [Integer]
-filterDbNumber = undefined
+filterDbNumber = foldr filterNumber []
+  where
+    filterNumber (DbNumber n) acc = n : acc
+    filterNumber _            acc = acc
 
 -- 3. Gets the most recent date
 mostRecent :: [DatabaseItem] -> UTCTime
-mostRecent = undefined
+mostRecent db = foldr max minDate (filterDbDate db)
+  where minDate = (UTCTime 
+                    (fromGregorian 0 0 0) 
+                    (secondsToDiffTime 34123))
 
 -- 4. Sums all the DbNumber values
 sumDb :: [DatabaseItem] -> Integer
-sumDb = undefined
+sumDb db = foldr (+) 0 (filterDbNumber db)
 
 -- 5. Gets average of the DbNumber values
 avgDb :: [DatabaseItem] -> Double
-avgDb = undefined
-                
+avgDb db = (fromIntegral (sumDb db)) / fromIntegral (length $ filterDbNumber db)
