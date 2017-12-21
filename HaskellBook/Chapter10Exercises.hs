@@ -59,3 +59,108 @@ test = "a lazy brown fox jumped over the black dog"
 seekritFunc' :: (Fractional b, Num b) => [Char] -> b
 seekritFunc' x = 
   (sum (map (\w -> fromIntegral $ length w) (words x))) / fromIntegral (length (words x))
+
+----------------
+-- All of the below should
+--  a) use foldr
+--  b) be point-free
+
+-- 1. or
+
+myOr :: [Bool] -> Bool
+myOr = foldr (||) True
+
+-- 2. any
+
+myAny :: [Bool] -> Bool
+myAny = undefined
+
+-- myAny even [1,3,5]
+-- False
+-- myAny odd [1,3,5]
+-- True
+
+-- 3. elem
+
+myElem :: Eq a => a -> [a] -> Bool
+myElem = undefined
+
+-- myElem 1 [1..10]
+-- True
+-- myElem 1 [2..10]
+-- False
+
+-- 4. reverse, don't worry about making it lazy
+
+myReverse :: [a] -> [a]
+myReverse = undefined
+
+-- myReverse "blah"
+-- "halb"
+-- myReverse [1..5]
+-- [5,4,3,2,1]
+
+-- 5. map, should have same behavior as built-in map
+
+myMap :: (a -> b) -> [a] -> [b]
+myMap = undefined
+
+-- 6. filter, should have same behavior as built-in filter
+
+myFilter :: (a -> Bool) -> [a] -> [a]
+myFilter = undefined
+
+-- 7. squish, flattens list of lists into a single list
+
+squish :: [[a]] -> [a]
+squish = undefined
+
+-- 8. squishMap, maps a function over a list and
+--    concatenates the results
+
+squishMap :: (a -> [b]) -> [a] -> [b]
+squishMap = undefined
+
+-- squishMap (\x -> [1, x, 3]) [2]
+-- [1,2,3]
+-- let f x = "WO" ++ [x] ++ " OT "
+-- squishMap f "blah"
+-- "WO b OT WO l OT WO a OT WO h OT"
+
+-- 9. squishAgain, flattens a list of lists into 
+--    a list, this time re-use squishMap 
+
+squishAgain :: [[a]] -> [a]
+squishAgain = undefined
+
+-- 10. myMaximumBy takes a comparison function
+--     and a list, and returns the greatest element
+--     of the list based on the last value that the
+--     comparison returned GT for
+
+myMaximumBy :: (a -> a -> Ordering)
+            -> [a]
+            -> a
+myMaximumBy = undefined
+
+-- myMaximumBy (\_ _ -> GT) [1..10]
+-- 1
+-- myMaximumBy (\_ _ -> LT) [1..10]
+-- 10
+
+-- 11. myMinimumBy takes a comparison function
+--     and a list, and returns the smallest element
+--     of the list based on the last value that the
+--     comparison returned LT for
+
+myMinimumBy :: (a -> a -> Ordering)
+            -> [a]
+            -> a
+myMinimumBy = undefined
+
+-- myMinimumBy (\_ _ -> GT) [1..10]
+-- 10
+-- myMinimumBy (\_ _ -> LT) [1..10]
+-- 1
+-- myMinimumBy compare [1..10]
+-- 1
