@@ -68,12 +68,13 @@ seekritFunc' x =
 -- 1. or
 
 myOr :: [Bool] -> Bool
-myOr = foldr (||) True
+myOr = foldr (||) False
 
 -- 2. any
 
-myAny :: [Bool] -> Bool
-myAny = undefined
+myAny :: (a -> Bool) -> [a] -> Bool
+-- myAny f items = myOr (map f items)
+myAny f = foldr (\item acc -> f item || acc) False
 
 -- myAny even [1,3,5]
 -- False
@@ -83,7 +84,7 @@ myAny = undefined
 -- 3. elem
 
 myElem :: Eq a => a -> [a] -> Bool
-myElem = undefined
+myElem item items = foldr (\current _ -> current == item) False items
 
 -- myElem 1 [1..10]
 -- True
@@ -93,7 +94,7 @@ myElem = undefined
 -- 4. reverse, don't worry about making it lazy
 
 myReverse :: [a] -> [a]
-myReverse = undefined
+myReverse = foldl (flip (:)) []
 
 -- myReverse "blah"
 -- "halb"
@@ -103,27 +104,36 @@ myReverse = undefined
 -- 5. map, should have same behavior as built-in map
 
 myMap :: (a -> b) -> [a] -> [b]
-myMap = undefined
+myMap f = foldr (\x acc -> f x : acc) []
+
+-- myMap (+1) [1..5]
+-- [2,3,4,5,6]
 
 -- 6. filter, should have same behavior as built-in filter
 
 myFilter :: (a -> Bool) -> [a] -> [a]
-myFilter = undefined
+myFilter f = foldr (\x acc -> if f x then x : acc else acc) []
+
+-- myFilter even [1..5]
+-- [2,4]
 
 -- 7. squish, flattens list of lists into a single list
 
 squish :: [[a]] -> [a]
-squish = undefined
+squish = foldr (\x acc -> x ++ acc) []
+
+-- squish [[1..5],[6..10]]
+-- [1,2,3,4,5,6,7,8,9,10]
 
 -- 8. squishMap, maps a function over a list and
 --    concatenates the results
 
 squishMap :: (a -> [b]) -> [a] -> [b]
-squishMap = undefined
+squishMap f = foldr (\x acc -> f x ++ acc) [] 
 
 -- squishMap (\x -> [1, x, 3]) [2]
 -- [1,2,3]
--- let f x = "WO" ++ [x] ++ " OT "
+-- let f x = "WO " ++ [x] ++ " OT "
 -- squishMap f "blah"
 -- "WO b OT WO l OT WO a OT WO h OT"
 
@@ -131,7 +141,7 @@ squishMap = undefined
 --    a list, this time re-use squishMap 
 
 squishAgain :: [[a]] -> [a]
-squishAgain = undefined
+squishAgain = squishMap 
 
 -- 10. myMaximumBy takes a comparison function
 --     and a list, and returns the greatest element
