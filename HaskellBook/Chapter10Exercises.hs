@@ -140,22 +140,28 @@ squishMap f = foldr (\x acc -> f x ++ acc) []
 -- 9. squishAgain, flattens a list of lists into 
 --    a list, this time re-use squishMap 
 
+-- hard
 squishAgain :: [[a]] -> [a]
-squishAgain = squishMap 
+squishAgain = squishMap (\x -> foldr (:) [] x)
 
 -- 10. myMaximumBy takes a comparison function
 --     and a list, and returns the greatest element
 --     of the list based on the last value that the
 --     comparison returned GT for
 
+-- hard, blew a lot of time with a foldr implementation
+-- foldr does the comparisons in the wrong order, foldl
+-- does them in the right order
 myMaximumBy :: (a -> a -> Ordering)
             -> [a]
             -> a
-myMaximumBy = undefined
+myMaximumBy f (x:xs) = foldl (\x y -> if f x y == GT then x else y) x xs 
 
 -- myMaximumBy (\_ _ -> GT) [1..10]
 -- 1
 -- myMaximumBy (\_ _ -> LT) [1..10]
+-- 10
+-- myMaximumBy compare [1..10]
 -- 10
 
 -- 11. myMinimumBy takes a comparison function
@@ -166,7 +172,7 @@ myMaximumBy = undefined
 myMinimumBy :: (a -> a -> Ordering)
             -> [a]
             -> a
-myMinimumBy = undefined
+myMinimumBy f (x:xs) = foldl (\x y -> if f x y == LT then x else y) x xs
 
 -- myMinimumBy (\_ _ -> GT) [1..10]
 -- 10
