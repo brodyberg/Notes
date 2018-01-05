@@ -1,3 +1,40 @@
+1/5/2018
+
+How does this make sense: 
+
+*DogTypes> :t HuskyData
+HuskyData :: HuskyType a
+*DogTypes> :t HuskyData :: HuskyType String
+HuskyData :: HuskyType String :: HuskyType String
+
+Was expecting: 
+
+*DogTypes> :t HuskyData :: HuskyType String
+HuskyData :: HuskyType String
+
+fails: 
+
+*DogTypes> :t DogueDeBordeaux String :: DogueDeBordeaux String
+
+<interactive>:1:17: error:
+    Data constructor not in scope: String :: String
+
+works: 
+
+DogueDeBordeaux "foo" :: DogueDeBordeaux String
+  :: DogueDeBordeaux String
+
+data Doggies a = 
+    Husky a 
+  | Mastiff a 
+  deriving (Eq, Show)
+
+*DogTypes> :k Doggies
+Doggies :: * -> *
+*DogTypes> :k Doggies Int
+Doggies Int :: *
+
+
 12/15/2017
 
 Observe: 
