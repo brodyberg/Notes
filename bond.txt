@@ -1,3 +1,21 @@
+1/6/2018
+
+*LogicGoats> :set +t
+*LogicGoats> 3
+3
+it :: Num t => t
+
+*LogicGoats> :set -XFlexibleInstances
+*LogicGoats> :showi language
+base language is: Haskell2010
+with the following modifiers:
+  -XNoDatatypeContexts
+  -XExtendedDefaultRules
+  -XFlexibleInstances
+  -XNoMonomorphismRestriction
+  -XNondecreasingIndentation
+  -XTypeSynonymInstances
+  
 1/5/2018
 
 How does this make sense: 
@@ -34,6 +52,41 @@ Doggies :: * -> *
 *DogTypes> :k Doggies Int
 Doggies Int :: *
 
+also: 
+
+I had thought that the data ctor couldn't mention a type
+where the type ctor hadn't already mentioned it but that's
+not the case. So this fails simply because there's no a
+in any scope, not just type ctor scope: 
+
+data Foo = Bar a
+
+and this use of a type on the data ctor side works because
+there is an Int in scope: 
+
+data Foo = Bar Int
+
+does this work?
+
+data Foo = Num a => Bar a
+-- no, a still not in scope
+-- but I wonder if you can still require typeclass instances
+
+This also does not work: 
+
+data Foo a = Num a => Bar a
+<interactive>:82:14: error:
+    * Data constructor `Bar' has existential type variables, a context, or a specialised result type
+        Bar :: forall a. Num a => a -> Foo a
+        (Use ExistentialQuantification or GADTs to allow this)
+    * In the definition of data constructor `Bar'
+      In the data type declaration for `Foo'
+
+And this also doesn't work out of the box: 
+
+data Num a => Foo a = Bar a
+<interactive>:83:6: error:
+    Illegal datatype context (use DatatypeContexts): Num a =>
 
 12/15/2017
 
