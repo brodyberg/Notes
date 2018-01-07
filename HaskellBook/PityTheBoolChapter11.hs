@@ -25,9 +25,9 @@ myNumba = Numba (-127)
 
 -- What is the cardinality of NumberOrBool?
 -- Int8 + Bool
--- |-127| + 1 + 127 + Bool
--- 255 + 2
--- 257
+-- |-128| + 1 + 127 + Bool
+-- 256 + 2
+-- 258
 
 -- What happens when you create a Numba with a
 -- numeric literal larger than 127?
