@@ -1,6 +1,6 @@
 module Deconstructing where
 
-data GuessWhat a = 
+data GuessWhat = 
   Chickenbutt deriving (Eq, Show)
 
 data Id a = 
@@ -67,3 +67,66 @@ data SheepInfo =
   SheepInfo Name Age PoundsOfWool
   deriving (Eq, Show)
 
+data Animal = 
+    Cow CowInfo
+  | Pig PigInfo
+  | Sheep SheepInfo
+  deriving (Eq, Show)
+
+-- or alternatively
+type Animal' = Sum CowInfo (Sum PigInfo SheepInfo)
+
+-- bess' is a direct use of the
+-- CowInfo data constructor
+
+-- bess is a call to the Sum First data 
+-- constructor and we're specifying the type
+-- as animal' and that matches because First
+-- of Animal' must be CowInfo
+
+-- elmer works because the Second Second of 
+-- Animal needs to be a SheepInfo
+
+-- elmo doesn't work because Animal' First
+-- is required to be a CowInfo 
+
+-- *Deconstructing> let sheep = SheepInfo "Baaaa" 5 5
+-- sheep :: SheepInfo
+-- *Deconstructing> :t First (Second sheep)
+-- First (Second sheep) :: Sum (Sum a SheepInfo) b
+
+trivialValue :: GuessWhat
+trivialValue = Chickenbutt
+
+idInt :: Id Integer
+idInt = MkId 10
+
+type Awesome = Bool
+
+person :: Product Name Awesome
+person = Product "Simon" True
+
+data Twitter = 
+  Twitter deriving (Eq, Show)
+
+data AskFm = 
+  AskFm deriving (Eq, Show)
+
+socialNetwork :: Sum Twitter AskFm
+socialNetwork = First Twitter
+
+-- *Deconstructing> type SN = Sum Twitter AskFm
+-- type SN = Sum Twitter AskFm
+-- *Deconstructing> Second Twitter :: SN
+
+-- <interactive>:55:1: error:
+--     * Couldn't match type `Twitter' with `AskFm'
+--       Expected type: SN
+--         Actual type: Sum Twitter Twitter
+--     * In the expression: Second Twitter :: SN
+--       In an equation for `it': it = Second Twitter :: SN
+
+data SocialNetwork =
+    Twitter
+  | AskFm
+  deriving (Eq, Show)
