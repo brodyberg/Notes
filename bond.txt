@@ -1,3 +1,17 @@
+1/9/2018
+
+Can we use CipherChapter9.hs as a module and 
+purely recycle that code?
+
+the idea is to keep the Vigenere stuff in that
+file and the caesar stuff over there. 
+
+Nope, can't do that: caesar assumes we pass it
+a whole string that is uniformly shifted by 
+an index where Vigenere has a unique shift per
+index. So Vigenere is one level more complex 
+thank the caesar cipher. 
+
 1/6/2018
 
 *LogicGoats> :set +t
