@@ -61,8 +61,10 @@ postorder Leaf = []
 postorder (Node left a right) = 
   (postorder left) ++ (postorder right) ++ [a]
 
-foldr' :: (a -> b -> b) -> b -> BinaryTree a -> b
-foldr' _ acc Leaf = acc 
+foldr' :: (a -> b -> b) 
+       -> b 
+       -> BinaryTree a 
+       -> b
 foldr' f acc tree = 
   foldr f acc $ inorder tree
 
