@@ -61,19 +61,10 @@ postorder Leaf = []
 postorder (Node left a right) = 
   (postorder left) ++ (postorder right) ++ [a]
 
---foldr' :: (a -> b) -> b -> b
-foldr' :: (a -> b -> b) -> BinaryTree a -> b -> b
-foldr' _ Leaf acc = acc 
-foldr' f (Node left a right) acc = 
-  --f a acc 
-  (\a acc -> f a + acc) -- + is troubling me
-  -- how do we know a and b support (+)?
-  -- and then what, we have another + to 
-  -- combine with the rest of the tree?
-  -- or do we map then reduce? seems easier
-  -- map f over whole tree
-  -- then do inorder but still we have to 
-  -- know how to combine a and b types
+foldr' :: (a -> b -> b) -> b -> BinaryTree a -> b
+foldr' _ acc Leaf = acc 
+foldr' f acc tree = 
+  foldr f acc $ inorder tree
 
 testTree :: BinaryTree Integer
 testTree = 
@@ -101,10 +92,16 @@ testPostorder =
 
 testFoldr :: IO ()
 testFoldr = 
-  if foldr' (+5) testTree 0 == 23
-  then putStrLn "Foldr': ok"
-  else putStrLn "Foldr': fail"
+  if foldr' (+) 0 testTree == 6
+    then putStrLn "Foldr': ok"
+    else putStrLn "Foldr': fail"
 
+testFoldr2 :: IO ()
+testFoldr2 = 
+  if foldr' (\x acc -> x + 5 + acc) 0 testTree == 21
+    then putStrLn "Foldr' 2: ok"
+    else putStrLn "Foldr' 2: fail"
+    
 main :: IO ()
 main = do 
   mapOk
@@ -112,4 +109,5 @@ main = do
   testInorder
   testPostorder
   testFoldr
+  testFoldr2
 
