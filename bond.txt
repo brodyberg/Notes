@@ -1,3 +1,12 @@
+1/10/2018
+
+I'm digging how comfortable I am knowing functions and using 
+operators like $ and . casually in the repl. Super neat. 
+
+ex. rangeOk $ map ord message
+
+All that comes from VigenereCipherChapter11.hs
+
 1/9/2018
 
 Can we use CipherChapter9.hs as a module and 
