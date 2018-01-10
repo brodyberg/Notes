@@ -19,20 +19,6 @@ import Data.Char (ord)
 -- index into the keyword and then caesar 
 -- shift by that amount
 
--- so that's a fold/map: 
--- foldr (\c (index, acc) -> )
-
--- map across message and do simple thing
--- 
-
--- map (\c -> c) message
--- "we will meet at dawn, that is the plan"
-
--- foldr (\c (index, acc) -> (index + 1, c : acc)) (0, "") message
--- (38,"we will meet at dawn, that is the plan")
-
--- foldr (\c (index, modAcc, acc) -> (index + 1, (mod index (length keyword)) : modAcc, c : acc)) (0, [], "") message
-
 -- rotate :: Num a 
 --        => Char 
 --        -> ([Char], a, [a], [Char]) 
@@ -49,26 +35,7 @@ rotate c (keyword, index, modAcc, acc) =
 keyword = "brodybtest"
 message = "we will meet at dawn, that is the plan"
 
-result = foldr rotate (keyword, 0, [], "") message
-
--- (index + 1, (ord $ keyword !! (mod index (length keyword))) : modAcc, c : acc)
-
---foldr (\c (index, modAcc, acc) -> (index + 1, (ord $ keyword !! (mod index (length keyword))) : modAcc, c : acc)) (0, [], "") message
-
--- map across message where we consume
--- chars in the keyword in a loop
-
--- preserve spaces?
--- so, do the map but with the keyword in mind
--- and skip spaces
-
--- concat $ take 50 $ repeat keyword 
--- makes a huge [Char] of our keyword repeated...
--- but will it only ever be 
--- (length keyword) * 50 chars long?
-
--- endlessZip :: [a] -> [b] -> [(a, b)]
--- endlessZip []
+(_, _, _, codeMessage) = foldr rotate (keyword, 0, [], "") message
 
 -- vigenere :: [Char] -> [Char] -> [Char]
 -- vigenere keyword = map mapper
