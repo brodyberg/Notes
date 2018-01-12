@@ -12,31 +12,48 @@ import Prelude
 --    the message char is the amount by which
 --    to shift the message char
 
+data Direction = Backward | Forward
+
+encode :: String
+       -> String
+       -> (Direction, String, Int, [Int], [Int], [Int], String)
+encode keyword message = 
+  foldr rotate (Forward, keyword, 0, [], [], [], "") message  
+
+decode :: String
+       -> String
+       -> (Direction, String, Int, [Int], [Int], [Int], String)
+decode keyword message = 
+  foldr rotate (Backward, keyword, 0, [], [], [], "") message  
+     
 rotate :: Char 
-       -> (String, Int, [Int], [Int], [Int], String) 
-       -> (String, Int, [Int], [Int], [Int], String)
-rotate c (keyword, index, modAcc, firstCodedOrds, finalCodedOrds, acc) = 
-  (keyword, newIndex, shiftedOrd : modAcc, firstCodedOrd : firstCodedOrds, finalCodedOrd : finalCodedOrds, encodedChar : acc)
+       -> (Direction, String, Int, [Int], [Int], [Int], String) 
+       -> (Direction, String, Int, [Int], [Int], [Int], String)
+rotate c (direction, keyword, index, modAcc, firstCodedOrds, finalCodedOrds, acc) = 
+  (direction, keyword, newIndex, shiftedOrd : modAcc, firstCodedOrd(direction) : firstCodedOrds, finalCodedOrd : finalCodedOrds, encodedChar : acc)
   where 
     newIndex = index + 1
     shiftedOrd = fromIntegral $ mod (ord $ keyword !! (mod index (length keyword))) 26
-    --     shiftedOrd = ord $ keyword !! (mod index (length keyword))
     wrapOrd n = n - (ord 'z' - ord 'a') - 1
     charMod n
       | n > ord 'z' = wrapOrd n
       | otherwise   = n
-    firstCodedOrd = (ord c) + shiftedOrd
-    finalCodedOrd = charMod firstCodedOrd        
+    firstCodedOrd Forward = (ord c) + shiftedOrd
+    firstCodedOrd Backward = (ord c) - shiftedOrd
+    finalCodedOrd = charMod (firstCodedOrd direction)
     encodedChar = 
       if ord c <= (ord 'z') || ord c >= (ord 'a')  
-      then chr finalCodedOrd -- chr . finalCodedOrd -- charMod firstCodedOrd-- $ (ord c) + shiftedOrd
+      then chr finalCodedOrd
       else c -- don't encode if nonalpha
 
 keyword = "brodybtest"
 message = "vulka fenryka to tizca"
 
-(_, ix, mods, firstCodedOrds, finalCodedOrds, codeMessage) = 
-  foldr rotate (keyword, 0, [], [], [], "") message
+(_, _, _, codeMods, firstCodedOrds, finalCodedOrds, codedMessage) = 
+  encode keyword message
+
+(_, _, _, decodeMods, firstDecodedOrds, finalDecodedOrds, decodedMessage) = 
+  decode keyword codedMessage
 
 shiftsInRange :: [Int] -> Bool
 shiftsInRange = all (\x -> x <= 25 && x >= 0)
