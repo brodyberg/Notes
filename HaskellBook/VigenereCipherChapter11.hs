@@ -19,38 +19,50 @@ data Direction =
 
 encode :: String
        -> String
-       -> (Direction, String, Int, [Int], [Int], [Int], String)
-encode keyword message = 
-  foldr rotate (Forward, keyword, 0, [], [], [], "") message  
+       -> String
+encode keyword message = encodedMessage
+  where 
+    (_, _, _, encodedMessage) = 
+      foldr rotate (Forward, keyword, 0, "") message  
 
 decode :: String
        -> String
-       -> (Direction, String, Int, [Int], [Int], [Int], String)
-decode keyword message = 
-  foldr rotate (Backward, keyword, 0, [], [], [], "") message  
-     
-rotate :: Char 
-       -> (Direction, String, Int, [Int], [Int], [Int], String) 
-       -> (Direction, String, Int, [Int], [Int], [Int], String)
-rotate c (direction, keyword, index, modAcc, firstCodedOrds, finalCodedOrds, acc) = 
-  (direction, keyword, newIndex, shiftedOrd : modAcc, firstCodedOrd(direction) : firstCodedOrds, finalCodedOrd : finalCodedOrds, encodedChar : acc)
+       -> String
+decode keyword message = decodedMessage
   where 
-    newIndex = index + 1
+    (_, _, _, decodedMessage) = 
+      foldr rotate (Backward, keyword, 0, "") message  
+     
+isAlpha :: Char -> Bool
+isAlpha c = 
+  if ord c >= ord 'a'
+  then if ord c <= ord 'z' then True else False
+  else False
+
+rotate :: Char 
+  -> (Direction, String, Int, String) 
+  -> (Direction, String, Int, String)
+rotate c (direction, keyword, index, acc) = 
+  (direction, keyword, newIndex, encodedChar : acc)
+  where 
+    newIndex = if isAlpha c then index + 1 else index
+                 -- don't update the index if nonalpha
+                 -- which means we split the keyword across
+                 -- spaces and punctuation
     matchedKeyChar = keyword !! (mod index (length keyword))
     matchedKeyCharOrd = ord matchedKeyChar
     -- this # has to represent the offset of this char from 'a'
-    shiftedOrd = fromIntegral $ mod (matchedKeyCharOrd - ord 'a') 26
+    rawShiftedOrd = fromIntegral $ mod (matchedKeyCharOrd - ord 'a') 26
+    shiftedOrd Forward = rawShiftedOrd
+    shiftedOrd Backward = (-1) * rawShiftedOrd
     wrapOrd n = n - (ord 'z' - ord 'a') - 1
     charMod n
       | n > ord 'z' = wrapOrd n
       | otherwise   = n
-    firstCodedOrd Forward = (ord c) + shiftedOrd
-    firstCodedOrd Backward = (ord c) - shiftedOrd
-    finalCodedOrd = charMod (firstCodedOrd direction)
-    encodedChar = 
-      if ord c <= (ord 'z') || ord c >= (ord 'a')  
-      then chr finalCodedOrd
-      else c -- don't encode if nonalpha
+    firstCodedOrd = (ord c) + shiftedOrd(direction)
+    finalCodedOrd = charMod firstCodedOrd
+    encodedChar = if isAlpha c then chr finalCodedOrd else c 
+      -- don't encode if nonalpha
 
 -- amazing test: 
 --encode "a" "a"
@@ -59,36 +71,3 @@ rotate c (direction, keyword, index, modAcc, firstCodedOrds, finalCodedOrds, acc
 keyword = "brodybtest"
 message' = "vulka fenryka to tizca"
 message = "vulkafenrykatotizca"
-
-sCoded :: String -> String
-sCoded m = encoded
-  where (_, _, _, _, _, _, encoded) = encode keyword m
-
-mOrds = map ord message
-demOrds = map ord codedMessage
-
-codemoves  = zip3 mOrds codeMods firstCodedOrds
-_codeMoves = map (\(a,b,c) -> show a ++ "+" ++ show b ++ "=" ++ show c ) codemoves
-
-_codeMoves2 = zip _codeMoves finalCodedOrds
-_codeMovesM = map (\(a, b) -> a ++ " *" ++ show b) _codeMoves2
-
-__codeMoves = zip message _codeMoves
-
-decodemoves = zip3 mOrds decodeMods firstDecodedOrds
-
-sDecoded :: String -> String 
-sDecoded m = decoded
-  where (_, _, _, _, _, _, decoded) = decode keyword m
-
-(_, _, _, codeMods, firstCodedOrds, finalCodedOrds, codedMessage) = 
-  encode keyword message
-
-(_, _, _, decodeMods, firstDecodedOrds, finalDecodedOrds, decodedMessage) = 
-  decode keyword codedMessage
-
-shiftsInRange :: [Int] -> Bool
-shiftsInRange = all (\x -> x <= 25 && x >= 0)
-
-rangeAlpha :: [Int] -> Bool
-rangeAlpha = all (\x -> x == 32 || (x <= (ord 'z') && x >= (ord 'a')))
