@@ -21,6 +21,10 @@ data Direction =
   | Forward
   deriving (Eq, Show)
 
+-- All encode and decode do is abstract out the user 
+-- needing to use Direction and throwing away the 
+-- intermediate results of the fold. Is there a better
+-- way to do this without all this duplicated code?
 encode :: String
        -> String
        -> String
@@ -37,12 +41,24 @@ decode keyword message = decodedMessage
     (_, _, _, decodedMessage) = 
       foldr rotate (Backward, keyword, 0, "") message  
      
+-- broke this out because there was a tension caused because
+-- I initially put all the functions within rotate, which is ok
+-- but I found that it made exposing their results, effectively
+-- intermediate results for the overall function, hard to do
+-- The good side of that was that it caused me to produce
+-- several validation functions you can see in the blame and
+-- to use hoogle for the first time where I searched for 
+-- [a] -> [b] -> [c] -> [(a, b, c)] to discover zip3 and *then*
+-- realize there is no zip4 but implementation should be a snap. 
 isAlpha :: Char -> Bool
 isAlpha c = 
   if ord c >= ord 'a'
   then if ord c <= ord 'z' then True else False
   else False
 
+-- rotate has to know the direction, and takes the entire 
+-- keyword every time it is invoked. Is there a way to 
+-- not have all this work within the function?
 rotate :: Char 
   -> (Direction, String, Int, String) 
   -> (Direction, String, Int, String)
@@ -84,5 +100,7 @@ rotate c (direction, keyword, index, acc) =
 -- "b"
 
 keyword = "brodybtest"
-message' = "vulka fenryka to tizca"
+message' = "vulka fenryka to tizca" -- had a hard time initially
+  -- figuring out what to do with spaces, punctuation and generally
+  -- non-alpha characters
 message = "vulkafenrykatotizca"
