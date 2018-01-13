@@ -1,4 +1,4 @@
-module VigenereCipher where
+module VigenereCipher (encode, decode) where
 
 import Data.Char (ord, chr)
 import Prelude
@@ -8,9 +8,13 @@ import Prelude
 -- 2. Match chars of message against 
 --    chars of the keyword
 
--- 3. Index of keyword char matched against
---    the message char is the amount by which
---    to shift the message char
+-- 3. For the character in the keyword lined 
+--    up against the message character, how far 
+--    is that character from the beginning of the
+--    alphabet? The number is the amount by which
+--    you shift the message character. 
+--    ex. a is a shift of 0
+--    ex. z is a shift of 25
 
 data Direction = 
     Backward 
@@ -56,8 +60,10 @@ rotate c (direction, keyword, index, acc) =
     shiftedOrd Forward = rawShiftedOrd
     shiftedOrd Backward = (-1) * rawShiftedOrd
     wrapOrd n = n - (ord 'z' - ord 'a') - 1
+    wrapOrd' n = n + (ord 'z' - ord 'a') + 1
     charMod n
       | n > ord 'z' = wrapOrd n
+      | n < ord 'a' = wrapOrd' n 
       | otherwise   = n
     firstCodedOrd = (ord c) + shiftedOrd(direction)
     finalCodedOrd = charMod firstCodedOrd
@@ -65,8 +71,17 @@ rotate c (direction, keyword, index, acc) =
       -- don't encode if nonalpha
 
 -- amazing test: 
---encode "a" "a"
--- encoded output should be: "a"
+-- encode "a" "a"
+-- "a"
+-- what's amazing about this test is that it means that 
+-- a caesar cipher is a monoid: 
+-- items: Char
+-- operator: shift
+-- zero: 'a' in this case and 0 in the caesar cipher
+
+-- more tests: 
+-- encode "b" "a"
+-- "b"
 
 keyword = "brodybtest"
 message' = "vulka fenryka to tizca"
