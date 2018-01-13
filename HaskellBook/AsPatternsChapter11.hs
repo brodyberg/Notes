@@ -25,7 +25,11 @@ isSubseqOf :: (Eq a)
            => [a]
            -> [a]
            -> Bool
-isSubseqOf xs ys = False
+isSubseqOf [] _ = True
+isSubseqOf _ [] = False
+isSubseqOf ax@(x:xs) (y:ys) 
+  | x == y    = isSubseqOf xs ys
+  | otherwise = isSubseqOf ax ys
 
 testMatchStart :: IO ()
 testMatchStart = 
