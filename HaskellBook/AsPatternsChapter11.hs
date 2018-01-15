@@ -72,9 +72,6 @@ testIntermingled2 =
 -- 2. Split a sentence into words, then tuple each
 --    word with the capitalized form of each. 
 
--- it's gotta be for capitalize
--- "hello" :: [Char] x:xs of h ello and then @ append
-
 capitalizeWords :: String
                 -> [(String, String)]
 capitalizeWords s = map make $ words s
