@@ -1,5 +1,7 @@
 module AsPatterns where
 
+import Data.Char (toUpper)
+
 f :: Show a => (a, b) -> IO (a, b)
 f t@(a, _) = do 
   print a
@@ -67,6 +69,28 @@ testIntermingled2 =
   then putStrLn "match intermingled 2: pass"
   else putStrLn "match intermingled 2: fail"
    
+-- 2. Split a sentence into words, then tuple each
+--    word with the capitalized form of each. 
+
+-- it's gotta be for capitalize
+-- "hello" :: [Char] x:xs of h ello and then @ append
+
+capitalizeWords :: String
+                -> [(String, String)]
+capitalizeWords s = map make $ words s
+  where  
+    make ax@(x:xs) = (ax, toUpper x : xs)
+
+capitalizeTest :: IO ()
+capitalizeTest = 
+  if actual == expected
+  then putStrLn "capitalize: pass"
+  -- else putStrLn $ "capitalize: fail, actual: " ++ actual ++ " expected: " ++ expected
+  else putStrLn $ "capitalize: fail"
+  where
+    expected = [("hello", "Hello"), ("world", "World")]
+    actual = capitalizeWords "hello world"
+
 main :: IO ()
 main = do 
   testMatchStart
@@ -75,3 +99,4 @@ main = do
   testNoMatchIncomplete
   testNoMatchOutOfOrder
   testIntermingled2
+  capitalizeTest
