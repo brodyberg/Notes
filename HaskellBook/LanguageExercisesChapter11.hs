@@ -36,15 +36,14 @@ capitalizeParagraph =
                 else (glom, seenList))
             ([], [])
             $ reverse paragraph
-    nonEmptyNonReversedSentences paragraph = 
+    nonEmptyNonReversedSentences = 
       foldr 
         (\s acc -> 
           if length s > 0 
           then (reverse s) : acc 
           else acc) 
         []
-        $ makeReversedSentences paragraph
-    capitalizedSentences paragraph = 
+    capitalizedSentences = 
       foldr 
         (\s acc -> 
           let 
@@ -52,4 +51,3 @@ capitalizeParagraph =
           in 
             acc ++ (withSpaces $ (capitalizeWord firstWord) : otherwords))
         []
-        $ nonEmptyNonReversedSentences paragraph
