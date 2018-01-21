@@ -3,36 +3,46 @@ module Phone where
 -- 1. Create a datastructure that captures the 
 --    phone layout on page 457. 
 
-data Face = 
-    Number Int
-  | Symbol Char
-
 data Value = 
-    Two Char Char
+    One   Char 
+  | Two   Char Char 
   | Three Char Char Char
-  | Four Char Char Char
-
-data Key = 
-    Num Int 
-  | NumTwoAlpha   Int Char Char 
-  | NumThreeAlpha Int Char Char Char
-  | NumFourAlpha  Int Char Char Char Char
-  | TwoSymbols    Char Char
-  | ThreeSymbols  Char Char Char
+  | Four  Char Char Char Char
   deriving (Eq, Show)
 
+toString :: Value -> String
+toString (One c) = [c]
+toString (Two c r) = [c, r]
+toString (Three c r e) = [c, r, e]
+toString (Four c r e w) = [c, r, e, w]
+
+data Key = 
+    Num Int
+  | NumAlpha Int Value
+  | Alpha Int Value
+  | Symbol Char Value
+  deriving (Eq, Show)
+
+keyToValidValues :: Key -> String
+keyToValidValues (Num x)        = show x
+keyToValidValues (NumAlpha x v) = show x ++ toString v
+keyToValidValues (Alpha x v)    = show x ++ toString v
+keyToValidValues (Symbol s v)   = [s] ++ toString v
+
+keyRowToValidValues :: KeyRow -> String
+keyRowToValidValues (KeyRow x y z) = 
+  foldr (++) "" $ map keyToValidValues [x, y, z]
+
 keyToValidButtons :: Key -> String
-keyToValidButtons (Num x)                   = show x
-keyToValidButtons (NumTwoAlpha   x g h)     = show x ++ [g, h]
-keyToValidButtons (NumThreeAlpha x g h i)   = show x ++ [g, h, i]
-keyToValidButtons (NumFourAlpha  x g h i j) = show x ++ [g, h, i, j]
-keyToValidButtons (TwoSymbols      g h)     = [g, h]   
-keyToValidButtons (ThreeSymbols    g h i)   = [g, h, i]
+keyToValidButtons (Num x)        = show x
+keyToValidButtons (NumAlpha x _) = show x
+keyToValidButtons (Alpha x _)    = show x
+keyToValidButtons (Symbol s _)   = [s]
 
 keyRowToValidButtons :: KeyRow -> String
 keyRowToValidButtons (KeyRow x y z) = 
   foldr (++) "" $ map keyToValidButtons [x, y, z]
-
+  
 data KeyRow = KeyRow Key Key Key
   deriving (Eq, Show)
 
@@ -41,22 +51,25 @@ data Phone = Phone KeyRow KeyRow KeyRow KeyRow
 
 class KeyPad a where
   validButtons :: a -> String
+  validValues  :: a -> String
 
 instance KeyPad Phone where
   validButtons (Phone kr1 kr2 kr3 kr4) = 
     foldr (++) "" $ map keyRowToValidButtons [kr1, kr2, kr3, kr4]
+  validValues (Phone kr1 kr2 kr3 kr4) = 
+    foldr (++) "" $ map keyRowToValidValues [kr1, kr2, kr3, kr4]
 
 thisPhone :: Phone
 thisPhone = 
   Phone 
     (KeyRow 
-      (Num 1)                           (NumThreeAlpha 2 'A' 'B' 'C') (NumThreeAlpha 3 'D' 'E' 'F'))
+      (Num 1)                          (Alpha 2 (Three 'A' 'B' 'C')) (Alpha 3 (Three 'D' 'E' 'F')))
     (KeyRow
-      (NumThreeAlpha 4 'G' 'H' 'I')     (NumThreeAlpha 5 'J' 'K' 'L') (NumThreeAlpha 6 'M' 'N' 'O'))
+      (Alpha 4 (Three 'G' 'H' 'I'))    (Alpha 5 (Three 'J' 'K' 'L')) (Alpha 6 (Three 'M' 'N' 'O')))
     (KeyRow
-      (NumFourAlpha  7 'P' 'Q' 'R' 'S') (NumThreeAlpha 8 'T' 'U' 'V') (NumFourAlpha 9 'W' 'X' 'Y' 'Z'))
+      (Alpha 7 (Four 'P' 'Q' 'R' 'S')) (Alpha 8 (Three 'T' 'U' 'V')) (Alpha 9 (Four 'W' 'X' 'Y' 'Z')))
     (KeyRow
-      (TwoSymbols '*' '^')              (NumTwoAlpha   0 '+' '_')     (ThreeSymbols '#' '.' ','))
+      (Symbol '*' (One '^'))          (NumAlpha 0 (Two '+' '_'))     (Symbol '#' (Two '.' ',')))
 
 -- 2. Convert the following conversations into the keypresses
 --    required to express them. 
