@@ -1,33 +1,40 @@
 module Phone where
 
+import Data.List
+
 -- 1. Create a datastructure that captures the 
 --    phone layout on page 457. 
 
--- Char to Key
--- Key to Char
-
-data Key = 
-    Num Int
-  | Alpha Char
-  deriving (Eq, Show)
-
-data Value = Value [Char]
-  deriving (Eq, Show)
-
-data Phone = Phone [Key] [Value]
+data Phone = Phone String [String]
   deriving (Eq, Show)
 
 standardPhone :: Phone
 standardPhone
-       = Phone [(Num 1),     (Num 2),  (Num 3),
-                (Num 4),     (Num 5),  (Num 6),
-                (Num 7),     (Num 8),  (Num 9),
-                (Alpha '*'), (Num 0),  (Alpha '#')]
+       = Phone "123456789*0#"
+               ["",     "abc", "def", 
+                "ghi",  "jkl", "mno",
+                "pqrs", "tuv", "wxyz", 
+                "^",    "+_",  ".,"]
 
-               [(Value []),                   (Value ['a','b','c']),   (Value ['d', 'e', 'f']),
-                (Value ['g', 'h', 'i']),      (Value ['j', 'k', 'l']), (Value ['m', 'n', 'o']),
-                (Value ['p', 'q', 'r', 's']), (Value ['t', 'u', 'v']), (Value ['w', 'x', 'y', 'z']),
-                (Value ['^']),                (Value ['+', '_']),      (Value ['.', ','])]
+(Phone keys values) = standardPhone
+kv = zip keys values
+n = filter (\c -> c == 'a') "abc"
+
+f = foldr 
+      (\(k, v) acc -> 
+        case find (\c -> c == 'a') v of 
+          Just _ -> (k, v) : acc
+          _      -> acc) 
+      [] 
+      kv
+
+-- m = map (\(_, Value str) -> str) kv
+-- -- ["","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz","^","+_",".,"]
+
+--thingie :: Key -> 
+
+--m = map (\(_, Value str) -> str) kv
+
 
 convo :: [String]
 convo = [
@@ -45,7 +52,7 @@ type Presses = Int
 charToTaps :: Phone
             -> Char 
             -> [(Digit, Presses)]
-charToTaps (Phone keys values) c =
+charToTaps (Phone keys values) c = undefined
   -- which value contains c
   -- use that index to look up the key
 
