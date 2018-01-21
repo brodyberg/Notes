@@ -74,6 +74,9 @@ thisPhone =
 -- 2. Convert the following conversations into the keypresses
 --    required to express them. 
 
+validButtons' = validButtons thisPhone
+validValues'  = validValues  thisPhone
+
 convo :: [String]
 convo = [
   "Hope is the beginning of despair",
