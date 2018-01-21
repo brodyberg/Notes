@@ -17,7 +17,9 @@ data Value = Value [Char]
 data Phone = Phone [Key] [Value]
   deriving (Eq, Show)
 
-aPhone = Phone [(Num 1),     (Num 2),  (Num 3),
+standardPhone :: Phone
+standardPhone
+       = Phone [(Num 1),     (Num 2),  (Num 3),
                 (Num 4),     (Num 5),  (Num 6),
                 (Num 7),     (Num 8),  (Num 9),
                 (Alpha '*'), (Num 0),  (Alpha '#')]
@@ -27,8 +29,39 @@ aPhone = Phone [(Num 1),     (Num 2),  (Num 3),
                 (Value ['p', 'q', 'r', 's']), (Value ['t', 'u', 'v']), (Value ['w', 'x', 'y', 'z']),
                 (Value ['^']),                (Value ['+', '_']),      (Value ['.', ','])]
 
+convo :: [String]
+convo = [
+  "Hope is the beginning of despair",
+  "Ok Marneas calm down",
+  "We were betrayed at Calth",
+  "True enough",
+  "Only the Emperor can save us now",
+  "Since when do Ultramarines say that",
+  "Put on your fancy gauntlets and fight"]
+
+type Digit = Char
+type Presses = Int
+
+charToTaps :: Phone
+            -> Char 
+            -> [(Digit, Presses)]
+charToTaps (Phone keys values) c =
+  -- which value contains c
+  -- use that index to look up the key
 
 
+-- assuming the default phone definition
+-- 'a' -> [('2', 1)]
+-- 'A' -> [('*', 1), ('2', 1)]
+
+-- charToTaps for first sentence: 
+
+-- [('*', 1), (2, 4), (3, 6)]
+
+cellPhonesDead :: Phone
+               -> String
+               -> [(Digit, Presses)]
+cellPhonesDead = undefined
 
 
 
