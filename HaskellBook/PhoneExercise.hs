@@ -69,7 +69,7 @@ thisPhone =
     (KeyRow
       (Alpha 7 (Four 'P' 'Q' 'R' 'S')) (Alpha 8 (Three 'T' 'U' 'V')) (Alpha 9 (Four 'W' 'X' 'Y' 'Z')))
     (KeyRow
-      (Symbol '*' (One '^'))          (NumAlpha 0 (Two '+' '_'))     (Symbol '#' (Two '.' ',')))
+      (Symbol '*' (One '^'))           (NumAlpha 0 (Two '+' '_'))     (Symbol '#' (Two '.' ',')))
 
 -- 2. Convert the following conversations into the keypresses
 --    required to express them. 
@@ -87,8 +87,20 @@ convo = [
   "Since when do Ultramarines say that",
   "Put on your fancy gauntlets and fight"]
 
--- they hard code valid buttons, but we could
--- derive it from a phone by asking
-
 type Digit = Char
 type Presses = Int
+
+reverseTaps :: Phone
+            -> Char 
+            -> [(Digit, Presses)]
+reverseTaps = undefined
+
+-- assuming the default phone definition
+-- 'a' -> [('2', 1)]
+-- 'A' -> [('*', 1), ('2', 1)]
+
+cellPhonesDead :: Phone
+               -> String
+               -> [(Digit, Presses)]
+cellPhonesDead = undefined
+
