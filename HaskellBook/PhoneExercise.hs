@@ -120,11 +120,11 @@ rhibd = standardTapsToString hibd'
 --    for each message?
 
 fingerTapCount :: [(Digit, Presses)] -> Presses
-fingerTapCount = undefined
+fingerTapCount = foldr (\(d, p) acc -> p + acc) 0
 
 -- 4. What was the most popular letter for each message?
 --    What was its cost? You'll want to combine reverseTaps
---    and fingetTaps figure out what it cost in taps. 
+--    and fingerTaps figure out what it cost in taps. 
 --    ReverseTaps is a list because you need to press a 
 --    different button in order to get capitals
 
@@ -134,8 +134,8 @@ mostPopularLetter = undefined
 -- 5. What was the most popular letter overall? What was the 
 --    most popular word? 
 
-mostPopularLetter :: [String] -> Char
-mostPopularLetter = undefined
+mostPopularLetterOverall :: [String] -> Char
+mostPopularLetterOverall = undefined
 
 mostPopularWord :: [String] -> Char
 mostPopularWord = undefined
