@@ -2,7 +2,7 @@ module Phone where
 
 import Data.List (elemIndex)
 import Data.Maybe (fromJust)
-import Data.Char (isUpper, toLower, isLetter, toUpper)
+import Data.Char (isUpper, toLower, isLetter, toUpper, ord)
 
 convo :: [String]
 convo = [
@@ -128,8 +128,34 @@ fingerTapCount = foldr (\(d, p) acc -> p + acc) 0
 --    ReverseTaps is a list because you need to press a 
 --    different button in order to get capitals
 
-mostPopularLetter :: String -> Char
-mostPopularLetter = undefined
+mostPopularLetter :: String -> [Int]-- Char
+mostPopularLetter s = 
+  let 
+    letterCounts = 
+      foldr 
+        (\c acc -> 
+          let 
+            index = (ord c) - 97
+            indexValue = acc !! index
+            newValue = indexValue + 1
+            beforeSlice = 
+              if index == 0 
+              then [] 
+              else take (index - 1) acc
+            afterSlice = 
+              if index == 25 
+              then [] 
+              else drop (index + 1) acc
+            spliced = beforeSlice ++ [newValue] ++ afterSlice
+          in 
+            spliced)
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        s
+  in 
+    letterCounts
+
+-- find count for (lower) letter which occurs most in string
+-- find tap cost * occurences
 
 -- 5. What was the most popular letter overall? What was the 
 --    most popular word? 
