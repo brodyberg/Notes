@@ -115,3 +115,27 @@ stringToTaps p s = foldr (++) [] $ map (\c -> charToTaps p c) s
 hibd = "Hope is the beginning of despair."
 hibd' = standardStringToTaps hibd
 rhibd = standardTapsToString hibd' 
+
+-- 3. How many times do digits need to be pressed
+--    for each message?
+
+fingerTapCount :: [(Digit, Presses)] -> Presses
+fingerTapCount = undefined
+
+-- 4. What was the most popular letter for each message?
+--    What was its cost? You'll want to combine reverseTaps
+--    and fingetTaps figure out what it cost in taps. 
+--    ReverseTaps is a list because you need to press a 
+--    different button in order to get capitals
+
+mostPopularLetter :: String -> Char
+mostPopularLetter = undefined
+
+-- 5. What was the most popular letter overall? What was the 
+--    most popular word? 
+
+mostPopularLetter :: [String] -> Char
+mostPopularLetter = undefined
+
+mostPopularWord :: [String] -> Char
+mostPopularWord = undefined
