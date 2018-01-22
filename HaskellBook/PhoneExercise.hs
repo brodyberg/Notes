@@ -23,8 +23,8 @@ standardCharToTaps :: Char
 standardCharToTaps = charToTaps standardPhone
 
 charToTaps :: Phone
-  -> Char 
-  -> [(Digit, Presses)]
+           -> Char 
+           -> [(Digit, Presses)]
 charToTaps (Phone keys values) c = 
   if isUpper c 
   then ('*', 1) : (charToTaps (Phone keys values) $ toLower c)
