@@ -2,7 +2,7 @@ module Phone where
 
 import Data.List (elemIndex)
 import Data.Maybe (fromJust)
-import Data.Char (isUpper, toLower)
+import Data.Char (isUpper, toLower, isLetter, toUpper)
 
 convo :: [String]
 convo = [
@@ -55,32 +55,59 @@ charToTaps (Phone keys values) c =
     pressCount k v = (fromJust $ elemIndex c (v ++ [k])) + 1
     thePress = foldr f [] $ zip keys values
 
+-- tapsToChar :: Phone
+--            -> [(Digit, Presses)]
+--            -> Char
+-- tapsToChar (Phone keys values) taps =
+--   -- need to take into account capitalization
+--   let
+--     (digit, presses) = taps !! 0
+--     kv = zip keys values
+--     filtered = filter (\(c, str) -> c == digit) kv
+--     x = head filtered
+--     makeTheStr (key, values) = 
+--       values ++ [key]
+--   in
+--     (makeTheStr x) !! (presses - 1)
 
-tapsToChar :: Phone
-           -> [(Digit, Presses)]
---           -> [(Digit, String)]
-           -> Char
-tapsToChar (Phone keys values) taps =
+tapToChar :: Phone
+          -> (Digit, Presses)
+          -> Char
+tapToChar (Phone keys values) (digit, presses) =
   let
-    (digit, presses) = taps !! 0
     kv = zip keys values
     filtered = filter (\(c, str) -> c == digit) kv
-    -- (key, values) = head filtered
     x = head filtered
     makeTheStr (key, values) = 
       values ++ [key]
-
-    -- values = "abc"
-    -- key = '2'
---    theStr = values ++ [key]
   in
     (makeTheStr x) !! (presses - 1)
-    --theStr !! (mod presses (length theStr)) -- mod by length
-    --'d'
-    --filtered
 
-tapsa = [('2', 1)]
-tapsA = [('*', 1), ('2', 1)]
+tapsToString :: Phone
+             -> [(Digit, Presses)]
+             -> String
+tapsToString phone taps = 
+  foldr processor (phone, False, "") taps
+
+processor :: (Digit, Presses)
+          -> (Phone, Bool, String)
+          -> (Phone, Bool, String)
+processor tap (p, upCase, acc) = 
+  let
+    tapChar = tapToChar p tap
+    capitalize = tap == ('*', 1)
+    outputChar = 
+      if upCase && isLetter tapChar 
+      then toUpper tapChar
+      else tapChar
+  in 
+    if capitalize
+    then (p, capitalize, acc)
+    else (p, capitalize, outputChar : acc)
+
+tapsa = [('2', 1 :: Presses)]
+tapsA = [('*', 1 :: Presses), ('2', 1 :: Presses)]
+
 
 
 (Phone keys values) = standardPhone
