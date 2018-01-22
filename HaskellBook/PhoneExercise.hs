@@ -20,6 +20,9 @@ standardPhone
 kv = zip keys values
 n = filter (\c -> c == 'a') "abc"
 
+-- this aligns the required output
+-- character 'a' with the key to press
+-- and family of values for that key
 f = foldr 
       (\(k, v) acc -> 
         case find (\c -> c == 'a') v of 
@@ -28,13 +31,7 @@ f = foldr
       [] 
       kv
 
--- m = map (\(_, Value str) -> str) kv
--- -- ["","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz","^","+_",".,"]
-
---thingie :: Key -> 
-
---m = map (\(_, Value str) -> str) kv
-
+-- spaces: (0, 2)
 
 convo :: [String]
 convo = [
