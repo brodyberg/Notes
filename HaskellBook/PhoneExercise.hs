@@ -2,7 +2,7 @@ module Phone where
 
 import Data.List (elemIndex)
 import Data.Maybe (fromJust)
-import Data.Char (isUpper, toLower, isLetter, toUpper, ord)
+import Data.Char (isUpper, toLower, isLetter, toUpper, ord, chr)
 
 convo :: [String]
 convo = [
@@ -128,17 +128,10 @@ fingerTapCount = foldr (\(d, p) acc -> p + acc) 0
 --    ReverseTaps is a list because you need to press a 
 --    different button in order to get capitals
 
-x :: [Int]
-x = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-x'' = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-x' :: [Int]
-x' = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-
 beforeSlice :: Int -> [Int] -> [Int]
 beforeSlice index acc = 
   if index == 0
   then []
---  else take (index - 1) acc
   else take index acc
 
 afterSlice :: Int -> [Int] -> [Int]
@@ -147,24 +140,37 @@ afterSlice index acc =
   then []
   else drop (index + 1) acc
 
-mostPopularLetter :: String -> ([Int], [Int], [Int])-- Char
+largestLetter :: Int
+              -> (Int, (Int, Int))
+              -> (Int, (Int, Int))
+largestLetter count (index, t@(largestIndex, largestCount)) =
+  if count > largestCount
+  then (newIndex, (index, count))
+  else (newIndex, t)
+  where
+    newIndex = index + 1
+
+mostFrequentLetter :: [Int] ->  Char
+mostFrequentLetter counts = chr (winnerOrd + 97)
+  where
+    (_, (winnerOrd, _)) = foldr largestLetter (0, (0, 0)) $ reverse counts
+
+mostPopularLetter :: String -> Char
 mostPopularLetter s = 
   let 
     letterCounts = 
       foldr 
-        (\c (indexList, lengthList, acc) -> 
+        (\c acc -> 
           let 
             index = (ord c) - 97
             indexValue = acc !! index
             newValue = indexValue + 1
           in 
-           (index : indexList,
-            (length acc) : lengthList,
-           (beforeSlice index acc) ++ [newValue] ++ (afterSlice index acc)))
-        ([], [], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
+           (beforeSlice index acc) ++ [newValue] ++ (afterSlice index acc))
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         s
   in 
-    letterCounts
+    mostFrequentLetter letterCounts
 
 -- find count for (lower) letter which occurs most in string
 -- find tap cost * occurences
