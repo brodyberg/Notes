@@ -128,28 +128,40 @@ fingerTapCount = foldr (\(d, p) acc -> p + acc) 0
 --    ReverseTaps is a list because you need to press a 
 --    different button in order to get capitals
 
-mostPopularLetter :: String -> [Int]-- Char
+x :: [Int]
+x = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+x'' = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+x' :: [Int]
+x' = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
+beforeSlice :: Int -> [Int] -> [Int]
+beforeSlice index acc = 
+  if index == 0
+  then []
+--  else take (index - 1) acc
+  else take index acc
+
+afterSlice :: Int -> [Int] -> [Int]
+afterSlice index acc = 
+  if (index - 1) == (length acc)
+  then []
+  else drop (index + 1) acc
+
+mostPopularLetter :: String -> ([Int], [Int], [Int])-- Char
 mostPopularLetter s = 
   let 
     letterCounts = 
       foldr 
-        (\c acc -> 
+        (\c (indexList, lengthList, acc) -> 
           let 
             index = (ord c) - 97
             indexValue = acc !! index
             newValue = indexValue + 1
-            beforeSlice = 
-              if index == 0 
-              then [] 
-              else take (index - 1) acc
-            afterSlice = 
-              if index == 25 
-              then [] 
-              else drop (index + 1) acc
-            spliced = beforeSlice ++ [newValue] ++ afterSlice
           in 
-            spliced)
-        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+           (index : indexList,
+            (length acc) : lengthList,
+           (beforeSlice index acc) ++ [newValue] ++ (afterSlice index acc)))
+        ([], [], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
         s
   in 
     letterCounts
@@ -164,4 +176,4 @@ mostPopularLetterOverall :: [String] -> Char
 mostPopularLetterOverall = undefined
 
 mostPopularWord :: [String] -> Char
-mostPopularWord = undefined
+mostPopularWord = undefined 
