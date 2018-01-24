@@ -167,10 +167,15 @@ mostFrequentLetterAndMagnitude counts = (magnitude, chr (winnerOrd + 97))
 
 mostPopularLetterAndMagnitude :: String -> (Int, Char)
 mostPopularLetterAndMagnitude s = 
-  let 
+  mostFrequentLetterAndMagnitude $ letterCounts s
+
+letterCounts :: String
+             -> [Int]
+letterCounts s = counts sentenceAllLowerLetters
+  where
     sentenceAllLowerLetters = 
       foldr (\c acc -> if isLetter c then (toLower c) : acc else acc) "" s
-    letterCounts = 
+    counts sent = 
       foldr 
         (\c acc -> 
           let 
@@ -180,10 +185,7 @@ mostPopularLetterAndMagnitude s =
           in 
             (beforeSlice index acc) ++ [newValue] ++ (afterSlice index acc))
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        sentenceAllLowerLetters
-  in 
-    mostFrequentLetterAndMagnitude letterCounts
-    
+        sent
 -- find count for (lower) letter which occurs most in string
 -- find tap cost * occurences
 
@@ -196,14 +198,10 @@ acc = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 folder :: String
        -> [Int]
        -> [Int]
-folder s acc = (beforeSlice index acc) ++ [newValue] ++ (afterSlice index acc)
-  where
-    (sMag, sChar) = mostPopularLetterAndMagnitude s
-    -- we need the char so we can index into acc
-    index = (ord sChar) - 97
-    indexValue = acc !! index
-    -- we need the mag so we know by how much to increment the current value
-    newValue = indexValue + sMag
+folder s acc = combinedLetterCounts
+  where 
+    thisLetterCount = letterCounts s
+    combinedLetterCounts = map (\(x, y) -> x + y) $ zip acc thisLetterCount
 
 mostPopularLetterOverall :: [String] -> [Int]-- (Int, Char)
 mostPopularLetterOverall sentences = 
