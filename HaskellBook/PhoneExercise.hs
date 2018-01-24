@@ -151,13 +151,25 @@ largestLetter count (index, t@(largestIndex, largestCount)) =
     newIndex = index + 1
 
 mostFrequentLetter :: [Int] ->  Char
-mostFrequentLetter counts = chr (winnerOrd + 97)
+mostFrequentLetter counts = winnerChar
   where
-    (_, (winnerOrd, _)) = foldr largestLetter (0, (0, 0)) $ reverse counts
+    (_, winnerChar) = mostFrequentLetterAndMagnitude counts
 
 mostPopularLetter :: String -> Char
-mostPopularLetter s = 
+mostPopularLetter s = winnerChar 
+  where
+    (_, winnerChar) = mostPopularLetterAndMagnitude s
+
+mostFrequentLetterAndMagnitude :: [Int] ->  (Int, Char)
+mostFrequentLetterAndMagnitude counts = (magnitude, chr (winnerOrd + 97))
+  where
+    (_, (winnerOrd, magnitude)) = foldr largestLetter (0, (0, 0)) $ reverse counts
+
+mostPopularLetterAndMagnitude :: String -> (Int, Char)
+mostPopularLetterAndMagnitude s = 
   let 
+    sentenceAllLowerLetters = 
+      foldr (\c acc -> if isLetter c then (toLower c) : acc else acc) "" s
     letterCounts = 
       foldr 
         (\c acc -> 
@@ -166,12 +178,12 @@ mostPopularLetter s =
             indexValue = acc !! index
             newValue = indexValue + 1
           in 
-           (beforeSlice index acc) ++ [newValue] ++ (afterSlice index acc))
+            (beforeSlice index acc) ++ [newValue] ++ (afterSlice index acc))
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        s
+        sentenceAllLowerLetters
   in 
-    mostFrequentLetter letterCounts
-
+    mostFrequentLetterAndMagnitude letterCounts
+    
 -- find count for (lower) letter which occurs most in string
 -- find tap cost * occurences
 
@@ -179,7 +191,20 @@ mostPopularLetter s =
 --    most popular word? 
 
 mostPopularLetterOverall :: [String] -> Char
-mostPopularLetterOverall = undefined
+mostPopularLetterOverall sentences = undefined
+
+sentenceWithTheMostOfAParticularLetter :: [String] -> (Int, Char, String)
+sentenceWithTheMostOfAParticularLetter sentences = 
+  foldr 
+    (\s t@(magnitude, largestLetter, sLeader) -> 
+      let 
+        (sMag, sChar) = mostPopularLetterAndMagnitude s
+      in 
+        if sMag > magnitude
+        then (sMag, sChar, s)
+        else t) 
+    (0, 'a', "") 
+    sentences
 
 mostPopularWord :: [String] -> Char
 mostPopularWord = undefined 
