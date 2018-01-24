@@ -190,8 +190,29 @@ mostPopularLetterAndMagnitude s =
 -- 5. What was the most popular letter overall? What was the 
 --    most popular word? 
 
-mostPopularLetterOverall :: [String] -> Char
-mostPopularLetterOverall sentences = undefined
+acc :: [Int]
+acc = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
+folder :: String
+       -> [Int]
+       -> [Int]
+folder s acc = (beforeSlice index acc) ++ [newValue] ++ (afterSlice index acc)
+  where
+    (sMag, sChar) = mostPopularLetterAndMagnitude s
+    -- we need the char so we can index into acc
+    index = (ord sChar) - 97
+    indexValue = acc !! index
+    -- we need the mag so we know by how much to increment the current value
+    newValue = indexValue + sMag
+
+mostPopularLetterOverall :: [String] -> [Int]-- (Int, Char)
+mostPopularLetterOverall sentences = 
+--  let
+    foldr 
+      folder
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+      sentences
+  --in
 
 sentenceWithTheMostOfAParticularLetter :: [String] -> (Int, Char, String)
 sentenceWithTheMostOfAParticularLetter sentences = 
