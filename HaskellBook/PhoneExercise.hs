@@ -203,14 +203,34 @@ folder s acc = combinedLetterCounts
     thisLetterCount = letterCounts s
     combinedLetterCounts = map (\(x, y) -> x + y) $ zip acc thisLetterCount
 
-mostPopularLetterOverall :: [String] -> [Int]-- (Int, Char)
-mostPopularLetterOverall sentences = 
---  let
-    foldr 
-      folder
-      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-      sentences
-  --in
+maxFolder :: Int
+          -> (Int, Int, Int)
+          -> (Int, Int, Int)
+maxFolder count (index, curMax, curIx) = 
+  if count > curMax 
+--  then (index + 1, count, chr (index + 97)) 
+  then (index + 1, count, index) 
+  else (index + 1, curMax, curIx)
+
+maxOfList :: [Int] -> (Int, Int, Int)
+maxOfList = foldr maxFolder (0, 0, 0)
+
+x = overallLetterCounts convo
+
+overallLetterCounts :: [String] -> [Int]
+overallLetterCounts sentences = 
+  foldr 
+    folder
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    sentences
+
+mostPopularLetterOverall :: [String] -> (Int, Char)
+mostPopularLetterOverall sentences = (count, actualChar)
+  where 
+    (_, count, ordinal) = maxOfList $ reverse $ overallLetterCounts sentences
+    actualChar = chr (ordinal + 97)
+
+convoMostPopularLetter = mostPopularLetterOverall convo
 
 sentenceWithTheMostOfAParticularLetter :: [String] -> (Int, Char, String)
 sentenceWithTheMostOfAParticularLetter sentences = 
