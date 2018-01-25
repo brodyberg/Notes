@@ -186,8 +186,6 @@ letterCounts s = counts sentenceAllLowerLetters
             (beforeSlice index acc) ++ [newValue] ++ (afterSlice index acc))
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         sent
--- find count for (lower) letter which occurs most in string
--- find tap cost * occurences
 
 -- 5. What was the most popular letter overall? What was the 
 --    most popular word? 
@@ -208,7 +206,6 @@ maxFolder :: Int
           -> (Int, Int, Int)
 maxFolder count (index, curMax, curIx) = 
   if count > curMax 
---  then (index + 1, count, chr (index + 97)) 
   then (index + 1, count, index) 
   else (index + 1, curMax, curIx)
 
@@ -244,6 +241,26 @@ sentenceWithTheMostOfAParticularLetter sentences =
         else t) 
     (0, 'a', "") 
     sentences
+
+data Trie a = 
+  Node a Int [Trie a]
+  deriving (Eq, Show)
+
+-- insert' :: Eq a 
+--         => [a]
+--         -> Trie a
+--         -> Trie a
+-- insert' [] (Node item count children) = 
+--   (Node item (count + 1) children)
+-- insert' [x:xs] (Node item count children) = 
+--   let 
+--     branchIndex = findIndex ((Node c _ _) -> c == x)
+--   in 
+
+
+
+--         insert' item (Root tries) = undefined
+-- insert' item (Node currentItem count )
 
 mostPopularWord :: [String] -> Char
 mostPopularWord = undefined 
