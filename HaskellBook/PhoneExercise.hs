@@ -253,27 +253,27 @@ insert' :: Eq a
 insert' [] (Node item count children) = 
   (Node item (count + 1) children)
 insert' (x:xs) (Node item count children) = 
-  case branchIndex of 
+  case maybeIndex x children of 
     Just ix -> (Node item count ((before ix) ++ [(insert' xs (toUpdate ix))] ++ (after ix)))
     _       -> (Node item count ((insert' xs (Node x 0 [])) : children))
   where 
     before ix = beforeSlice ix children
     after ix = afterSlice ix children
     toUpdate ix = children !! ix
-    branchIndex = findIndex (\(Node c _ _) -> c == x) children
 
 convoInTrie :: [String]
             -> Trie Char
 convoInTrie sentences = 
   foldr (\w acc -> insert' w acc) (Node '_' 0 []) $ allWordsLower sentences
 
-allTheWords :: [String]
-            -> [String]
-allTheWords = foldr (\s acc -> words s ++ acc) []
-
 allWordsLower :: [String]
               -> [String]
-allWordsLower = foldr (\w acc -> (foldr (\c cacc -> toLower c : cacc) "" w) : acc) []
+allWordsLower sentences = 
+  foldr (\w acc -> (foldr (\c cacc -> toLower c : cacc) "" w) : acc) [] $ allTheWords sentences
+  where 
+    allTheWords :: [String]
+                -> [String]
+    allTheWords = foldr (\s acc -> words s ++ acc) []
 
 maybeIndex :: Eq a 
            => a
@@ -297,7 +297,7 @@ frequencyOfWords :: [String]
                  -> [(Maybe Int, String)]
 frequencyOfWords sentences = wordOccurences
   where 
-    allLower = allWordsLower $ allTheWords sentences
+    allLower = allWordsLower sentences
     filledTrie = convoInTrie allLower
     wordOccurences = 
       map (\w -> (frequencyOfWord w filledTrie, w)) allLower 
@@ -305,8 +305,7 @@ frequencyOfWords sentences = wordOccurences
 mostPopularWord :: [String] -> (Maybe Int, String)
 mostPopularWord sentences = winner
   where 
-    trie = frequencyOfWords sentences
-    winner = foldr folder (Just 0, "") trie
+    winner = foldr folder (Just 0, "") $ frequencyOfWords sentences
     folder (thisMag, thisWord) t@(largestMag, _) = 
       if thisMag > largestMag 
       then (thisMag, thisWord) 
