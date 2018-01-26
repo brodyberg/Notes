@@ -265,28 +265,51 @@ insert' (x:xs) (Node item count children) =
 convoInTrie :: [String]
             -> Trie Char
 convoInTrie sentences = 
-  foldr (\w acc -> insert' w acc) (Node '_' 0 []) allWordsLower
-  where 
-    allTheWords = foldr (\s acc -> words s ++ acc) [] sentences
-    allWordsLower = foldr (\w acc -> (foldr (\c cacc -> toLower c : cacc) "" w) : acc) [] allTheWords
+  foldr (\w acc -> insert' w acc) (Node '_' 0 []) $ allWordsLower sentences
 
-mostPopularWord :: [String] -> Char
-mostPopularWord = undefined 
-  -- read trie for path (word) with max count
+allTheWords :: [String]
+            -> [String]
+allTheWords = foldr (\s acc -> words s ++ acc) []
 
--- we could take a word and return a count
+allWordsLower :: [String]
+              -> [String]
+allWordsLower = foldr (\w acc -> (foldr (\c cacc -> toLower c : cacc) "" w) : acc) []
 
 maybeIndex :: Eq a 
            => a
-           -> Trie a
+           -> [Trie a]
            -> Maybe Int
-maybeIndex x (Node _ _ children) = findIndex (\(Node c _ _) -> c == x) children
+maybeIndex _ [] = Nothing
+maybeIndex x children = findIndex (\(Node c _ _) -> c == x) children
 
 frequencyOfWord :: String
                 -> Trie Char
                 -> Maybe Int
-frequencyOfWord [] t@(Node _ count _) = Just count
+frequencyOfWord [] (Node _ count _) = Just count
 frequencyOfWord (x:xs) (Node item count children) = 
-  case maybeIndex x t of
+  case maybeIndex x children of
     Just ix -> frequencyOfWord xs (children !! ix)
     _       -> Nothing
+
+countOfThe = frequencyOfWord "the" $ convoInTrie convo
+
+frequencyOfWords :: [String]
+                 -> [(Maybe Int, String)]
+frequencyOfWords sentences = wordOccurences
+  where 
+    allLower = allWordsLower $ allTheWords sentences
+    filledTrie = convoInTrie allLower
+    wordOccurences = 
+      map (\w -> (frequencyOfWord w filledTrie, w)) allLower 
+
+mostPopularWord :: [String] -> (Maybe Int, String)
+mostPopularWord sentences = winner
+  where 
+    trie = frequencyOfWords sentences
+    winner = foldr folder (Just 0, "") trie
+    folder (thisMag, thisWord) t@(largestMag, _) = 
+      if thisMag > largestMag 
+      then (thisMag, thisWord) 
+      else t
+
+winnerWord = mostPopularWord convo
