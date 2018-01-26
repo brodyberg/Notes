@@ -262,5 +262,15 @@ insert' (x:xs) (Node item count children) =
     toUpdate ix = children !! ix
     branchIndex = findIndex (\(Node c _ _) -> c == x) children
 
+-- fix for case
+
+convoInTrie :: [String]
+            -> Trie Char
+convoInTrie sentences = 
+  foldr (\w acc -> insert' w acc) (Node '_' 0 []) allTheWords
+  where 
+    allTheWords = foldr (\s acc -> words s ++ acc) [] sentences
+
 mostPopularWord :: [String] -> Char
 mostPopularWord = undefined 
+  -- read trie for path (word) with max count
