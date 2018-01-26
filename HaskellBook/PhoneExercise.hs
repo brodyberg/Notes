@@ -273,3 +273,20 @@ convoInTrie sentences =
 mostPopularWord :: [String] -> Char
 mostPopularWord = undefined 
   -- read trie for path (word) with max count
+
+-- we could take a word and return a count
+
+maybeIndex :: Eq a 
+           => a
+           -> Trie a
+           -> Maybe Int
+maybeIndex x (Node _ _ children) = findIndex (\(Node c _ _) -> c == x) children
+
+frequencyOfWord :: String
+                -> Trie Char
+                -> Maybe Int
+frequencyOfWord [] t@(Node _ count _) = Just count
+frequencyOfWord (x:xs) (Node item count children) = 
+  case maybeIndex x t of
+    Just ix -> frequencyOfWord xs (children !! ix)
+    _       -> Nothing
