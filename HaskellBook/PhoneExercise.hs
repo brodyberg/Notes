@@ -262,14 +262,13 @@ insert' (x:xs) (Node item count children) =
     toUpdate ix = children !! ix
     branchIndex = findIndex (\(Node c _ _) -> c == x) children
 
--- fix for case
-
 convoInTrie :: [String]
             -> Trie Char
 convoInTrie sentences = 
-  foldr (\w acc -> insert' w acc) (Node '_' 0 []) allTheWords
+  foldr (\w acc -> insert' w acc) (Node '_' 0 []) allWordsLower
   where 
     allTheWords = foldr (\s acc -> words s ++ acc) [] sentences
+    allWordsLower = foldr (\w acc -> (foldr (\c cacc -> toLower c : cacc) "" w) : acc) [] allTheWords
 
 mostPopularWord :: [String] -> Char
 mostPopularWord = undefined 
