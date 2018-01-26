@@ -1,6 +1,6 @@
 module Phone where
 
-import Data.List (elemIndex)
+import Data.List (elemIndex, findIndex)
 import Data.Maybe (fromJust)
 import Data.Char (isUpper, toLower, isLetter, toUpper, ord, chr)
 
@@ -128,13 +128,13 @@ fingerTapCount = foldr (\(d, p) acc -> p + acc) 0
 --    ReverseTaps is a list because you need to press a 
 --    different button in order to get capitals
 
-beforeSlice :: Int -> [Int] -> [Int]
+beforeSlice :: Int -> [a] -> [a]
 beforeSlice index acc = 
   if index == 0
   then []
   else take index acc
 
-afterSlice :: Int -> [Int] -> [Int]
+afterSlice :: Int -> [a] -> [a]
 afterSlice index acc = 
   if (index - 1) == (length acc)
   then []
@@ -246,21 +246,21 @@ data Trie a =
   Node a Int [Trie a]
   deriving (Eq, Show)
 
--- insert' :: Eq a 
---         => [a]
---         -> Trie a
---         -> Trie a
--- insert' [] (Node item count children) = 
---   (Node item (count + 1) children)
--- insert' [x:xs] (Node item count children) = 
---   let 
---     branchIndex = findIndex ((Node c _ _) -> c == x)
---   in 
-
-
-
---         insert' item (Root tries) = undefined
--- insert' item (Node currentItem count )
+insert' :: Eq a 
+        => [a]
+        -> Trie a
+        -> Trie a
+insert' [] (Node item count children) = 
+  (Node item (count + 1) children)
+insert' (x:xs) (Node item count children) = 
+  case branchIndex of 
+    Just ix -> (Node item count ((before ix) ++ [(insert' xs (toUpdate ix))] ++ (after ix)))
+    _       -> (Node item count ((insert' xs (Node x 0 [])) : children))
+  where 
+    before ix = beforeSlice ix children
+    after ix = afterSlice ix children
+    toUpdate ix = children !! ix
+    branchIndex = findIndex (\(Node c _ _) -> c == x) children
 
 mostPopularWord :: [String] -> Char
 mostPopularWord = undefined 
