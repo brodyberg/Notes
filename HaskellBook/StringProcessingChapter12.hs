@@ -72,6 +72,12 @@ countTheBeforeVowel s = sum $ go $ words s
 --    of elements returned
 
 countVowels :: String -> Integer
-countVowels = undefined
+countVowels s = 
+  foldr (\c acc -> if isVowel c then 1 + acc else acc) 0 s 
+  where
+    isVowel c =    
+      case elemIndex c "aeoiu" of
+        Just _ -> True
+        _      -> False
 
 -- Next: ValidateTheWordChapter12.hs
