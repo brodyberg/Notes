@@ -1,6 +1,6 @@
 module StringProcessing where
 
-import Data.List (concat, intersperse)
+import Data.List (concat, intersperse, elemIndex)
 
 -- 1. Write a recursive function named replaceThe 
 -- which takes a text/string, breaks it into 
@@ -13,6 +13,12 @@ longString = "Far far away, behind the word mountains, far from the countries Vo
 
 notThe :: String -> Maybe String
 notThe s = if s == "the" then Nothing else Just s
+
+isThe :: String -> Maybe String
+isThe s = 
+  case notThe s of
+    Nothing -> Just "the"
+    _       -> Nothing
 
 replaceThe' :: String -> String
 replaceThe' s = foldr (\w acc -> w ++ " " ++ acc) "" noThe
@@ -31,3 +37,41 @@ replaceThe s = concat $ intersperse " " $ go (words s)
       case notThe w of 
         Just word -> word : go ws
         _         -> "a" : go ws 
+
+-- 2. Write a recursive function that takes a string, 
+--    breaks it into words, and counts the number of 
+--    instances of "the" followed by a vowel-initial
+--    word
+
+hasLeadingVowel :: String -> Bool
+hasLeadingVowel [] = False
+hasLeadingVowel (x:xs) = 
+  case elemIndex x vowels of
+    Just n -> True
+    _      -> False
+  where vowels = "aeoiu"
+
+test1 = "i was careful the alarm was blue"
+test2 = "i was careful the alarm was blue but not the rest"
+test3 = "the alarm was blue but not the rest of the outcomes"
+
+countTheBeforeVowel :: String -> Int
+countTheBeforeVowel s = sum $ go $ words s
+  where
+    go :: [String] -> [Int] 
+    go [] = [0]
+    go (x:[]) = [0]
+    go (x:y:xs) = 
+      case isThe x of
+        Just w -> if hasLeadingVowel y then 1 : go xs else 0 : go(y:xs)
+        _      -> 0 : go(y:xs)
+
+-- 3. Return the number of letters that are vowels in 
+--    a word. Possible steps: test for vowelhood, 
+--    return the vowels in a word, count the number
+--    of elements returned
+
+countVowels :: String -> Integer
+countVowels = undefined
+
+-- Next: ValidateTheWordChapter12.hs
