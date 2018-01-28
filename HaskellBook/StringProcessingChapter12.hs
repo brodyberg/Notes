@@ -1,5 +1,7 @@
 module StringProcessing where
 
+import Data.List (concat, intersperse)
+
 -- 1. Write a recursive function named replaceThe 
 -- which takes a text/string, breaks it into 
 -- words and replaces each instance of 'the' with 'a'. 
@@ -12,11 +14,20 @@ longString = "Far far away, behind the word mountains, far from the countries Vo
 notThe :: String -> Maybe String
 notThe s = if s == "the" then Nothing else Just s
 
-replaceThe :: String -> String
-replaceThe s = foldr (\w acc -> w ++ " " ++ acc) "" noThe
+replaceThe' :: String -> String
+replaceThe' s = foldr (\w acc -> w ++ " " ++ acc) "" noThe
   where 
     noThe = foldr folder [] $ words s
     folder w acc = 
       case notThe w of
         Just word -> word : acc
         _         -> "a" : acc
+
+replaceThe :: String -> String
+replaceThe s = concat $ intersperse " " $ go (words s)
+  where
+    go [] = []
+    go (w:ws) = 
+      case notThe w of 
+        Just word -> word : go ws
+        _         -> "a" : go ws 
