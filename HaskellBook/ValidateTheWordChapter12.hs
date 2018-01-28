@@ -2,7 +2,6 @@ module ValidateTheWord where
 
 import Data.List (elemIndex)
 
-
 -- Use the Maybe type to write a function that 
 -- counts the number of vowels in a string and the
 -- number of consonants. If the number of vowels
@@ -32,9 +31,5 @@ mkWord w =
   where
     vowelCount = countVowels w
     consonantCount = length w - vowelCount
-
-
-
-
 
 -- Next: ItsOnlyNaturalChapter12.hs

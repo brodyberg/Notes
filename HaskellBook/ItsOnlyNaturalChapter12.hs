@@ -30,7 +30,8 @@ data Nat =
 -- 2
 
 natToInteger :: Nat -> Integer
-natToInteger = undefined
+natToInteger Zero = 0
+natToInteger (Succ n) = 1 + natToInteger n
 
 -- integerToNat 0
 -- Just Zero
@@ -45,6 +46,17 @@ natToInteger = undefined
 -- Nothing
 
 integerToNat :: Integer -> Maybe Nat
-integerToNat = undefined
+integerToNat i = if i >= 0 then Just $ go i else Nothing
+  -- case i >= 0 of
+  --   True -> go i
+  --   _    -> Nothing
+  where 
+    go i = 
+      case i == 0 of
+        True -> Zero 
+        _    -> (Succ $ go (i - 1))
+
+
+
 
 -- Next: SmallLibraryForMaybeChapter12.hs
