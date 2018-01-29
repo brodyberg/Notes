@@ -104,7 +104,7 @@ catMaybes (x:xs) =
 
 flipMaybe :: [Maybe a] -> Maybe [a]
 flipMaybe list = 
-  if sawNothing == False
+  if not sawNothing
   then Just result
   else Nothing
   where 

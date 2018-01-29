@@ -5,22 +5,44 @@ module SmallLibraryForEither where
 -- for the type, use common sense to determine what
 -- it should do. 
 
+allLeft = [Left 'a', Left 'b', Left 'c']
+allRight = [Right 1, Right 2, Right 3]
+mixed = [Left 'a', Right 2, Left 'c']
+
 -- 1. Try to eventually arrive at a solution that 
 --    uses foldr, even if earlier versons don't use
 --    foldr. 
 
 lefts' :: [Either a b] -> [a]
-lefts' = undefined
+lefts' list = 
+  foldr folder [] list
+  where 
+    folder e acc = 
+      case e of 
+        Right _ ->     acc
+        Left n  -> n : acc
 
 -- 2. Same as the last one. Use foldr eventually. 
 
 rights' :: [Either a b] -> [b]
-rights' = undefined
+rights' list = 
+  foldr folder [] list
+  where
+    folder e acc = 
+      case e of 
+        Right n -> n : acc
+        Left _  ->     acc
 
 -- 3. 
 
 partitionEithers' :: [Either a b] -> ([a], [b])
-partitionEithers' = undefined
+partitionEithers' list = 
+  foldr folder ([],[]) list
+  where
+    folder e (lacc, racc) = 
+      case e of 
+        Right n -> n : racc
+        Left m  -> m : lacc
 
 -- 4. 
 
