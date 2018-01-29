@@ -47,16 +47,10 @@ natToInteger (Succ n) = 1 + natToInteger n
 
 integerToNat :: Integer -> Maybe Nat
 integerToNat i = if i >= 0 then Just $ go i else Nothing
-  -- case i >= 0 of
-  --   True -> go i
-  --   _    -> Nothing
   where 
     go i = 
       case i == 0 of
         True -> Zero 
         _    -> (Succ $ go (i - 1))
-
-
-
 
 -- Next: SmallLibraryForMaybeChapter12.hs

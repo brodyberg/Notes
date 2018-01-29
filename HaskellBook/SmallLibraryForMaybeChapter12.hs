@@ -12,7 +12,8 @@ module SmallLibraryForMaybe where
 -- False
 
 isJust :: Maybe a -> Bool
-isJust = undefined
+isJust Nothing = False
+isJust _       = True
 
 -- isNothing (Just 1)
 -- False
@@ -21,7 +22,8 @@ isJust = undefined
 -- True
 
 isNothing :: Maybe a -> Bool
-isNothing = undefined
+isNothing Nothing = True
+isNothing _       = False
 
 -- 2. The following is the Maybe catamorphism. You can 
 --    turn a Maybe value into anything else with this
@@ -36,7 +38,8 @@ mayybe :: b
        -> (a -> b) 
        -> Maybe a 
        -> b
-mayybe = undefined
+mayybe seed _ Nothing = seed
+mayybe _ f (Just x) = f x
 
 -- 3. In case you want to provide a fallback value. 
 
@@ -47,7 +50,8 @@ mayybe = undefined
 -- 1
 
 fromMaybe :: a -> Maybe a -> a
-fromMaybe = undefined
+fromMaybe seed Nothing = seed
+fromMaybe _ (Just x) = x
 
 -- Try writing it in terms of the maybe catamorphism. 
 
@@ -60,7 +64,8 @@ fromMaybe = undefined
 -- Nothing
 
 listToMaybe :: [a] -> Maybe a
-listToMaybe = undefined
+listToMaybe [] = Nothing
+listToMaybe (x:xs) = Just x
 
 -- maybeToList (Just 1)
 -- [1]
@@ -69,7 +74,8 @@ listToMaybe = undefined
 -- []
 
 maybeToList :: Maybe a -> [a]
-maybeToList = undefined
+maybeToList Nothing = []
+maybeToList (Just x) = [x]
 
 -- 5. For when we want to drop the Nothing values from
 --    our list. 
@@ -82,7 +88,11 @@ maybeToList = undefined
 -- []
 
 catMaybes :: [Maybe a] -> [a]
-catMaybes = undefined
+catMaybes [] = []
+catMaybes (x:xs) = 
+  case x of
+    (Just n) -> n : catMaybes xs
+    _        -> catMaybes xs
 
 -- 6. You'll see this called "sequence" later. 
 
@@ -93,4 +103,17 @@ catMaybes = undefined
 -- Nothing
 
 flipMaybe :: [Maybe a] -> Maybe [a]
-flipMaybe = undefined
+flipMaybe list = 
+  if sawNothing == False
+  then Just result
+  else Nothing
+  where 
+    (sawNothing, result) = foldr folder (False, []) list
+    folder m (b, acc) = 
+      if b 
+      then (True, [])
+      else case m of 
+        (Just n) -> (False, n : acc)
+        _        -> (True, [])
+
+-- Next: SmallLibraryForEitherChapter12.hs
