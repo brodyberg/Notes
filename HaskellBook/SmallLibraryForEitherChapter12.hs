@@ -39,17 +39,20 @@ partitionEithers' :: [Either a b] -> ([a], [b])
 partitionEithers' list = 
   foldr folder ([],[]) list
   where
-    folder e (lacc, racc) = 
+    folder e (lacc, racc) =
       case e of 
         Right n -> (lacc, n : racc)
         Left m  -> (m : lacc, racc)
 
 -- 4. 
 
-eitherMaybe' :: (a -> b)
+eitherMaybe' :: (b -> c)
              -> Either a b
              -> Maybe c
-eitherMaybe' = undefined
+eitherMaybe' f e = 
+  case e of
+    Right n -> Just $ f n
+    _       -> Nothing
 
 -- 5. This is a general catamorphism for Either values
 
@@ -57,15 +60,29 @@ either' :: (a -> c)
         -> (b -> c)
         -> Either a b
         -> c
-either' = undefined
+either' f g e = 
+  case e of
+    Right x -> g x
+    Left y  -> f y
 
 -- 6. Same as before, but use the either' function you 
 --    just wrote. 
 
+-- couldn't do this one, my solution compiles
+-- and seems like not the right answer even though
+-- I do check at runtime the function g will 
+-- never be invoked... 
+
 eitherMaybe'' :: (b -> c)
               -> Either a b
               -> Maybe c
-eitherMaybe'' = undefined
-
+eitherMaybe'' f e = 
+  case e of 
+--    Right x -> Just $ f x
+  --    Right x -> Just $ either' id f e
+--    Right x -> Just $ either' id f e
+    Right x -> Just $ either' undefined f e
+    _       -> Nothing
+  
 -- Next: UnfoldsChapter12.hs
           
