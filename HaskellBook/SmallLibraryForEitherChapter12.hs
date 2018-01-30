@@ -41,8 +41,8 @@ partitionEithers' list =
   where
     folder e (lacc, racc) = 
       case e of 
-        Right n -> n : racc
-        Left m  -> m : lacc
+        Right n -> (lacc, n : racc)
+        Left m  -> (m : lacc, racc)
 
 -- 4. 
 
