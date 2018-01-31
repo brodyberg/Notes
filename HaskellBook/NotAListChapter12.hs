@@ -3,7 +3,7 @@ module NotAList where
 -- Given the BinaryTree from Chapter 11, complete
 -- the following exercises. 
 
-data BinaryTree = 
+data BinaryTree a = 
     Leaf
   | Node (BinaryTree a) a (BinaryTree a)
   deriving (Eq, Ord, Show)
@@ -13,7 +13,8 @@ data BinaryTree =
 unfold :: (a -> Maybe (a, b, a))
        -> a
        -> BinaryTree b
-unfold = undefined
+unfold _ 0 = Leaf
+unfold f n = Node (unfold f (n - 1)) n (unfold f (n - 1))
 
 -- 2. Maybe a tree builder. 
 --    Using the unfold function you've made for 
