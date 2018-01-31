@@ -80,12 +80,15 @@ test' = take 10 $ myUnfoldr (\b -> if b == 3 then Nothing else Just (b, b+1)) 0
 --           -> [a]
 
 betterIterate :: (a -> a) -> a -> [a]
-betterIterate f x = undefined -- myUnfoldr ...?
+betterIterate f =
+  myUnfoldr (\n -> Just(n, f n)) 
 
 -- Remember, your betterIterate should have the
 -- same results as iterate: 
 
 -- take 10 $ iterate (+1) 0 
+-- take 10 $ myIterate (+1) 0
 -- take 10 $ betterIterate (+1) 0
+
 
 -- Next: NotAListChapter12.hs
