@@ -74,7 +74,15 @@ unfold' f n = t2
                         Just(l, c2, r) -> if c == c2 then (Node Leaf c Leaf) else (Node Leaf c Leaf)
                         Nothing       -> Leaf
         _          -> Leaf
+-- so we make a tree
+-- then we look at b
+-- and say
 
+-- we say nothing
+-- we can't count up from zero because what is zero for
+-- something that is Eq, Ord or Show?
+-- can we count up in maker?
+--   we said a and b are the same types so.. 
 
 -- *can* we compare them? even with no unfold' local typeclass?
 -- no, no comparison even though we know that 
