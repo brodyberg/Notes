@@ -62,10 +62,46 @@ maker' x = Just(x - 1, x - 1, x - 1)
 unfold' :: (a -> Maybe (a, b, a))
         -> a
         -> BinaryTree b
-unfold' f n = 
-  case f n of 
-    Just(l, c, r) -> if c == 2 then (Node Leaf 9 Leaf) else (Node Leaf 3 Leaf)
-    _             -> Leaf
+unfold' f n = t2
+  where
+    t1 = 
+      case f n of 
+        Just(l, c, r) -> Just(l, c)
+        _             -> Nothing
+    t2 = 
+      case t1 of
+        Just(l, c) -> case f l of 
+                        Just(l, c2, r) -> if c == c2 then (Node Leaf c Leaf) else (Node Leaf c Leaf)
+                        Nothing       -> Leaf
+        _          -> Leaf
+
+
+-- *can* we compare them? even with no unfold' local typeclass?
+-- no, no comparison even though we know that 
+-- due to maker' our b is in BinaryTree and BinaryTree is in the
+-- TC
+-- But wait, *we* make the tree, so can we make one and then
+-- pull out the value and play with it there?
+
+-- ok, so I got two b's but even when i can 
+-- compare them I can't do anything meaninful with them
+-- incoming a is limit
+-- we can not compare those as we get no TypeClass info
+-- unless we can somehow force that .. but even if we could
+-- that would have to be in the function definition for
+-- unfold' so it wouldn't work there anyway
+
+
+    -- (l, c, r) = f n
+    -- first = c
+    -- (l', c', r') = f l
+    -- second = c'
+
+
+
+  -- case f n of 
+  --   Just(l, c, r) -> if c == 2 then (Node Leaf c Leaf) else (Node Leaf c Leaf)
+  --   _             -> Leaf
 
 -- well, there's nothing to compare c to without
 -- assuming the type of c so yeah, it (might) be
