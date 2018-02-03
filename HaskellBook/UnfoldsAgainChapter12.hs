@@ -51,8 +51,8 @@ unfold :: (a -> Maybe(a, b, a))
        -> BinaryTree b
 unfold f x = 
   case f x of
-    Just(l, c, r) -> 
-    _             
+    Just(l, c, r) -> Node (unfold f l) c (unfold f r)
+    _             -> Leaf
 
 treeBuild :: Int
           -> BinaryTree Int
