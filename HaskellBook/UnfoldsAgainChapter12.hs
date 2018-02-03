@@ -57,7 +57,7 @@ unfold f x =
 treeBuild :: Int
           -> BinaryTree Int
 treeBuild x = 
-  unfold (\n -> if n < x then Just(n + 1, n + 1, n + 1) else Nothing) 0
+  unfold (\n -> if n < x then Just(n + 1, n, n + 1) else Nothing) 0
 
   -- START AT FUCKING ZERO
   -- GO UP
