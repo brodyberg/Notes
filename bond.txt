@@ -1,3 +1,11 @@
+2/5/2017
+
+stack ghci --ghci-options -XNoImplicitPrelude
+
+1/26/2018
+
+git rev-list --count 6d2ddd053511a..HEAD
+
 1/10/2018
 
 I'm digging how comfortable I am knowing functions and using 
