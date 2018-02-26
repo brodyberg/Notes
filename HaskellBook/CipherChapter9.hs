@@ -1,4 +1,4 @@
-module Cipher where 
+module Cipher (caesar) where 
 
 import Data.Char
 
