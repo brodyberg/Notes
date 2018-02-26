@@ -8,13 +8,14 @@ import System.Exit   (exitSuccess)
 import System.Random (randomRIO)
 
 data Puzzle = 
-  Puzzle String [Maybe Char] [Char]
+  Puzzle String [Maybe Char] [Char] Int
 
 instance Show Puzzle where
-  show (Puzzle _ discovered guessed) = 
+  show (Puzzle s discovered guessed guessCount) = 
     (intersperse ' ' $ 
      fmap renderPuzzleChar discovered)
     ++ " Guessed so far: " ++ guessed
+    ++ " Guessed Remaining: " ++ (length s) - guessCount
 
 newtype WordList = 
   WordList [String]
@@ -51,10 +52,10 @@ randomWord' :: IO String
 randomWord' = gameWords >>= randomWord
 
 charInWord :: Puzzle -> Char -> Bool
-charInWord (Puzzle s _ _) c = elem c s
+charInWord (Puzzle s _ _ _) c = elem c s
 
 alreadyGuessed :: Puzzle -> Char -> Bool
-alreadyGuessed (Puzzle _ _ g) c = elem c g
+alreadyGuessed (Puzzle _ _ g _) c = elem c g
 
 renderPuzzleChar :: Maybe Char -> Char
 renderPuzzleChar Nothing = '_'
@@ -69,12 +70,8 @@ zipper guessed targetWordChar guessChar =
   then Just targetWordChar
   else guessChar
 
--- i thought zip stopped when one list ended, so 
--- how can this work if we've never guessed?
--- *Main> zipWith (\x y -> x) [1, 2, 3, 5] "ab"
--- [1,2]
 fillInPuzzleChar :: Puzzle -> Char -> Puzzle
-fillInPuzzleChar (Puzzle targetWord filledInSoFar s) c = 
+fillInPuzzleChar (Puzzle targetWord filledInSoFar s, _) c = 
   Puzzle targetWord newFilledInSoFar (c : s)
   where 
     newFilledInSoFar = 
@@ -82,15 +79,6 @@ fillInPuzzleChar (Puzzle targetWord filledInSoFar s) c =
         -- otherwise zipper would have too many parameters for zipWith to 
         -- accept
         targetWord filledInSoFar
--- so how can this ever start when zipWith is limited to 
--- going as long as the shortest list argument and filledInSoFar 
--- starts empty?
--- because we weren't properly setting up the Empty Puzzle with 
--- a list of Nothings per each character of the targetWord
-
--- String: word we're trying to guess
--- Characters we've filled in so far
--- Letters we've guessed so far
 
 handleGuess :: Puzzle -> Char -> IO Puzzle
 handleGuess puzzle guess = do
@@ -109,18 +97,21 @@ handleGuess puzzle guess = do
     (False, _) -> do 
       putStrLn "This character wasn't in\
                \ the word, try again."
-      return (fillInPuzzleChar puzzle guess)
+      return loseTurn (fillInPuzzleChar puzzle guess)
+
+loseTurn :: Puzzle -> Puzzle
+loseTurn (Puzzle s f g t) = (Puzzle s f g (t + 1))
 
 gameOver:: Puzzle -> IO ()
-gameOver (Puzzle targetWord _ guessed) = 
-  if (length guessed) > (length targetWord) 
+gameOver (Puzzle targetWord _ guessed guessCount) = 
+  if guessCount > (length targetWord) 
   then do putStrLn "You lose!"
           putStrLn $ "The word was: " ++ targetWord
           exitSuccess
   else return ()
 
 gameWin :: Puzzle -> IO ()
-gameWin (Puzzle _ filledInSoFar _) = 
+gameWin (Puzzle _ filledInSoFar _ _) = 
   if all isJust filledInSoFar then
     do putStrLn "You win!"
        exitSuccess
@@ -139,7 +130,7 @@ runGame puzzle = forever $ do
                     \ a single letter."
 
 freshPuzzle :: String -> Puzzle
-freshPuzzle s = Puzzle s (take (length s) $ repeat Nothing) []
+freshPuzzle s = Puzzle s (take (length s) $ repeat Nothing) [] 0
 
 main :: IO ()
 main = do
