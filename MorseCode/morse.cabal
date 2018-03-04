@@ -33,7 +33,7 @@ library
 executable morse
   main-is: Main.hs
   hs-source-dirs:
-      app
+      src
   -- ghc-options: -threaded -rtsopts -with-rtsopts=-N
   ghc-options:
       -Wall -fwarn-tabs
@@ -43,10 +43,12 @@ executable morse
     , containers
     , QuickCheck
   other-modules:
-      Paths_MorseCode
+    Morse
+  -- other-modules:
+  --     Paths_MorseCode
   default-language: Haskell2010
 
-test-suite tests
+test-suite test
   type: exitcode-stdio-1.0
   main-is: tests.hs
   hs-source-dirs:
@@ -55,7 +57,7 @@ test-suite tests
   ghc-options:
       -Wall -fwarn-tabs
   build-depends:
-      MorseCode
+      morse
     , base >=4.7 && <5
     , containers
     , QuickCheck
