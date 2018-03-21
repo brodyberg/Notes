@@ -22,40 +22,30 @@ digitToWord n =
       8 -> "eight"
       9 -> "nine"
 
--- digits :: Int -> [Int]
--- digits n = 
---   (n `mod` 10) : final n 
---   where 
---     final x = 
---       case x `quot` 10 of
---         0 -> []
---         n -> digits n
+digitsG :: Int -> [Int]
+digitsG n = reverse $ go n
+  where 
+    go 0 = []
+    go n = (n `mod` 10) : digitsG (n `quot` 10)
 
+digitsF :: Int -> [Int]
+digitsF 0 = []
+digitsF n = (n `mod` 10) : digitsF (n `quot` 10)
+      
 digits'' :: Int -> [Int]
 digits'' n = 
   if n == 0 
   then []
   else (n `mod` 10) : digits'' (n `quot` 10)
 
-digits' :: Int -> [Int]
-digits' n = 
+digits_ :: Int -> [Int]
+digits_ n = 
   (n `mod` 10) : final n 
   where 
     final x = 
       case x `quot` 10 of
         0 -> []
-        w -> digits w
-
-digits :: Int -> [Int]
-digits n = reverse $ go n 
-  where 
-    go n = 
-      (n `mod` 10) : final n 
-      where 
-        final x = 
-          case x `quot` 10 of
-            0 -> []
-            n -> digits n
+        w -> digits_ w
 
 wordNumber :: Int -> String
 wordNumber n = undefined
