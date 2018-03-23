@@ -8,6 +8,12 @@ code (on os x) doing this:
 
 Then mousing over a symbol (ex. Just) will show the type in a tooltip! 
 
+got ghci working by installing ghci helper by Richard Cook
+doesn't create 'stack ghci' command but rather 'start ghci using stack' 
+which literally just starts ghci, nothing else, have to load an 
+actual *.hs file rather than 'stack ghci' which takes the current 
+file into context
+
 2/5/2017
 
 stack ghci --ghci-options -XNoImplicitPrelude
