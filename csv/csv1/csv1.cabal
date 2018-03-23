@@ -22,7 +22,10 @@ executable csv1
                        bytestring,
                        tasty,
                        tasty-hunit,
-                       mtl
+                       mtl >= 2.2 && < 3,
+                       pipes,
+                       hxt,
+                       hxt-xpath
 
 test-suite tests
   type:                exitcode-stdio-1.0

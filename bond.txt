@@ -1,3 +1,449 @@
+2/5/2017
+
+stack ghci --ghci-options -XNoImplicitPrelude
+
+1/26/2018
+
+git rev-list --count 6d2ddd053511a..HEAD
+
+1/10/2018
+
+I'm digging how comfortable I am knowing functions and using 
+operators like $ and . casually in the repl. Super neat. 
+
+ex. rangeOk $ map ord message
+
+All that comes from VigenereCipherChapter11.hs
+
+1/9/2018
+
+Can we use CipherChapter9.hs as a module and 
+purely recycle that code?
+
+the idea is to keep the Vigenere stuff in that
+file and the caesar stuff over there. 
+
+Nope, can't do that: caesar assumes we pass it
+a whole string that is uniformly shifted by 
+an index where Vigenere has a unique shift per
+index. So Vigenere is one level more complex 
+thank the caesar cipher. 
+
+1/6/2018
+
+*LogicGoats> :set +t
+*LogicGoats> 3
+3
+it :: Num t => t
+
+*LogicGoats> :set -XFlexibleInstances
+*LogicGoats> :showi language
+base language is: Haskell2010
+with the following modifiers:
+  -XNoDatatypeContexts
+  -XExtendedDefaultRules
+  -XFlexibleInstances
+  -XNoMonomorphismRestriction
+  -XNondecreasingIndentation
+  -XTypeSynonymInstances
+  
+1/5/2018
+
+How does this make sense: 
+
+*DogTypes> :t HuskyData
+HuskyData :: HuskyType a
+*DogTypes> :t HuskyData :: HuskyType String
+HuskyData :: HuskyType String :: HuskyType String
+
+Was expecting: 
+
+*DogTypes> :t HuskyData :: HuskyType String
+HuskyData :: HuskyType String
+
+fails: 
+
+*DogTypes> :t DogueDeBordeaux String :: DogueDeBordeaux String
+
+<interactive>:1:17: error:
+    Data constructor not in scope: String :: String
+
+works: 
+
+DogueDeBordeaux "foo" :: DogueDeBordeaux String
+  :: DogueDeBordeaux String
+
+data Doggies a = 
+    Husky a 
+  | Mastiff a 
+  deriving (Eq, Show)
+
+*DogTypes> :k Doggies
+Doggies :: * -> *
+*DogTypes> :k Doggies Int
+Doggies Int :: *
+
+also: 
+
+I had thought that the data ctor couldn't mention a type
+where the type ctor hadn't already mentioned it but that's
+not the case. So this fails simply because there's no a
+in any scope, not just type ctor scope: 
+
+data Foo = Bar a
+
+and this use of a type on the data ctor side works because
+there is an Int in scope: 
+
+data Foo = Bar Int
+
+does this work?
+
+data Foo = Num a => Bar a
+-- no, a still not in scope
+-- but I wonder if you can still require typeclass instances
+
+This also does not work: 
+
+data Foo a = Num a => Bar a
+<interactive>:82:14: error:
+    * Data constructor `Bar' has existential type variables, a context, or a specialised result type
+        Bar :: forall a. Num a => a -> Foo a
+        (Use ExistentialQuantification or GADTs to allow this)
+    * In the definition of data constructor `Bar'
+      In the data type declaration for `Foo'
+
+And this also doesn't work out of the box: 
+
+data Num a => Foo a = Bar a
+<interactive>:83:6: error:
+    Illegal datatype context (use DatatypeContexts): Num a =>
+
+12/15/2017
+
+Observe: 
+
+Prelude> c 3 $ c 4 $ c 5 $ c 6 7
+3
+
+The idea here is: 
+
+3 + 4 + 5 + 6
+
+as opposed to 
+
+3 * 4 + 5 * 6 where the different operators (+) and (*) are competing for precedence. 
+
+Furthermore, the idea is that, if we're in a foldr situation, and we evaluate from the 
+left side because all the precedences are the same between all the functions since all 
+the functions are const, then when we go to do this, the output is 1: 
+
+xs = [1..5] ++ undefined
+foldr const 0 xs
+
+which *incorrectly* written out looks like: 
+
+(const 1 (const 2 (const 3 (const 4 (const 5 (const ..? 0))))))
+
+If you wrote it out this way, and I have many times, you'd assume the result would be: 
+
+const ..? 0 which is exception
+
+but if we instead look at it like 
+
+const :: a -> b -> a
+const x _ = x
+
+and: 
+
+const 1 _ 
+
+Then the answer should be 1. 
+
+12/14/2017
+
+Prelude> let xs = [1..3] ++ undefined
+Prelude> (const 1 (const 2 (const 3 (const undefined 0))))
+1
+Prelude> xs
+[1,2,3*** Exception: Prelude.undefined
+CallStack (from HasCallStack):
+  error, called at libraries\base\GHC\Err.hs:79:14 in base:GHC.Err
+  undefined, called at <interactive>:1:20 in interactive:Ghci1
+Prelude> (const 1 (const 2 (const 3 0)))
+1
+Prelude> foldr const 0 xs
+1
+Prelude> (const 1 (const 2 (const 3 (const undefined 0))))
+1
+Prelude> (const 1 (const 2 (const 3 (const 5 0))))
+1
+Prelude> const 1 undefined
+1
+Prelude> const undefined 1
+*** Exception: Prelude.undefined
+CallStack (from HasCallStack):
+  error, called at libraries\base\GHC\Err.hs:79:14 in base:GHC.Err
+  undefined, called at <interactive>:11:7 in interactive:Ghci8
+Prelude> (const 1 (const undefined 3))
+1
+Prelude> (const 1 (const undefined undefined))
+1
+Prelude> 2^2^3
+256
+Prelude> 2^(2^3)
+256
+Prelude> (2^2)^3
+64
+Prelude> const 1 (const undefined undefined)
+1
+Prelude> :i const
+const :: a -> b -> a    -- Defined in `GHC.Base'
+Prelude> fc = flip const
+Prelude> fc undefined 1
+1
+Prelude> (fc 1 (fc 2 (fc 3 4)))
+4
+Prelude> (fc 1 (fc 2 (fc 3 undefined)))
+*** Exception: Prelude.undefined
+CallStack (from HasCallStack):
+  error, called at libraries\base\GHC\Err.hs:79:14 in base:GHC.Err
+  undefined, called at <interactive>:25:19 in interactive:Ghci17
+Prelude> (fc undefined (fc 2 (fc 3 4)))
+4
+Prelude>
+
+
+12/4/2017
+
+http://www.stephendiehl.com/posts/haskell_2018.html
+https://futtetennismo.me/posts/docker/2017-11-24-docker-haskell-executables.html
+
+12/2/2017
+
+Haskell PDBs: https://ghc.haskell.org/trac/ghc/ticket/12397
+
+11/30/2017
+
+Prelude> mySqr = [x^2 | x <- [1..10]]
+Prelude> mySqr
+[1,4,9,16,25,36,49,64,81,100]
+Prelude> [x | x <- mySqr, rem x 2 == 0]
+[4,16,36,64,100]
+Prelude> [(x,y) | x <- mySqr, y <- mySqr, x < 50, y > 50]
+[(1,64),(1,81),(1,100),(4,64),(4,81),(4,100),(9,64),(9,81),(9,100),(16,64),(16,81),(16,100),(25,64),(25,81),(25,100),(36,64),(36,81),(36,100),(49,64),(49,81),(49,100)]
+Prelude> take 5 [(x,y) | x <- mySqr, y <- mySqr, x < 50, y > 50]
+[(1,64),(1,81),(1,100),(4,64),(4,81)]
+Prelude> :i elem
+class Foldable (t :: * -> *) where
+  ...
+  elem :: Eq a => a -> t a -> Bool
+  ...
+        -- Defined in `Data.Foldable'
+infix 4 `elem`
+Prelude> elem 'a' "abracadabra"
+True
+Prelude> [x | x <- "Three Letter Acronym", elem x ['A'..'Z']]
+"TLA"
+Prelude> :l AcrosChapter9.hs
+[1 of 1] Compiling Acros            ( AcrosChapter9.hs, interpreted )
+Ok, modules loaded: Acros.
+*Acros> acros "Three Letter Acronym"
+"TLA"
+*Acros> acros "National Aeronautics and Space Administration"
+"NASA"
+
+11/26/2017
+
+How about a Haskell "get things done" library that is 
+not physically monolithic but is of a uniform design?
+
+The "where do i get started to do real work" library set?
+
+11/20/2017
+
+We could write, with Parsec a parser for .gitignore files
+such that if you provided a file tree, and zero or more
+.gitignore files we could provide you with a tree that 
+represents all the items that are not ignored. 
+
+The goal though would be to use that returned tree, in my 
+case, for a buildtime validator. So maybe for that you 
+could then call a function which yields all the files 
+stored within the result tree.
+
+comment: #
+multi-line comment start/end: ###
+wildcard: *
+alternation: [] - we could generate the alternations
+directory: /
+glob: **
+I think it's case-sensitive
+rooting: starting with /
+this is a folder: anything and /
+  folder means: walk into tree
+  file means:
+barenames for file anywhere: msbuild.log
+
+every rule is: 
+  walk 
+    zero 
+    every
+    specific 
+    exact, fuzzy or alternating named directories into tree
+  and delete
+    exact, fuzzy or alternating name
+  where name is file or directory
+
+** not sure if .gitignore cares whether the thing is a 
+  file or directory. 
+
+
+So we get the given tree (how to users make this? and what is
+it?) Then we get the [GitIgnore] and generate the list of 
+items we'll slice out of our tree. We will then traverse the
+tree, and each item in our list is an item to remove from the 
+tree. And then the user needs to not only expect but be 
+looking forward to using the return value. That could just
+be a Rose Tree.
+
+MVP: 
+take path and one .gitignore with just names
+generate tree
+parse gitignore for the filenames
+traverse the tree, removing each instance of name
+return RoseTree representing pruned tree
+
+11/19/2017
+
+Essentially I'm saying: I'll use a parser I built to parse your XPath to build a parser for 
+XML that will implement your XPath. Maybe I could even figure out how to eliminate the intermediate
+step of parsing their XPath into an AST I then read in order to build a parser which implements
+the semantics of their XPath. 
+
+11/18/2017
+
+I think there should be a way to use expertise built around XPath in Haskell. Right now
+I can't find a way to use XPath but instead I see libraries built on their own combinators
+etc. Theoretically what we could do is provide an api accepting strings in XPath format
+which we then parse using Parsec but which themselves create Parsec parsers which 
+implement the intention of the XPath. 
+
+11/11/2017
+
+:browse! will tell you where you might import something from
+
+Super valuable: 
+
+*Matching> :browse Data.Maybe
+Data.Maybe.catMaybes :: [Maybe a] -> [a]
+Data.Maybe.fromJust :: Maybe a -> a
+Data.Maybe.fromMaybe :: a -> Maybe a -> a
+Data.Maybe.isJust :: Maybe a -> Bool
+Data.Maybe.isNothing :: Maybe a -> Bool
+Data.Maybe.listToMaybe :: [a] -> Maybe a
+Data.Maybe.mapMaybe :: (a -> Maybe b) -> [a] -> [b]
+maybe :: b -> (a -> b) -> Maybe a -> b
+Data.Maybe.maybeToList :: Maybe a -> [a]
+data Maybe a = Nothing | Just a
+*Matching> :browse! Data.Maybe
+-- not currently imported
+Data.Maybe.catMaybes :: [Maybe a] -> [a]
+Data.Maybe.fromJust :: Maybe a -> a
+Data.Maybe.fromMaybe :: a -> Maybe a -> a
+Data.Maybe.isJust :: Maybe a -> Bool
+Data.Maybe.isNothing :: Maybe a -> Bool
+Data.Maybe.listToMaybe :: [a] -> Maybe a
+Data.Maybe.mapMaybe :: (a -> Maybe b) -> [a] -> [b]
+Data.Maybe.maybeToList :: Maybe a -> [a]
+-- imported via Prelude
+maybe :: b -> (a -> b) -> Maybe a -> b
+Just :: a -> Maybe a
+data Maybe a = Nothing | Just a
+Nothing :: Maybe a
+
+Also, here's the ghci command to show what we've defined at 
+the console: 
+
+*Matching> :show bindings
+isItTwo :: Integer -> Bool = _
+it :: Maybe Integer = Just 4
+
+What's interesting there is it which I didn't even give a name to. 
+
+11/10/2017 later...
+
+Multi-line in ghci: 
+
+Prelude> :{
+Prelude| let trip :: Integer -> Integer
+Prelude|     trip = \x -> x * 3
+Prelude| :}
+Prelude> :t trip
+trip :: Integer -> Integer
+
+bonkers! 
+
+11/10/2017
+
+Playing around with forM and mapM: 
+
+<interactive>:1:1: error: Variable not in scope: forM
+*Main> :m Control.Monad
+Prelude Control.Monad> forM [1,2,3] (\n -> Some n)
+
+<interactive>:3:21: error:
+    Data constructor not in scope: Some :: Integer -> m b
+Prelude Control.Monad> :t Maybe
+
+<interactive>:1:1: error:
+    * Data constructor not in scope: Maybe
+    * Perhaps you meant variable `maybe' (imported from Prelude)
+Prelude Control.Monad> :m +Data.Maybe
+Prelude Control.Monad Data.Maybe> forM [1,2,3] (\n -> Some n)
+
+<interactive>:6:21: error:
+    Data constructor not in scope: Some :: Integer -> m b
+Prelude Control.Monad Data.Maybe> :browse Data.Maybe
+catMaybes :: [Maybe a] -> [a]
+fromJust :: Maybe a -> a
+fromMaybe :: a -> Maybe a -> a
+isJust :: Maybe a -> Bool
+isNothing :: Maybe a -> Bool
+listToMaybe :: [a] -> Maybe a
+mapMaybe :: (a -> Maybe b) -> [a] -> [b]
+maybe :: b -> (a -> b) -> Maybe a -> b
+maybeToList :: Maybe a -> [a]
+data Maybe a = Nothing | Just a
+Prelude Control.Monad Data.Maybe> forM [1,2,3] (\n -> Just n)
+Just [1,2,3]
+Prelude Control.Monad Data.Maybe> mapM (\n -> Just n) [1,2,3]
+Just [1,2,3]
+
+11/5/2017
+
+Prelude> :show bindings
+x :: Num t => t = _
+y :: Num a => a = _
+w :: Num a => a = _
+z :: Num a => a -> a = _
+f :: Fractional a => a = _
+x' :: [Char] = _
+y' :: [Char] = _
+z' :: [Char] = _
+f' :: [Char] = _
+$trModule :: GHC.Types.Module = _
+bigNum :: Num a => a = _
+
+10/30/2017
+
+Spent the week: thinking about the Either Monad as a model for operations 
+that need to be sequenced but are in the context of failure. 
+
+Spent the weekend: first heard and began reading about Indexed Monads
+which appear to be Monad sequencing operations in the context of a
+state-machine representing the states of some external system. 
+
 10/23/2017
 
 I'm also going through Haskell Programming from First Principles

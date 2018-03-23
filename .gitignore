@@ -1,3 +1,9 @@
 bin/
 obj/
 .vscode
+# Cabal build artifacts
+dist/
+.cabal-sandbox/
+cabal.sandbox.config
+.stack-work/
+.vscode
