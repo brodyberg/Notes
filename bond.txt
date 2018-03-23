@@ -1,3 +1,13 @@
+3/23/2018
+
+successfully got tooltips with actual type information to appear in Haskell 
+code (on os x) doing this: 
+1. install haskelly vs code extension
+2. stack install intero QuickCheck stack-run
+3. stack build intero QuickCheck stack-run
+
+Then mousing over a symbol (ex. Just) will show the type in a tooltip! 
+
 2/5/2017
 
 stack ghci --ghci-options -XNoImplicitPrelude
