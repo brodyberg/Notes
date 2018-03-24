@@ -9,8 +9,8 @@ digitToWord n =
   else Just (translate n)
   where 
     translate :: Int -> String
-    translate n = 
-      case n of
+    translate x = 
+      case x of
       0 -> "zero"
       1 -> "one"
       2 -> "two"
@@ -22,30 +22,41 @@ digitToWord n =
       8 -> "eight"
       9 -> "nine"
 
-digitsG :: Int -> [Int]
-digitsG n = reverse $ go n
+digitsBORKED :: Int -> [Int]
+digitsBORKED n = reverse $ go n
+--digits n = go n
   where 
     go 0 = []
-    go n = (n `mod` 10) : digitsG (n `quot` 10)
+    go x = (x `mod` 10) : digitsBORKED (x `quot` 10)
+-- ex. digits 542
+--    >[4,5,2]
+-- ex. digits 5421
+--    >[2,5,4,1]
 
-digitsF :: Int -> [Int]
-digitsF 0 = []
-digitsF n = (n `mod` 10) : digitsF (n `quot` 10)
-      
-digits'' :: Int -> [Int]
-digits'' n = 
-  if n == 0 
-  then []
-  else (n `mod` 10) : digits'' (n `quot` 10)
+-- *WordNumber> reverse $ (542 `mod` 10) : ((542 `quot` 10) `mod` 10) : (((542 `quot` 10) `quot` 10) `mod` 10) : []
+-- [5,4,2]
+-- *WordNumber> reverse $ (5421 `mod` 10) : ((5421 `quot` 10) `mod` 10) : (((5421 `quot` 10) `quot` 10) `mod` 10) : ((((5421 `quot` 10) `quot` 10) `quot` 10) `mod` 10) : []
+-- [5,4,2,1]
 
-digits_ :: Int -> [Int]
-digits_ n = 
-  (n `mod` 10) : final n 
-  where 
-    final x = 
-      case x `quot` 10 of
-        0 -> []
-        w -> digits_ w
+-- goal: (recursive) thing that without reverse will make 5421 into 1245
+theDigits' :: Int -> [Int]
+theDigits' 0 = []
+theDigits' n = n `mod` 10 : theDigits' (n `quot` 10)
 
-wordNumber :: Int -> String
-wordNumber n = undefined
+theDigits :: Int -> [Int]
+theDigits n = 
+  n `mod` 10 : 
+    case (n `quot` 10) of  
+      0 -> []
+      x -> theDigits x
+
+-- theDigits 0 -> []
+
+-- fmap digitToWord $ theDigits 1234
+
+-- the conclusion is: we aren't descending in quot quot quot quot 
+-- mod manner somehow, figure that out. s
+
+-- wordNumber :: Int -> String
+-- wordNumber n = undefined
+--  fmap digitToWord $ digits n
