@@ -1,0 +1,98 @@
+-- Haskell Playground 1.0
+runState stackManip [5,8,2,1]
+
+[4] >>= \n -> [n,5]
+
+runState stackManip2
+
+runState stackManip3 [5,8,2,1]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--Left2 "foo"
+
+-- X2 Int
+
+
+
+
+
+
+
+
+
+
+
+
+--Foo 1
+--
+--x = Foo $ \n -> n + 1
+--x
+--
+--
+--
+--
+--1 + 1
+--
+--x = Left "uh oh"
+--y = Right 5
+--z = Right 9
+--
+--y >>= \n -> return(n + 5)
+--y >> z
+--y >>= \n -> return (n)
+--y >>= \n -> x
+--
+--Left "boom" >>= \n -> return (n + 1)
+--Right 100 >>= \n -> return(n + 1)
+--
+--Right [100] >>= \n -> return(33:n)
+--
+--Right (4,'a') >>= \(l,r) -> return (l,r,5) 
+
+
+--add4 :: Num a -> Either a
+--
+--
+--
+----  case n where
+----  4 -> Right 4 
+----  _ -> Left "uh oh"
+--
+--n + 4
+--
+--y >>= (
+--
+
+
+

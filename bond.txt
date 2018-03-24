@@ -1,3 +1,19 @@
+3/23/2018
+
+successfully got tooltips with actual type information to appear in Haskell 
+code (on os x) doing this: 
+1. install haskelly vs code extension
+2. stack install intero QuickCheck stack-run
+3. stack build intero QuickCheck stack-run
+
+Then mousing over a symbol (ex. Just) will show the type in a tooltip! 
+
+got ghci working by installing ghci helper by Richard Cook
+doesn't create 'stack ghci' command but rather 'start ghci using stack' 
+which literally just starts ghci, nothing else, have to load an 
+actual *.hs file rather than 'stack ghci' which takes the current 
+file into context
+
 2/5/2017
 
 stack ghci --ghci-options -XNoImplicitPrelude
