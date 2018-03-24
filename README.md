@@ -23,7 +23,9 @@ Examples:
 
 * Haskell Language Extensions change the syntax of the file 
   you are looking at making it tough to figure out the syntax you
-  know from the syntax the extension has introduced. 
+  know from the syntax the extension has introduced. Worse, "modern"
+  Haskell involves having a [working knowledge of more extensions
+  than one might imagine](http://dev.stephendiehl.com/hask/#the-benign). 
 * Like many Functional languages, Haskell reading requires working
   familiarity with a basic set of functions before you can even 
   tell yourself basic stories about what some code is doing. Examples
@@ -41,12 +43,12 @@ Examples:
 * Haskell the language and Haskell the culture places a huge amount 
   of emphasis on abstraction. The result of this is that both commonly
   discuss and implement levels of abstraction unheard of in other
-  languages or communities. 
-* In my experience, getting into Haskell with previous language           
-  experience did not prepare me for the abstractions, correctness and     
-  re-usability the language and libraries commonly express. 
+  languages or communities. Examples of this are the abstraction
+  ladder from value to function and then Functor, Applicative and Monad, 
+  and things like Kinds. 
+* In my experience, getting into Haskell with previous language experience did not prepare me for the abstractions, correctness and re-usability the language and libraries commonly express. 
 
 By keeping the above in mind, and working on Haskell every single
-day I could, and by subscribing to every [Haskell mailing-list](https://www.haskell.org/mailing-lists), podcast and 
+day I could, and by subscribing to every [Haskell mailing-list](https://www.haskell.org/mailing-lists), [podcast](https://www.haskellcast.com/) and 
 social-media feed, I have begun my journey in a way that I feel 
 will lead to Haskell in production. 
