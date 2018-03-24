@@ -1,6 +1,5 @@
 module WordNumber where
 
---import Data.List (intersperse)
 import Data.List (intercalate)
 import Data.Maybe
 
@@ -29,18 +28,16 @@ digitToWord n =
 -- *WordNumber> reverse $ (5421 `mod` 10) : ((5421 `quot` 10) `mod` 10) : (((5421 `quot` 10) `quot` 10) `mod` 10) : ((((5421 `quot` 10) `quot` 10) `quot` 10) `mod` 10) : []
 -- [5,4,2,1]
 
-theDigits :: Int -> [Int]
-theDigits n = 
+digits :: Int -> [Int]
+digits n = 
   if n < 0
   then []
   else 
     n `mod` 10 : 
       case (n `quot` 10) of  
         0 -> []
-        x -> theDigits x
-
--- fmap digitToWord $ theDigits 1234
+        x -> digits x
 
 wordNumber :: Int -> String
 wordNumber n = 
-  intercalate "-" $ catMaybes $ fmap digitToWord $ reverse $ theDigits n
+  intercalate "-" $ catMaybes $ fmap digitToWord $ (reverse . digits) n
