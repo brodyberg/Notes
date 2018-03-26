@@ -1,5 +1,43 @@
 3/25/2018
 
+Tried for a long time to get to a point of confidence with 
+generators within properties in QuickCheck (in the WordNumber
+module of the addition project) but I can't get past various
+type errors. 
+
+What I can get working: 
+  Inventing a round-trip for WordNumber so that I can 
+  have a property to test with QuickCheck. I felt proud
+  of making that happen. 
+
+  main = quickCheck ...
+  main = verboseCheck ...
+
+  prop_numberWordNumber :: Property
+  prop_numberWordNumber = 
+    forAll zeroThroughNineDigit
+    (\c -> (numberWord $ wordNumber c) == c)
+
+  prop_wordNumberWord :: Property
+  prop_wordNumberWord = 
+    forAll zeroThroughNineWord
+    (\w -> (wordNumber $ numberWord w) == w)
+
+The two problems with these are: 
+  1. They run 100 tests but there aren't that many inputs even
+  2. One digit or one word-number tests might be better focused on the 
+     helpers rather than the main wrapper functions wordNumber
+     and numberWord
+
+The main thing I can't get working is: 
+  With numbers that are NonNegative (there seems to be a helper
+  for this in the QuickCheck library) generate a lot of tests
+  that we can use the round-trip property to validate. 
+
+  The main issue is generating the non-negative data. 
+
+3/24/2018
+
 Have had a hard time lately: I've recently learned
 that it's possible to run Haskell not only in Azure Functions
 but also Azure Paas V1 *and* Paas V2 with zip deployment. 
