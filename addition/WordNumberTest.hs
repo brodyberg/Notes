@@ -2,7 +2,6 @@ module WordNumberTest where
 
 import Test.Hspec
 import Test.QuickCheck
--- import Test.QuickCheck.Modifiers
 import WordNumber 
   (digitToWord, digits, numberWord, wordNumber)
 
@@ -16,16 +15,6 @@ zeroThroughNineWord =
             "six"    ,"seven", "eight",
             "nine"]
 
--- getNonNegative :: NonNegative Int
--- getNonNegative = elements []
-
--- prop_all_numberWordNumber :: Property
--- prop_all_numberWordNumber = 
--- prop_numberWordNumber :: Property
--- prop_numberWordNumber = 
---   forAll zeroThroughNineDigit
---   (\c -> (numberWord $ wordNumber c) == c)
-  
 prop_numberWordNumber :: Property
 prop_numberWordNumber = 
   forAll zeroThroughNineDigit
@@ -75,56 +64,7 @@ main =
         wordNumber 10 `shouldBe` "one zero"
       it "returns \"one two three four\" for 1234" $ do
         wordNumber 1234 `shouldBe` "one two three four"
-      -- it "x: try to do quickcheck" $ do
-      --   property prop_x
       it "prop: prop_numberWordNumber" $ do
         property prop_numberWordNumber
       it "prop: prop_wordNumberWord" $ do
         property prop_wordNumberWord
-      -- it "y: try to do quickcheck" $ do
-      --   property prop_y
-      -- it "z: try to do quickcheck" $ do
-      --   property prop_z
-
-
-      -- it "can round-trip using number -> word -> number" $ do
-    --   property prop_toNumberIsReversible
-    -- it "can round-trip using word -> number -> word" $ do
-    --   property prop_toNumberIsReversible2
-
-
--- prop_x :: Int -> Bool
--- prop_x n = (numberWord (wordNumber n)) == n
-
--- prop_y :: Gen Result -- Property
--- prop_y = do
---   word <- sample zeroThroughNineWord
---   return $ if (wordNumber (numberWord word)) == word
---     then succeeded :: Result
---     else failed { reason = "bork" } :: Result
-
--- prop_z :: Gen Result
--- prop_z = do
---   n <- arbitrary :: Gen Int
---   return $ 
---     if ((numberWord (wordNumber n)) == n)
---     then Success { output = "brody" }
---     else Failure { reason = "z bork" }
-    -- then succeeded :: Result
-    -- else failed { reason = "bork" } :: Result
-
--- prop_toNumberIsReversible2 :: Property
--- prop_toNumberIsReversible2 = 
---   forAll zeroThroughNineWord
---   (\w -> (wordNumber $ numberWord w) == w)
-
--- prop_conversionReversible :: Property
--- prop_conversionReversible = 
---   forAll zeroThroughNineDigit
---   (\c -> digits c)
-
-  --(\d -> ((wordNumber d) >>= numberWord) == d)
-
--- prop_toNumberIsReversible :: Int -> Bool
--- prop_toNumberIsReversible x = 
---   (numberWord $ wordNumber x) == x
