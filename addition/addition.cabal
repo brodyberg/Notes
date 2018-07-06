@@ -9,7 +9,10 @@ cabal-version:    >=1.10
 
 library
   exposed-modules:    Addition
+                    , WordNumber
+                    , WordNumberTest
                     , IncTimesTest
+                    , Chapter14Exercises
   ghc-options:        -Wall -fwarn-tabs
   build-depends:      base >=4.7 && < 5
                     , hspec

@@ -4,28 +4,51 @@ Me learning Haskell. The model here is "progress every day."
 
 ## Content
 
-What you see here is me going through [Real World Haskell](http://book.realworldhaskell.org/read/). You can find work from Chapter 5 
-and Chapter 16 so far. 
+The HaskellBook folder is me going through the [Haskell Book](http://haskellbook.com/)
 
-## Credits
+Other stuff is from [Real World Haskell](http://book.realworldhaskell.org/), 
+but is also from before I realized I needed to step back from that and learn
+the fundamentals of Haskell from the ground up, from a "can actually do things" 
+perspective rather than the "I read [LYAH](http://learnyouahaskell.com/)"
+and think I know things perspective. 
 
-100% of this code is from Real World Haskell (with modifications like 
-making some functions match on postfix data constructors rather than infix
-and exposing some things from PrettyJSON to main.hs in the Haskell for Mac 
-version). 
 
-## [Haskell for Mac](http://haskellformac.com/)
+## Notes to Haskell Novices
 
-To see Chapter 5 in Haskell for Mac, open up PrettyJSON.hsproj in Haskell for Mac. 
-This will open up a set of files including main.hs which will be running a simple 
-JSON renderer that you can see in the Console output for Haskell for Mac. 
+Haskell has many features not found in other languages and for
+that reason and others requires a much firmer learning approach 
+than other languages seem to require. 
 
-## [VS Code](https://code.visualstudio.com/)
+Examples: 
 
-To see Chater 5 in VS Code, open VS Code and run ctrl-k-o to open the csv/csv1/src 
-folder. I can't remember which Haskell integration I installed, but after you install 
-one of them (Haskelly or Haskero) you can to ctrl-shift-p and execute Stack:GHCI 
-when you have the PrettyJSON.hs file open. Neat. 
+* Haskell Language Extensions change the syntax of the file 
+  you are looking at making it tough to figure out the syntax you
+  know from the syntax the extension has introduced. Worse, "modern"
+  Haskell involves having a [working knowledge of more extensions
+  than one might imagine](http://dev.stephendiehl.com/hask/#the-benign). 
+* Like many Functional languages, Haskell reading requires working
+  familiarity with a basic set of functions before you can even 
+  tell yourself basic stories about what some code is doing. Examples
+  of this include functions like '$', '.', along with data constructors,
+  type constructors, tuple constructors, matching etc. 
+* Thinking that "Haskell is a Lazy language" really misses the 
+  reality that instead of being "eager" or "lazy" Haskell really
+  is giving the programmer a much more nuanced and rich control 
+  over evaluation techniques than is typically enjoyed in other
+  languages. 
+* Mathematical concepts, usually hidden in other languages, are 
+  not only prominent in Haskell, but are extremely valuable so as to 
+  be unavoidable in practice. Examples: the Lambda Calculus, functions, 
+  Monoid, Functor, Applicative, Monad and many more. 
+* Haskell the language and Haskell the culture places a huge amount 
+  of emphasis on abstraction. The result of this is that both commonly
+  discuss and implement levels of abstraction unheard of in other
+  languages or communities. Examples of this are the abstraction
+  ladder from value to function and then Functor, Applicative and Monad, 
+  and things like Kinds. 
+* In my experience, getting into Haskell with previous language experience did not prepare me for the abstractions, correctness and re-usability the language and libraries commonly express. 
 
-ps. Those are Windows keyboard shortcuts
-
+By keeping the above in mind, and working on Haskell every single
+day I could, and by subscribing to every [Haskell mailing-list](https://www.haskell.org/mailing-lists), [podcast](https://www.haskellcast.com/) and 
+social-media feed, I have begun my journey in a way that I feel 
+will lead to Haskell in production. 

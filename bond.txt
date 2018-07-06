@@ -1,3 +1,100 @@
+3/25/2018
+
+Tried for a long time to get to a point of confidence with 
+generators within properties in QuickCheck (in the WordNumber
+module of the addition project) but I can't get past various
+type errors. 
+
+What I can get working: 
+  Inventing a round-trip for WordNumber so that I can 
+  have a property to test with QuickCheck. I felt proud
+  of making that happen. 
+
+  main = quickCheck ...
+  main = verboseCheck ...
+
+  prop_numberWordNumber :: Property
+  prop_numberWordNumber = 
+    forAll zeroThroughNineDigit
+    (\c -> (numberWord $ wordNumber c) == c)
+
+  prop_wordNumberWord :: Property
+  prop_wordNumberWord = 
+    forAll zeroThroughNineWord
+    (\w -> (wordNumber $ numberWord w) == w)
+
+The two problems with these are: 
+  1. They run 100 tests but there aren't that many inputs even
+  2. One digit or one word-number tests might be better focused on the 
+     helpers rather than the main wrapper functions wordNumber
+     and numberWord
+
+The main thing I can't get working is: 
+  With numbers that are NonNegative (there seems to be a helper
+  for this in the QuickCheck library) generate a lot of tests
+  that we can use the round-trip property to validate. 
+
+  The main issue is generating the non-negative data. 
+
+3/24/2018
+
+Have had a hard time lately: I've recently learned
+that it's possible to run Haskell not only in Azure Functions
+but also Azure Paas V1 *and* Paas V2 with zip deployment. 
+
+Not only is this a huge deal since those are the vernacular
+systems I work with at work, but I alredy know how to automate
+the compliant deployment of Azure Functions with Zip deployment
+so Haskell suddenly seems so close and yet I have so much to 
+work through in the Haskell Book. 
+
+In that context I am working through Chapter 14 which poses the
+following humbling challenge: go back to chapter 8 and implement: 
+
+digits :: Int -> [Int]
+
+where the input is a number and the output is simply a list
+of those numbers individually like: 
+
+> digits 542
+> [5, 4, 2]
+
+For some reason, when I do this the numbers come out in the 
+wrong order. But rather than trivially regarding this as a bug
+I began wondering how this could even be a thing since a) my
+code is so simple and b) by this time I know how to Haskell. 
+Right? Right??? So at this point rather than translating the
+new feeling of closeness of Haskell in the shop toward a push
+to drive through the Haskell Book I have this haunting over-
+thinking thing going on about whether I am really learning
+this stuff. 
+
+What needs to happen: 
+- Shut up and drain digits :: Int -> [Int] of issues to the
+  point I understand it 
+- Know that I am still learning
+- Know that I am getting there
+- Know that I have plenty to fallback on even if we can't
+  do Haskell right this minute at work, I *am* closer than
+  ever
+
+Haskelly on Windows never would show tooltips. It would get 
+stuck at a tooltip saying "Loading...". Haskelly seems to work
+on OS X just fine. To get tooltips I endedup installing the 
+Haskero extension which also added a number of interesting and
+valuable warnings in the Problems output and successfully 
+shows tooltips which is great. 
+
+lol, but by uninstalling Haskelly lost ctrl-shift-P stack ghci
+can hack this back by starting terminal in code and just running
+stack ghci foo.hs
+
+*WordNumber> reverse $ (542 `mod` 10) : ((542 `quot` 10) `mod` 10) : (((542 `quot` 10) `quot` 10) `mod` 10) : []
+[5,4,2]
+
+Also, at the end of the day any speedbump like this is a learning
+lesson which is the whole reason we got into this game. 
+
 3/23/2018
 
 successfully got tooltips with actual type information to appear in Haskell 
@@ -28,7 +125,7 @@ I'm digging how comfortable I am knowing functions and using
 operators like $ and . casually in the repl. Super neat. 
 
 ex. rangeOk $ map ord message
-
+ 
 All that comes from VigenereCipherChapter11.hs
 
 1/9/2018
