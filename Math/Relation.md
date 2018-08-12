@@ -12,6 +12,16 @@ Any subset of a Cartesian product.
 
 The application appears to be that the pairs have a *relationship* rather than being randomly assigned to the pairing. The relationship is from a rule that may or may not be a function. 
 
+## How to Read
+
+We read ```x ~ y``` as: "```x``` is equivalent to ```y```"
+
+## Physical Analogies
+
+For sets A and B, a function could be assigned a rule which  moves items from A to B. So *movement* between sets would be the physical analogy to that situation. 
+
+For relations, particularly the Equivalence Relation, the analogy is constrained to a single set. In this case, we are using some rule to establish an equivalence relation to partition a single set. 
+
 ### When pairs are from only A: 
 
 If the pairs are only from A, they are a subset of the Cartesian product of A, written as: A^2 = A x A. The Cartesian product of A would be all possible pairs of A, so it stands to reason that some chosen set of pairs would be a subset, even an equal subset. 
