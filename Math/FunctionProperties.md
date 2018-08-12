@@ -16,7 +16,29 @@ For the below, the function ```f``` we are talking about is from the set ```A```
 * Co-domain: items ```f``` places in ```B```
 * Target: see co-domain
 * Image: 
-* 
+* ```Id```<sub>```A```</sub>: "The identity map of ```A```"
+
+# Pro-tip on 'types': 
+
+All functions here are 'typed.' This means that any function you see, say ```f``` or ```Id```<sub>```A```</sub> has an input type and an output type. Those input and output types for any particular function could be different. However, whatever types they are will be be compatible with the type involved in any definition with which they are involved. 
+
+Example: the left and right inverse definitions below involve two items being equated across an ```=``` sign: 
+
+```g``` ∘ ```f``` =  ```Id```<sub>```A```
+
+The quantity on the left of the equal sign is: 
+
+```g``` ∘ ```f```
+
+The type of that quantity is: ```function```
+
+The quantity on the right of the equal sign is: 
+
+```Id```<sub>```A```
+
+The type of that quantity is: ```function```
+
+It would not be correct to equate two things of different types, and we see this definition follows that rule. 
 
 ## Injective
 
