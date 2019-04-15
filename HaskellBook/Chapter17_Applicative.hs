@@ -2,8 +2,22 @@
 -------------
 import Data.Monoid
 import Control.Applicative(liftA2)
+import Control.Monad.Identity
 import Data.Char
 import qualified Data.Map as Map(lookup, fromList)
+
+newtype Identity2 a = Identity2 a
+  deriving (Eq, Ord, Show)
+  
+instance Functor Identity2 where
+--  fmap f x = Identity2 f x 
+  fmap f (Identity2 x) = Identity2 (f x)
+   
+instance Applicative Identity2 where
+  pure = Identity2
+  (<*>) (Identity2 f) (Identity2 x) = fmap f (Identity2 x)
+--  (<*>) (Identity2 f) (Identity2 x) = Identity2 $ f x
+--  (<*>) (Identity2 f) (Identity2 x) = fmap
 
 f x = lookup x [(3, "hello"), (4, "julie"), (5, "kbai")]
 
@@ -11,8 +25,18 @@ g y = lookup y [(7, "sup?"), (8, "chris"), (9, "aloha")]
 h z = lookup z [(2, 3), (5, 6), (7, 8)]
 m x = lookup x [(4, 10), (8, 13), (1, 9001)]
 
+--let c (x:xs) = toUpper x:xs
 --let c (x:xs) = toUpper x:xs-------------
 -- Interactive: 
+
+fmap (+2) $ Identity2 3
+(++) <$> Identity2 "foo" <*> Identity2 "bar"
+
+Identity 3
+
+const <$> Identity [9, 9, 9] <*> Identity [1, 2, 3]
+const <$> Identity [1, 2, 3] <*> Identity [9, 9, 9]
+const <$> [1,2,3] <*> [9,9,9]
 
 x = liftA2 (++)
 
