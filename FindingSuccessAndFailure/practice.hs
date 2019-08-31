@@ -1,8 +1,5 @@
 function x y = if (x > y) then (x + 10) else y
 
--- function2 :: Integer -> Integer -> Integer
--- function2 x y = if (x > y) then (x + 10) else y
-
 function2 :: Integer -> Integer -> Integer
 function2 x y = 
   case (x > y) of
@@ -14,9 +11,6 @@ absVal x =
   case (x > 0) of 
     True -> x
     _ -> negate x
-
--- null username
--- null password
 
 validateUsernameAndPassword :: String -> String -> String
 validateUsernameAndPassword username password = 
