@@ -1,3 +1,6 @@
+import Data.Char (isAlpha)
+import Data.List (sort)
+
 function x y = if (x > y) then (x + 10) else y
 
 function2 :: Integer -> Integer -> Integer
@@ -30,7 +33,35 @@ safeHead :: [a] -> Maybe a
 safeHead [] = Nothing
 safeHead (x:xs) = Just x
 
+isAnagram :: String -> String -> Bool
+isAnagram word1 word2 = (sort word1) == (sort word2)
 
+isWord :: String -> Maybe String
+isWord word = 
+  case null word of 
+    True -> Nothing
+    False -> 
+      case (all isAlpha word) of
+        False -> Nothing
+        True -> Just word
 
+checkAnagram :: String -> String -> String
+checkAnagram word1 word2 = 
+  case (isWord word1) of 
+    Just left -> 
+      case (isWord word2) of
+        Just right -> 
+          case (isAnagram left right) of
+            True -> left ++ " and " ++ right ++ " are anagrams"
+            False -> left ++ " and " ++ right ++ " are NOT anagrams"
+        Nothing -> "Second word invalid"
+    Nothing -> "First word invalid"
 
-
+main :: IO ()
+main = 
+  do 
+    putStr "Please enter a word.\n"
+    word1 <- getLine
+    putStr "Please enter a second word.\n"
+    word2 <- getLine
+    print (checkAnagram word1 word2)
