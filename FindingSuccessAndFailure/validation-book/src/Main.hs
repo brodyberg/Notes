@@ -1,6 +1,6 @@
 module Main where
 
-import Data.Char
+import Data.Char (isAlphaNum, isSpace)
 
 checkPasswordLength :: String -> Maybe String
 checkPasswordLength password = 
@@ -13,6 +13,13 @@ requireAlphaNum xs =
   case (all isAlphaNum xs) of 
     True -> Just xs
     _ -> Nothing
+
+cleanWhitespace :: String -> Maybe String
+cleanWhitespace "" = Nothing
+cleanWhitespace (x:xs) =
+  case (isSpace x) of 
+    True -> cleanWhitespace xs
+    False -> Just (x:xs)
 
 main :: IO ()
 main = 
