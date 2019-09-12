@@ -1,3 +1,5 @@
+--{-# LANGUAGE TypeApplications #-}
+
 module Main where
 
 import Data.Char (isAlphaNum, isSpace)
@@ -32,6 +34,19 @@ checkAllThree password =
             _ -> Nothing
         _ -> Nothing
     _ -> Nothing
+
+checkAllThreeAgain :: String -> Maybe String
+checkAllThreeAgain password = 
+  do 
+    cleaned <- cleanWhitespace password
+    cleanedAlpha <- requireAlphaNum cleaned
+    checkPasswordLength cleanedAlpha
+
+checkAllThreeAgain' :: String -> Maybe String
+checkAllThreeAgain' password = 
+  cleanWhitespace password >>= requireAlphaNum >>= checkPasswordLength
+  
+-- *Main> :type (>>=) @IO @String
 
 main :: IO ()
 main = 
