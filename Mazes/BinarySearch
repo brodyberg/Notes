@@ -1,0 +1,4 @@
+data Exit = 
+    N
+  | E
+  deriving (Eq, Show)
