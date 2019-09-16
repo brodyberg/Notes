@@ -75,7 +75,7 @@ rotate c (direction, keyword, index, acc) =
     rawShiftedOrd = fromIntegral $ mod (matchedKeyCharOrd - ord 'a') 26
     shiftedOrd Forward = rawShiftedOrd
     shiftedOrd Backward = (-1) * rawShiftedOrd
-    wrapOrd n = n - (ord 'z' - ord 'a') - 1
+    wrapOrd n  = n - (ord 'z' - ord 'a') - 1
     wrapOrd' n = n + (ord 'z' - ord 'a') + 1
     charMod n
       | n > ord 'z' = wrapOrd n

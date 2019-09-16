@@ -1,6 +1,6 @@
 module DeconstructingValues where
 
-newtype Name = Name String deriving Show
+newtype Name  = Name String deriving Show
 newtype Acres = Acres Int deriving Show
 
 data FarmerType =
@@ -24,8 +24,8 @@ isDairyFarmer _                        = False
 -- it :: Farmer
 
 data FarmerRec = 
-  FarmerRec { name :: Name
-            , acres :: Acres
+  FarmerRec { name       :: Name
+            , acres      :: Acres
             , farmerType :: FarmerType }
             deriving Show
 
