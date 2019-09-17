@@ -64,6 +64,20 @@ bindMaybe (Just x) f = f x
 -- *Main> bindMaybe (Just 1) (\x -> Just (x + 2))
 -- Just 3
 
+data StringOrValue a = Str String | Val a deriving Show
+
+bindStringOrValue 
+  :: StringOrValue a 
+  -> (a -> StringOrValue b)
+  -> StringOrValue b
+bindStringOrValue (Str s) f = (Str s)
+bindStringOrValue (Val x) f = f x
+
+-- bindStringOrValue (Str "foo") (\x -> (Str "bar"))
+-- bindStringOrValue (Str "foo") (\x -> (Val x))
+-- bindStringOrValue (Val 1) (\x -> (Str "bar"))
+-- bindStringOrValue (Val 1) (\x -> (Val (x + 1)))
+
 main :: IO ()
 main = 
   do
