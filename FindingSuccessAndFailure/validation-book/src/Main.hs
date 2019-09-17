@@ -48,6 +48,14 @@ checkAllThreeAgain' password =
   
 -- *Main> :type (>>=) @IO @String
 
+-- exercise: convert this to do syntax: 
+reverseLine :: IO ()
+-- reverseLine = getLine >>= (print . reverse)
+reverseLine = 
+  do 
+    line <- getLine
+    (print . reverse) line
+
 main :: IO ()
 main = 
   do
