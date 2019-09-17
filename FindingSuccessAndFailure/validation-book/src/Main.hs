@@ -56,6 +56,14 @@ reverseLine =
     line <- getLine
     (print . reverse) line
 
+bindMaybe :: Maybe a -> (a -> Maybe b) -> Maybe b
+bindMaybe Nothing _ = Nothing
+bindMaybe (Just x) f = f x 
+-- *Main> bindMaybe Nothing (\x -> Just x)
+-- Nothing
+-- *Main> bindMaybe (Just 1) (\x -> Just (x + 2))
+-- Just 3
+
 main :: IO ()
 main = 
   do
