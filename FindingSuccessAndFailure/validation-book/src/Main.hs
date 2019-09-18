@@ -1,8 +1,25 @@
---{-# LANGUAGE TypeApplications #-}
+-- {-# LANGUAGE TypeApplications #-}
+-- :set -XTypeApplications
 
 module Main where
 
 import Data.Char (isAlphaNum, isSpace)
+
+-- EITHER
+
+checkPasswordLength' :: String -> Either String String
+checkPasswordLength' password = 
+  case (length password > 20 || length password < 4) of 
+    True -> Left "Too long or short"
+    _ -> Right password
+
+requireAlphaNum' :: String -> Either String String
+requireAlphaNum' xs = 
+  case (all isAlphaNum xs) of 
+    True -> Right xs
+    _ -> Left "Not all characters are alpha-numeric"
+
+-- MAYBE
 
 checkPasswordLength :: String -> Maybe String
 checkPasswordLength password = 
