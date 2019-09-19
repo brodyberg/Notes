@@ -19,6 +19,23 @@ requireAlphaNum' xs =
     True -> Right xs
     _ -> Left "Not all characters are alpha-numeric"
 
+cleanWhitespace' :: String -> Either String String
+cleanWhitespace' "" = Left "Empty string"
+cleanWhitespace' (x:xs) =
+  case (isSpace x) of 
+    True -> cleanWhitespace' xs
+    False -> Right (x:xs)
+
+validatePassword' :: String -> Either String String
+validatePassword' password = 
+  do
+    cleaned <- cleanWhitespace' password
+    cleanedAlpha <- requireAlphaNum' cleaned
+    checkPasswordLength' cleanedAlpha
+
+validatePassword'' :: String -> Either String String
+validatePassword'' password = cleanWhitespace' password >>= requireAlphaNum' >>= checkPasswordLength' 
+    
 -- MAYBE
 
 checkPasswordLength :: String -> Maybe String
