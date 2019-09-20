@@ -73,5 +73,5 @@ main :: IO ()
 main = 
   do
     putStr "Please enter a password\n> "
-    password <- getLine
-    print (validatePassword (Password password))
+    password <- Password <$> getLine
+    print (validatePassword password)
