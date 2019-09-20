@@ -5,191 +5,73 @@ module Main where
 
 import Data.Char (isAlphaNum, isSpace)  
 
--- EITHER
+newtype Password = Password String deriving (Show, Eq)
+newtype Username = Username String deriving (Show, Eq)
+newtype Error = Error String deriving (Show, Eq)
 
-checkPasswordLength' :: String -> Either String String
-checkPasswordLength' password = 
+checkPasswordLength :: Password -> Either Error Password
+checkPasswordLength (Password password) = 
   case (length password > 20 || length password < 4) of 
-    True -> Left "Too long or short"
-    _ -> Right password
+    True -> Left (Error "Too long or short")
+    _ -> Right (Password password)
 
-requireAlphaNum' :: String -> Either String String
-requireAlphaNum' xs = 
+requireAlphaNum :: Password -> Either Error Password
+requireAlphaNum (Password xs) = 
   case (all isAlphaNum xs) of 
-    True -> Right xs
-    _ -> Left "Not all characters are alpha-numeric"
+    True -> Right (Password xs)
+    _ -> Left (Error "Not all characters are alpha-numeric")
 
-cleanWhitespace' :: String -> Either String String
-cleanWhitespace' "" = Left "Empty string"
-cleanWhitespace' (x:xs) =
+cleanWhitespace :: Password -> Either Error Password
+cleanWhitespace (Password "") = Left (Error "Empty string")
+cleanWhitespace (Password (x:xs)) =
   case (isSpace x) of 
-    True -> cleanWhitespace' xs
-    False -> Right (x:xs)
+    True -> cleanWhitespace (Password xs)
+    False -> Right (Password (x:xs))
 
-validatePassword' :: String -> Either String String
-validatePassword' password = 
+validatePassword :: String -> Either Error Password
+validatePassword password = 
   do
-    cleaned <- cleanWhitespace' password
-    cleanedAlpha <- requireAlphaNum' cleaned
-    checkPasswordLength' cleanedAlpha
+    cleaned <- cleanWhitespace (Password password)
+    cleanedAlpha <- requireAlphaNum cleaned
+    checkPasswordLength cleanedAlpha
 
-validatePassword'' :: String -> Either String String
-validatePassword'' password = cleanWhitespace' password >>= requireAlphaNum' >>= checkPasswordLength' 
+validatePassword' :: String -> Either Error Password
+validatePassword' password = cleanWhitespace (Password password) >>= requireAlphaNum >>= checkPasswordLength 
     
-validatePassword''order :: String -> Either String String
-validatePassword''order password = cleanWhitespace' password >>= checkPasswordLength' >>= requireAlphaNum'
+validatePassword'order :: String -> Either Error Password
+validatePassword'order password = cleanWhitespace (Password password) >>= checkPasswordLength >>= requireAlphaNum
 
 -- TESTS
 
-printTestResult :: Either String () -> IO ()
+printTestResult :: Either Error () -> IO ()
 printTestResult r = 
   case r of
-    Left err -> putStrLn err
+    Left (Error err) -> putStrLn err
     Right () -> putStrLn "All Tests Pass"
 
--- printTestResult (Left "foo")
--- printTestResult (Right ())
-
-eq :: (Eq a, Show a) => Int -> a -> a -> Either String ()
+eq :: (Eq a, Show a) => Int -> a -> a -> Either Error ()
 eq n actual expected = 
   case (actual == expected) of 
     True -> Right ()
-    False -> Left (unlines 
+    False -> Left (Error (unlines 
       [ "Test " ++ show n 
       , "  Expected:  " ++ show expected
       , "  But got:   " ++ show actual
-      ])
-
--- test1 :: IO ()
--- test1 = 
---   do 
---   one <- eq 1 (checkPasswordLength' "") (Left "Too long or short")),
---   two <- eq 2 (checkPasswordLength' "julielovesbooks") (Right "julielovesbooks")),
---   three <- eq 3 (checkPasswordLength' "afasdfasdfasdfasdfasdfasdfasdf") (Left "Too long or short")),
---   four <- eq 4 (cleanWhitespace' "    foo") (Right "foo")),
---   five <- eq 5 (cleanWhitespace' "foo") (Right "foo")),
---   six <- eq 6 (cleanWhitespace' "foo  ") (Right "foo  "))]
-
-test2 :: IO ()
-test2 = printTestResult $     
-  (eq 1 (checkPasswordLength' "") (Left "Too long or short")) >>= 
-    (\_ -> (eq 2 (checkPasswordLength' "julielovesbooks") (Right "julielovesbooks_")) >>= 
-      (\_ -> (eq 3 (checkPasswordLength' "afasdfasdfasdfasdfasdfasdfasdf") (Left "Too long or short"))))
-  -- eq 2 (checkPasswordLength' "julielovesbooks") (Right "julielovesbooks")
-  -- eq 3 (checkPasswordLength' "afasdfasdfasdfasdfasdfasdfasdf") (Left "Too long or short")
-  -- eq 4 (cleanWhitespace' "    foo") (Right "foo")
-  -- eq 5 (cleanWhitespace' "foo") (Right "foo")
-  -- eq 6 (cleanWhitespace' "foo  ") (Right "foo  ")
-
--- *Main> :kind []
--- [] :: * -> *
--- *Main> [] >>= \_ -> []
--- []
--- *Main> [] >>= \x -> [x]
--- []
--- *Main> [2] >>= \x -> [x]
--- [2]
--- *Main> [2] >>= \x -> [3,x]
--- [3,2]
--- *Main> Just 4 >>= \x -> Just (3 + x)
--- Just 7
+      ]))
 
 test :: IO ()
 test = printTestResult $ 
     do
-      eq 1 (checkPasswordLength' "") (Left "Too long or short")
-      eq 2 (checkPasswordLength' "julielovesbooks") (Right "julielovesbooks")
-      eq 3 (checkPasswordLength' "afasdfasdfasdfasdfasdfasdfasdf") (Left "Too long or short")
-      eq 4 (cleanWhitespace' "    foo") (Right "foo")
-      eq 5 (cleanWhitespace' "foo") (Right "foo")
-      eq 6 (cleanWhitespace' "foo  ") (Right "foo  ")
+      eq 1 (checkPasswordLength (Password "")) (Left (Error "Too long or short"))
+      eq 2 (checkPasswordLength (Password "julielovesbooks")) (Right (Password "julielovesbooks"))
+      eq 3 (checkPasswordLength (Password "afasdfasdfasdfasdfasdfasdfasdf")) (Left (Error "Too long or short"))
+      eq 4 (cleanWhitespace (Password "    foo")) (Right (Password "foo"))
+      eq 5 (cleanWhitespace (Password "foo")) (Right (Password "foo"))
+      eq 6 (cleanWhitespace (Password "foo  ")) (Right (Password "foo  "))
       
--- what is do doing here?
--- do is syntax-sugar for >>=
--- but we're ignoring return values... right?
--- so how is this catching failures?
--- because >>= is itself catching the LAST item passing or an intermediate test passing?
-
--- MAYBE
-
-checkPasswordLength :: String -> Maybe String
-checkPasswordLength password = 
-  case (length password > 20 || length password < 4) of
-    True -> Nothing
-    _ -> Just password
-
-requireAlphaNum :: String -> Maybe String
-requireAlphaNum xs = 
-  case (all isAlphaNum xs) of 
-    True -> Just xs
-    _ -> Nothing
-
-cleanWhitespace :: String -> Maybe String
-cleanWhitespace "" = Nothing
-cleanWhitespace (x:xs) =
-  case (isSpace x) of 
-    True -> cleanWhitespace xs
-    False -> Just (x:xs)
-
-checkAllThree :: String -> Maybe String
-checkAllThree password = 
-  case cleanWhitespace password of 
-    Just cleaned -> 
-      case requireAlphaNum cleaned of
-        Just cleanedAlpha -> 
-          case checkPasswordLength cleanedAlpha of
-            Just cleanAlphaSized -> Just cleanAlphaSized
-            _ -> Nothing
-        _ -> Nothing
-    _ -> Nothing
-
-checkAllThreeAgain :: String -> Maybe String
-checkAllThreeAgain password = 
-  do 
-    cleaned <- cleanWhitespace password
-    cleanedAlpha <- requireAlphaNum cleaned
-    checkPasswordLength cleanedAlpha
-
-checkAllThreeAgain' :: String -> Maybe String
-checkAllThreeAgain' password = 
-  cleanWhitespace password >>= requireAlphaNum >>= checkPasswordLength
-  
--- *Main> :type (>>=) @IO @String
-
--- exercise: convert this to do syntax: 
-reverseLine :: IO ()
--- reverseLine = getLine >>= (print . reverse)
-reverseLine = 
-  do 
-    line <- getLine
-    (print . reverse) line
-
-bindMaybe :: Maybe a -> (a -> Maybe b) -> Maybe b
-bindMaybe Nothing _ = Nothing
-bindMaybe (Just x) f = f x 
--- *Main> bindMaybe Nothing (\x -> Just x)
--- Nothing
--- *Main> bindMaybe (Just 1) (\x -> Just (x + 2))
--- Just 3
-
-data StringOrValue a = Str String | Val a deriving Show
-
-bindStringOrValue 
-  :: StringOrValue a 
-  -> (a -> StringOrValue b)
-  -> StringOrValue b
-bindStringOrValue (Str s) f = (Str s)
-bindStringOrValue (Val x) f = f x
-
--- bindStringOrValue (Str "foo") (\x -> (Str "bar"))
--- bindStringOrValue (Str "foo") (\x -> (Val x))
--- bindStringOrValue (Val 1) (\x -> (Str "bar"))
--- bindStringOrValue (Val 1) (\x -> (Val (x + 1)))
-
 main :: IO ()
 main = 
   do
     putStr "Please enter a password\n> "
     password <- getLine
-    print (requireAlphaNum password)
-    -- print (checkPasswordLength password && requireAlphaNum password)
+    print (requireAlphaNum (Password password))
