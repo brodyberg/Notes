@@ -41,9 +41,6 @@ validatePassword' (Password password) =
   >>= requireAlphaNum 
   >>= checkPasswordLength 
     
--- validatePassword'order :: Password -> Either Error Password
--- validatePassword'order (Password password) = cleanWhitespace password >>= checkPasswordLength >>= requireAlphaNum
-
 -- TESTS
 
 printTestResult :: Either Error () -> IO ()
