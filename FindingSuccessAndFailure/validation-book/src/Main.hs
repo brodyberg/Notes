@@ -9,37 +9,40 @@ newtype Password = Password String deriving (Show, Eq)
 newtype Username = Username String deriving (Show, Eq)
 newtype Error = Error String deriving (Show, Eq)
 
-checkPasswordLength :: Password -> Either Error Password
-checkPasswordLength (Password password) = 
-  case (length password > 20 || length password < 4) of 
+checkPasswordLength :: String -> Either Error Password
+checkPasswordLength s = 
+  case (length s > 20 || length s < 4) of 
     True -> Left (Error "Too long or short")
-    _ -> Right (Password password)
+    _ -> Right (Password s)
 
-requireAlphaNum :: Password -> Either Error Password
-requireAlphaNum (Password xs) = 
+requireAlphaNum :: String -> Either Error String
+requireAlphaNum xs = 
   case (all isAlphaNum xs) of 
-    True -> Right (Password xs)
+    True -> Right xs
     _ -> Left (Error "Not all characters are alpha-numeric")
 
-cleanWhitespace :: Password -> Either Error Password
-cleanWhitespace (Password "") = Left (Error "Empty string")
-cleanWhitespace (Password (x:xs)) =
+cleanWhitespace :: String -> Either Error String
+cleanWhitespace "" = Left (Error "Empty string")
+cleanWhitespace (x:xs) =
   case (isSpace x) of 
-    True -> cleanWhitespace (Password xs)
-    False -> Right (Password (x:xs))
+    True -> cleanWhitespace xs
+    False -> Right (x:xs)
 
-validatePassword :: String -> Either Error Password
-validatePassword password = 
+validatePassword :: Password -> Either Error Password
+validatePassword (Password password) = 
   do
-    cleaned <- cleanWhitespace (Password password)
+    cleaned <- cleanWhitespace password
     cleanedAlpha <- requireAlphaNum cleaned
     checkPasswordLength cleanedAlpha
 
-validatePassword' :: String -> Either Error Password
-validatePassword' password = cleanWhitespace (Password password) >>= requireAlphaNum >>= checkPasswordLength 
+validatePassword' :: Password -> Either Error Password
+validatePassword' (Password password) = 
+  cleanWhitespace password 
+  >>= requireAlphaNum 
+  >>= checkPasswordLength 
     
-validatePassword'order :: String -> Either Error Password
-validatePassword'order password = cleanWhitespace (Password password) >>= checkPasswordLength >>= requireAlphaNum
+-- validatePassword'order :: Password -> Either Error Password
+-- validatePassword'order (Password password) = cleanWhitespace password >>= checkPasswordLength >>= requireAlphaNum
 
 -- TESTS
 
@@ -62,16 +65,16 @@ eq n actual expected =
 test :: IO ()
 test = printTestResult $ 
     do
-      eq 1 (checkPasswordLength (Password "")) (Left (Error "Too long or short"))
-      eq 2 (checkPasswordLength (Password "julielovesbooks")) (Right (Password "julielovesbooks"))
-      eq 3 (checkPasswordLength (Password "afasdfasdfasdfasdfasdfasdfasdf")) (Left (Error "Too long or short"))
-      eq 4 (cleanWhitespace (Password "    foo")) (Right (Password "foo"))
-      eq 5 (cleanWhitespace (Password "foo")) (Right (Password "foo"))
-      eq 6 (cleanWhitespace (Password "foo  ")) (Right (Password "foo  "))
+      eq 1 (checkPasswordLength "") (Left (Error "Too long or short"))
+      eq 2 (checkPasswordLength "julielovesbooks") (Right (Password "julielovesbooks"))
+      eq 3 (checkPasswordLength "afasdfasdfasdfasdfasdfasdfasdf") (Left (Error "Too long or short"))
+      eq 4 (cleanWhitespace "    foo") (Right "foo")
+      eq 5 (cleanWhitespace "foo") (Right "foo")
+      eq 6 (cleanWhitespace "foo  ") (Right "foo  ")
       
 main :: IO ()
 main = 
   do
     putStr "Please enter a password\n> "
     password <- getLine
-    print (requireAlphaNum (Password password))
+    print (validatePassword (Password password))
