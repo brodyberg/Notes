@@ -3,7 +3,7 @@
 
 module Main where
 
-import Data.Char (isAlphaNum, isSpace)
+import Data.Char (isAlphaNum, isSpace)  
 
 -- EITHER
 
@@ -36,6 +36,67 @@ validatePassword' password =
 validatePassword'' :: String -> Either String String
 validatePassword'' password = cleanWhitespace' password >>= requireAlphaNum' >>= checkPasswordLength' 
     
+validatePassword''order :: String -> Either String String
+validatePassword''order password = cleanWhitespace' password >>= checkPasswordLength' >>= requireAlphaNum'
+
+-- TESTS
+
+printTestResult :: Either String () -> IO ()
+printTestResult r = 
+  case r of
+    Left err -> putStrLn err
+    Right () -> putStrLn "All Tests Pass"
+
+-- printTestResult (Left "foo")
+-- printTestResult (Right ())
+
+eq :: (Eq a, Show a) => Int -> a -> a -> Either String ()
+eq n actual expected = 
+  case (actual == expected) of 
+    True -> Right ()
+    False -> Left (unlines 
+      [ "Test " ++ show n 
+      , "  Expected:  " ++ show expected
+      , "  But got:   " ++ show actual
+      ])
+
+-- test1 :: IO ()
+-- test1 = 
+--   do 
+--   one <- eq 1 (checkPasswordLength' "") (Left "Too long or short")),
+--   two <- eq 2 (checkPasswordLength' "julielovesbooks") (Right "julielovesbooks")),
+--   three <- eq 3 (checkPasswordLength' "afasdfasdfasdfasdfasdfasdfasdf") (Left "Too long or short")),
+--   four <- eq 4 (cleanWhitespace' "    foo") (Right "foo")),
+--   five <- eq 5 (cleanWhitespace' "foo") (Right "foo")),
+--   six <- eq 6 (cleanWhitespace' "foo  ") (Right "foo  "))]
+
+test2 :: IO ()
+test2 = printTestResult $     
+  (eq 1 (checkPasswordLength' "") (Left "Too long or short")) >>= 
+    (\_ -> (eq 2 (checkPasswordLength' "julielovesbooks") (Right "julielovesbooks_")) >>= 
+      (\_ -> (eq 3 (checkPasswordLength' "afasdfasdfasdfasdfasdfasdfasdf") (Left "Too long or short"))))
+  -- eq 2 (checkPasswordLength' "julielovesbooks") (Right "julielovesbooks")
+  -- eq 3 (checkPasswordLength' "afasdfasdfasdfasdfasdfasdfasdf") (Left "Too long or short")
+  -- eq 4 (cleanWhitespace' "    foo") (Right "foo")
+  -- eq 5 (cleanWhitespace' "foo") (Right "foo")
+  -- eq 6 (cleanWhitespace' "foo  ") (Right "foo  ")
+
+test :: IO ()
+test = printTestResult $ 
+    do
+      eq 1 (checkPasswordLength' "") (Left "Too long or short")
+      eq 2 (checkPasswordLength' "julielovesbooks") (Right "julielovesbooks")
+      eq 3 (checkPasswordLength' "afasdfasdfasdfasdfasdfasdfasdf") (Left "Too long or short")
+      eq 4 (cleanWhitespace' "    foo") (Right "foo")
+      eq 5 (cleanWhitespace' "foo") (Right "foo")
+      eq 6 (cleanWhitespace' "foo  ") (Right "foo  ")
+      
+-- what is do doing here?
+-- do is syntax-sugar for >>=
+-- but we're ignoring return values... right?
+-- so how is this catching failures?
+-- because >>= is itself catching the LAST item passing or an intermediate test passing?
+
 -- MAYBE
 
 checkPasswordLength :: String -> Maybe String
