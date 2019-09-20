@@ -81,6 +81,19 @@ test2 = printTestResult $
   -- eq 5 (cleanWhitespace' "foo") (Right "foo")
   -- eq 6 (cleanWhitespace' "foo  ") (Right "foo  ")
 
+-- *Main> :kind []
+-- [] :: * -> *
+-- *Main> [] >>= \_ -> []
+-- []
+-- *Main> [] >>= \x -> [x]
+-- []
+-- *Main> [2] >>= \x -> [x]
+-- [2]
+-- *Main> [2] >>= \x -> [3,x]
+-- [3,2]
+-- *Main> Just 4 >>= \x -> Just (3 + x)
+-- Just 7
+
 test :: IO ()
 test = printTestResult $ 
     do
