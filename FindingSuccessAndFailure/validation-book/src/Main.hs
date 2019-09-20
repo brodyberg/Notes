@@ -41,6 +41,20 @@ validatePassword' (Password password) =
   >>= requireAlphaNum 
   >>= checkPasswordLength 
     
+-- USERNAME
+
+checkUsernameLength :: String -> Either Error Username
+checkUsernameLength s = 
+  case (length s > 20 || length s < 4) of 
+    True -> Left (Error "Too long or short")
+    _ -> Right (Username s)
+
+validateUsername :: Username -> Either Error Username
+validateUsername (Username username) =
+  cleanWhitespace username
+  >>= requireAlphaNum 
+  >>= checkUsernameLength 
+
 -- TESTS
 
 printTestResult :: Either Error () -> IO ()
@@ -68,10 +82,17 @@ test = printTestResult $
       eq 4 (cleanWhitespace "    foo") (Right "foo")
       eq 5 (cleanWhitespace "foo") (Right "foo")
       eq 6 (cleanWhitespace "foo  ") (Right "foo  ")
+      eq 7 (checkUsernameLength "") (Left (Error "Too long or short"))
+      eq 8 (checkUsernameLength "julielovesbooks") (Right (Username "julielovesbooks"))
+      eq 9 (checkUsernameLength "afasdfasdfasdfasdfasdfasdfasdf") (Left (Error "Too long or short"))
       
 main :: IO ()
 main = 
   do
+    putStr "Please enter a username\n> "
+    username <- Username <$> getLine
+    print (validateUsername username)
+
     putStr "Please enter a password\n> "
     password <- Password <$> getLine
     print (validatePassword password)
