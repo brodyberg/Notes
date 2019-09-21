@@ -87,14 +87,46 @@ test = printTestResult $
       eq 14 (validateUsername (Username "teeje")) (Right (Username "teeje"))
       eq 15 (validatePassword (Password "teejeerewereerereere3333rteter")) (Left (Error "Too long or short"))
       eq 16 (validateUsername (Username "teejeerewereerereere3333rteter")) (Left (Error "Too long or short"))
-      
+   
 main :: IO ()
 main = 
-  do
-    putStr "Please enter a username\n> "
-    username <- Username <$> getLine
-    print (validateUsername username)
+  putStr "Please enter a username\n> " >>
+  getLine >>=
+    (\l -> print $ validateUsername (Username l))
 
-    putStr "Please enter a password\n> "
-    password <- Password <$> getLine
-    print (validatePassword password)
+  -- putStr "Please enter a username\n> " >>
+  -- getLine >>=
+  --   (\l -> Username l) >>=
+  --     (\x -> print "foob")
+
+  -- putStr "Please enter a username\n> " >>
+  -- Username <$> getLine >>=
+  --   (\u -> validateUsername u) >>=
+  --     (\r -> print r)
+
+
+  -- putStr "Please enter a username\n> " >> 
+  -- Username <$> getLine >>=
+  --   (\u -> print "foog")
+
+
+  -- putStr "Please enter a username\n> " >> print "bar"
+    -- (\x -> getLine) >>=
+    --   (\y -> Username y) >>=
+    --     (\z -> print "foo")
+
+    -- (\_ -> Username <$> getLine) >>= 
+    -- (\x -> print x)
+    -- (\username -> validateUsername username) >>=
+    --   (\username -> print username)
+
+-- main :: IO ()
+-- main = 
+--   do
+--     putStr "Please enter a username\n> "
+--     username <- Username <$> getLine
+--     print (validateUsername username)
+
+--     putStr "Please enter a password\n> "
+--     password <- Password <$> getLine
+--     print (validatePassword password)
