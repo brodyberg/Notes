@@ -9,12 +9,6 @@ newtype Password = Password String deriving (Show, Eq)
 newtype Username = Username String deriving (Show, Eq)
 newtype Error = Error String deriving (Show, Eq)
 
-checkPasswordLength :: String -> Either Error Password
-checkPasswordLength s = 
-  case (length s > 20 || length s < 4) of 
-    True -> Left (Error "Too long or short")
-    _ -> Right (Password s)
-
 requireAlphaNum :: String -> Either Error String
 requireAlphaNum xs = 
   case (all isAlphaNum xs) of 
@@ -33,28 +27,29 @@ validatePassword (Password password) =
   do
     cleaned <- cleanWhitespace password
     cleanedAlpha <- requireAlphaNum cleaned
-    checkPasswordLength cleanedAlpha
+    lengthOk <- checkLength cleanedAlpha
+    return (Password lengthOk)
 
 validatePassword' :: Password -> Either Error Password
 validatePassword' (Password password) = 
   cleanWhitespace password 
   >>= requireAlphaNum 
-  >>= checkPasswordLength 
+  >>= (\x -> Password <$> checkLength x)
     
 -- USERNAME
 
-checkUsernameLength :: String -> Either Error Username
-checkUsernameLength s = 
+checkLength :: String -> Either Error String
+checkLength s = 
   case (length s > 20 || length s < 4) of 
     True -> Left (Error "Too long or short")
-    _ -> Right (Username s)
+    _ -> Right s
 
 validateUsername :: Username -> Either Error Username
 validateUsername (Username username) =
   cleanWhitespace username
   >>= requireAlphaNum 
-  >>= checkUsernameLength 
-
+  >>= (\x -> Username <$> checkLength x)
+  
 -- TESTS
 
 printTestResult :: Either Error () -> IO ()
@@ -76,15 +71,22 @@ eq n actual expected =
 test :: IO ()
 test = printTestResult $ 
     do
-      eq 1 (checkPasswordLength "") (Left (Error "Too long or short"))
-      eq 2 (checkPasswordLength "julielovesbooks") (Right (Password "julielovesbooks"))
-      eq 3 (checkPasswordLength "afasdfasdfasdfasdfasdfasdfasdf") (Left (Error "Too long or short"))
-      eq 4 (cleanWhitespace "    foo") (Right "foo")
-      eq 5 (cleanWhitespace "foo") (Right "foo")
-      eq 6 (cleanWhitespace "foo  ") (Right "foo  ")
-      eq 7 (checkUsernameLength "") (Left (Error "Too long or short"))
-      eq 8 (checkUsernameLength "julielovesbooks") (Right (Username "julielovesbooks"))
-      eq 9 (checkUsernameLength "afasdfasdfasdfasdfasdfasdfasdf") (Left (Error "Too long or short"))
+      eq 1 (cleanWhitespace "    foo") (Right "foo")
+      eq 2 (cleanWhitespace "foo") (Right "foo")
+      eq 3 (cleanWhitespace "foo  ") (Right "foo  ")
+      eq 4 (checkLength "") (Left (Error "Too long or short"))
+      eq 5 (checkLength "julielovesbooks") (Right "julielovesbooks")
+      eq 6 (checkLength "afasdfasdfasdfasdfasdfasdfasdf") (Left (Error "Too long or short"))
+      eq 7 (validatePassword (Password "")) (Left (Error "Empty string"))
+      eq 8 (validateUsername (Username "")) (Left (Error "Empty string"))
+      eq 9 (validatePassword (Password "tee")) (Left (Error "Too long or short"))
+      eq 10 (validateUsername (Username "tee")) (Left (Error "Too long or short"))
+      eq 11 (validatePassword (Password "   tee")) (Left (Error "Too long or short"))
+      eq 12 (validateUsername (Username "   tee")) (Left (Error "Too long or short"))
+      eq 13 (validatePassword (Password "teeje")) (Right (Password "teeje"))
+      eq 14 (validateUsername (Username "teeje")) (Right (Username "teeje"))
+      eq 15 (validatePassword (Password "teejeerewereerereere3333rteter")) (Left (Error "Too long or short"))
+      eq 16 (validateUsername (Username "teejeerewereerereere3333rteter")) (Left (Error "Too long or short"))
       
 main :: IO ()
 main = 
