@@ -93,32 +93,6 @@ main =
   putStr "Please enter a username\n> " >> getLine >>= (\l -> print $ validateUsername (Username l)) >>
   putStr "Please enter a password\n> " >> getLine >>= (\l -> print $ validatePassword (Password l))
 
-  -- putStr "Please enter a username\n> " >>
-  -- getLine >>=
-  --   (\l -> Username l) >>=
-  --     (\x -> print "foob")
-
-  -- putStr "Please enter a username\n> " >>
-  -- Username <$> getLine >>=
-  --   (\u -> validateUsername u) >>=
-  --     (\r -> print r)
-
-
-  -- putStr "Please enter a username\n> " >> 
-  -- Username <$> getLine >>=
-  --   (\u -> print "foog")
-
-
-  -- putStr "Please enter a username\n> " >> print "bar"
-    -- (\x -> getLine) >>=
-    --   (\y -> Username y) >>=
-    --     (\z -> print "foo")
-
-    -- (\_ -> Username <$> getLine) >>= 
-    -- (\x -> print x)
-    -- (\username -> validateUsername username) >>=
-    --   (\username -> print username)
-
 -- main :: IO ()
 -- main = 
 --   do
