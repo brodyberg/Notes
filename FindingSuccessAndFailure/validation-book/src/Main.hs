@@ -90,8 +90,15 @@ test = printTestResult $
    
 main :: IO ()
 main = 
-  putStr "Please enter a username\n> " >> getLine >>= (\l -> print $ validateUsername (Username l)) >>
-  putStr "Please enter a password\n> " >> getLine >>= (\l -> print $ validatePassword (Password l))
+  -- putStr "Please enter a username\n> " >> getLine >>= (\l -> print $ validateUsername (Username l)) 
+  -- >> putStr "Please enter a password\n> " >> getLine >>= (\l -> print $ validatePassword (Password l))
+
+  putStr "Please enter a username\n> " >> getLine >>= print . validateUsername . Username >>
+  putStr "Please enter a password\n> " >> getLine >>= print . validatePassword . Password
+
+
+  -- putStr "Please enter a username\n> " >> 
+  -- getLine >>= (print $ validateUsername . Username) 
 
 -- main :: IO ()
 -- main = 
