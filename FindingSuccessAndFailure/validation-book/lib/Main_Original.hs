@@ -1,7 +1,7 @@
 -- {-# LANGUAGE TypeApplications #-}
 -- :set -XTypeApplications
 
-module Main where
+module Main_Original where
 
 import Data.Char (isAlphaNum, isSpace)  
 
@@ -190,8 +190,8 @@ bindStringOrValue (Val x) f = f x
 -- bindStringOrValue (Val 1) (\x -> (Str "bar"))
 -- bindStringOrValue (Val 1) (\x -> (Val (x + 1)))
 
-main :: IO ()
-main = 
+main_Original :: IO ()
+main_Original = 
   do
     putStr "Please enter a password\n> "
     password <- getLine
