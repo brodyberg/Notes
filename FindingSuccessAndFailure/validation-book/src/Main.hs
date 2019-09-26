@@ -1,7 +1,16 @@
--- {-# LANGUAGE TypeApplications #-}
 -- :set -XTypeApplications
+{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE InstanceSigs #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE PartialTypeSignatures #-}
+{-# LANGUAGE GADTSyntax#-}
+{-# LANGUAGE NoImplicitPrelude #-}
+
+-- https://typeclasses.com/extensions-intro
 
 module Main where
+
+import BrodyPrelude (Bool(True, False), String, Show, Eq)
 
 import Data.Char (isAlphaNum, isSpace)  
 import Data.Validation
@@ -14,7 +23,7 @@ data User = User Username Password deriving Show
 
 --------------
 
-makeUser :: Username -> Password -> Either Error User
+makeUser :: Username -> Password -> Validation Error User
 makeUser = undefined
 -- makeUser username password = 
 
@@ -33,7 +42,8 @@ cleanWhitespace (x:xs) =
     True -> cleanWhitespace xs
     False -> Success (x:xs)
 
--- validatePassword :: Password -> Validation Error Password
+validatePassword :: Password -> Validation Error Password
+validatePassword password = undefined
 -- validatePassword (Password password) = 
 --   do
 --     cleaned <- cleanWhitespace password
@@ -56,10 +66,11 @@ checkLength s =
     _ -> Success s
 
 validateUsername :: Username -> Validation Error Username
-validateUsername (Username username) =
-  cleanWhitespace username
-  >>= requireAlphaNum 
-  >>= (\x -> Username <$> checkLength x)
+validateUsername username = undefined
+-- validateUsername (Username username) =
+--   cleanWhitespace username
+--   >>= requireAlphaNum 
+--   >>= (\x -> Username <$> checkLength x)
   
 -- TESTS
 
@@ -79,25 +90,25 @@ eq n actual expected =
       , "  But got:   " ++ show actual
       ])])
 
-test :: IO ()
-test = printTestResult $ 
-    do
-      eq 1 (cleanWhitespace "    foo") (Success "foo")
-      eq 2 (cleanWhitespace "foo") (Success "foo")
-      eq 3 (cleanWhitespace "foo  ") (Success "foo  ")
-      eq 4 (checkLength "") (Failure (Error ["Too long or short"]))
-      eq 5 (checkLength "julielovesbooks") (Success "julielovesbooks")
-      eq 6 (checkLength "afasdfasdfasdfasdfasdfasdfasdf") (Failure (Error ["Too long or short"]))
-      eq 7 (validatePassword (Password "")) (Failure (Error ["Empty string"]))
-      eq 8 (validateUsername (Username "")) (Failure (Error ["Empty string"]))
-      eq 9 (validatePassword (Password "tee")) (Failure (Error ["Too long or short"]))
-      eq 10 (validateUsername (Username "tee")) (Failure (Error ["Too long or short"]))
-      eq 11 (validatePassword (Password "   tee")) (Failure (Error ["Too long or short"]))
-      eq 12 (validateUsername (Username "   tee")) (Failure (Error ["Too long or short"]))
-      eq 13 (validatePassword (Password "teeje")) (Success (Password "teeje"))
-      eq 14 (validateUsername (Username "teeje")) (Success (Username "teeje"))
-      eq 15 (validatePassword (Password "teejeerewereerereere3333rteter")) (Failure (Error ["Too long or short"]))
-      eq 16 (validateUsername (Username "teejeerewereerereere3333rteter")) (Failure (Error ["Too long or short"]))
+-- test :: IO ()
+-- test = printTestResult $ 
+--     do
+--       eq 1 (cleanWhitespace "    foo") (Success "foo")
+--       eq 2 (cleanWhitespace "foo") (Success "foo")
+--       eq 3 (cleanWhitespace "foo  ") (Success "foo  ")
+--       eq 4 (checkLength "") (Failure (Error ["Too long or short"]))
+--       eq 5 (checkLength "julielovesbooks") (Success "julielovesbooks")
+--       eq 6 (checkLength "afasdfasdfasdfasdfasdfasdfasdf") (Failure (Error ["Too long or short"]))
+--       eq 7 (validatePassword (Password "")) (Failure (Error ["Empty string"]))
+--       eq 8 (validateUsername (Username "")) (Failure (Error ["Empty string"]))
+--       eq 9 (validatePassword (Password "tee")) (Failure (Error ["Too long or short"]))
+--       eq 10 (validateUsername (Username "tee")) (Failure (Error ["Too long or short"]))
+--       eq 11 (validatePassword (Password "   tee")) (Failure (Error ["Too long or short"]))
+--       eq 12 (validateUsername (Username "   tee")) (Failure (Error ["Too long or short"]))
+--       eq 13 (validatePassword (Password "teeje")) (Success (Password "teeje"))
+--       eq 14 (validateUsername (Username "teeje")) (Success (Username "teeje"))
+--       eq 15 (validatePassword (Password "teejeerewereerereere3333rteter")) (Failure (Error ["Too long or short"]))
+--       eq 16 (validateUsername (Username "teejeerewereerereere3333rteter")) (Failure (Error ["Too long or short"]))
    
 main :: IO ()
 main = 
