@@ -1,7 +1,9 @@
 module Main where
 
-import Lib
-import Control.Lens
+import Lib (someFunc)
+-- import Control.Lens
+
+-- makeLenses ''Ship
 
 main :: IO ()
 main = someFunc

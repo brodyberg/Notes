@@ -1,6 +1,16 @@
 # Questions
 
-You can make a "liar lens" - what's the point of that?
+## HIE problems
+
+- Can't find symbols in different files
+
+Things that do work
+- Can find symbols in the same file (eg. F12)
+- Can see intellisense
+- In intellisense, can click link into (local?) docs(!)
+
+
+## You can make a "liar lens" - what's the point of that?
 
     *Main Lib Control.Lens> print purplePearl
     Ship {_name = "Purple Pearl", _numCrew = 74}
@@ -10,7 +20,7 @@ You can make a "liar lens" - what's the point of that?
     *Main Lib Control.Lens> view x purplePearl
     "foo"
 
-Given a path into a structure is it possible to *not* find a focus?
+## Given a path into a structure is it possible to *not* find a focus?
 * Argument that this is impossible:
   * I think the whole point of this is that the path and structure are related by actions such that one can surely define a path into a structure that doesn't exist but types on the action would prevent this from compiling. For example, `view _8 (1, 2)` should surely not compile right?
 
