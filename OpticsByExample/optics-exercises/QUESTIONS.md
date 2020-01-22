@@ -1,5 +1,15 @@
 # Questions
 
+You can make a "liar lens" - what's the point of that?
+
+    *Main Lib Control.Lens> print purplePearl
+    Ship {_name = "Purple Pearl", _numCrew = 74}
+    *Main Lib Control.Lens> x = lens (\s -> "foo") (\ship newName -> ship { _name = newName })
+    *Main Lib Control.Lens> view x pur
+    pure         purplePearl
+    *Main Lib Control.Lens> view x purplePearl
+    "foo"
+
 Given a path into a structure is it possible to *not* find a focus?
 * Argument that this is impossible:
   * I think the whole point of this is that the path and structure are related by actions such that one can surely define a path into a structure that doesn't exist but types on the action would prevent this from compiling. For example, `view _8 (1, 2)` should surely not compile right?

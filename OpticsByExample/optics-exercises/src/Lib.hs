@@ -2,6 +2,7 @@ module Lib
     ( someFunc
     , numCrew
     , name
+    , _name
     , purplePearl
     ) where
 
