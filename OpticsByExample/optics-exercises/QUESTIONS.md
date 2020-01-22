@@ -3,11 +3,16 @@
 ## HIE problems
 
 - Can't find symbols in different files
+- ghci symbol completion? definitely works in VS Code though
+- generating docs for my actual project?
+- what else is on the list *to* work?
 
 Things that do work
 - Can find symbols in the same file (eg. F12)
 - Can see intellisense
 - In intellisense, can click link into (local?) docs(!)
+- tab completion from intellisense on a symbol!
+- HLint definitely offering advice and flagging unused pragmas
 
 
 ## You can make a "liar lens" - what's the point of that?
