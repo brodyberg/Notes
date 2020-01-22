@@ -6,6 +6,7 @@
 - ghci symbol completion? definitely works in VS Code though
 - generating docs for my actual project?
 - what else is on the list *to* work?
+- I have two exports: name (a name lens) and purplePearl from Lib that have red squigglies like they are not exported from Lib... but they are and the build works and I can see them with `:browse Lib` in `stack ghci`
 
 Things that do work
 - Can find symbols in the same file (eg. F12)
