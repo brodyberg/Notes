@@ -8,6 +8,9 @@
 
 module Lib
      ( someFunc
+     , name
+     , numCrew
+     , purplePearl
      )
 where
 
@@ -49,7 +52,7 @@ setName ship newName = ship { _name = newName }
 purplePearl :: Ship
 purplePearl = Ship { _name = "Purple Pearl", _numCrew = 74 }
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+someFunc :: String -> IO ()
+someFunc = putStrLn
 
 -- makeLenses ''Ship
