@@ -1,0 +1,29 @@
+-- Haskell Playground 1.0
+head "foo"
+tail "foo"
+append "f" []
+"f" ++ []
+"gat" ++ ["ga"]
+"gat" : ["ga"]
+"g" ++ "a"
+"foo" ++ ['a']
+
+"g"
+
+ss "" "" []
+ss "" "a" []
+ss "" "ga" []
+ss "" "gat" []
+ss "" "gatt" []
+ss "" "gatta" []
+ss "" "gattac" []
+ss "" "gattaca" []
+
+ssWrapper "" []
+ssWrapper "a" []
+ssWrapper "ga" []
+ssWrapper "gat" []
+ssWrapper "gatt" []
+ssWrapper "gatta" []
+ssWrapper "gattac" []
+ssWrapper "gattaca" []
