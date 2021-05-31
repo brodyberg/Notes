@@ -48,6 +48,7 @@ ss [] therest found = ss [(head therest)] (tail therest) []
 ss save [] found = save : found 
 ss save therest found = ss (save ++ [(head therest)]) (tail therest) (save : found)
 
+-- implement all the fasta stuff
 
 
 -- getAllPossibleSubstrings g attaca
