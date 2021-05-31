@@ -59,9 +59,16 @@ module ProjectRosalind.FindingASharedMotif where
 -- getAllPossibleSubstrings substrings restOfString
 
 ssWrapper :: String -> [String] -> [String]
-ssWrapper [] acc  = acc
+ssWrapper [] acc = acc
 --ssWrapper s  acc = acc ++ (ssWrapper (tail s) [])
-ssWrapper s  acc = (ss s "" []) ++ (ssWrapper (tail s) [])
+-- ssWrapper s  acc = (ss s "" []) ++ (ssWrapper (tail s) [])
+ssWrapper s  acc = (ss "" s []) ++ (ssWrapper (tail s) [])
+
+
+--ssWrapper s acc = ssWrapper (tail s) (ss s "" [])
+--ssWrapper s acc = ssWrapper (tail s) (ss "" s [])
+
+-- explode it into tail
 
 ss :: String 
    -> String 

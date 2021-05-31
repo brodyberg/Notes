@@ -19,6 +19,8 @@ ss "" "gatta" []
 ss "" "gattac" []
 ss "" "gattaca" []
 
+ss "gattaca" "" []
+
 ssWrapper "" []
 ssWrapper "a" []
 ssWrapper "ga" []
@@ -27,3 +29,20 @@ ssWrapper "gatt" []
 ssWrapper "gatta" []
 ssWrapper "gattac" []
 ssWrapper "gattaca" []
+
+x = ssWrapper "gattaca" []
+y = ssWrapper "tagacca" []
+z = ssWrapper "ataca" []
+
+import Data.List (intersect, maximumBy)
+import Data.Function (on)
+
+q = intersect x y
+r = intersect q z
+
+maximumBy (compare `on` length) r
+
+--sortBy (\(a, _) (b, _) -> compare a b) r
+
+
+

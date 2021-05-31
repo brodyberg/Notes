@@ -34,6 +34,8 @@ instance Eq Char where
     GHC.Types.False -> False
   x /= y = not (x == y)
 
--- 
+instance Show [Char] where
+  show s = s
+
 -- instance Show String where
 --   show s = s
