@@ -36,12 +36,12 @@ ss [] therest found = ss [(head therest)] (tail therest) []
 ss save [] found = save : found 
 ss save therest found = ss (save ++ [(head therest)]) (tail therest) (save : found)
 
-prop_oneToOne :: Char -> Bool
-prop_oneToOne c = ss "" [c] [] == [[c]]
-
-prop_twoToTwo :: String -> Bool
-prop_twoToTwo s = length (ss "" s []) == 2
-
+-- Formula from
+-- https://stackoverflow.com/questions/12418590/finding-substrings-of-a-string
+prop_allPossibleSubstringCount :: String -> Bool
+prop_allPossibleSubstringCount s = 
+  length (ss "" s []) == (n * (n + 1)) `div` 2
+  where n = length s
 
 -- implement all the fasta stuff
 

@@ -19,8 +19,7 @@ ss "" "gatta" []
 ss "" "gattac" []
 ss "" "gattaca" []
 
-quickCheck prop_oneToOne
-quickCheck prop_twoToTwo
+quickCheck prop_allPossibleSubstringCount
 
 
 ss "gattaca" "" []
