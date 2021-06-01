@@ -10,19 +10,17 @@ append "f" []
 
 "g"
 
-ss "" "" []
-ss "" "a" []
-ss "" "ga" []
-ss "" "gat" []
-ss "" "gatt" []
-ss "" "gatta" []
-ss "" "gattac" []
-ss "" "gattaca" []
+s ""
+s "a"
+s "ga"
+s "gat"
+s "gatt"
+s "gatta"
+s "gattac"
+s "gattaca"
 
 quickCheck prop_allPossibleSubstringCount
 
-
-ss "gattaca" "" []
 
 ssWrapper "" []
 ssWrapper "a" []
