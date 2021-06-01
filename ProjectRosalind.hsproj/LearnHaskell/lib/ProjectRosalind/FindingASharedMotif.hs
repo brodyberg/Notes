@@ -29,10 +29,10 @@ ssWrapper str acc = (s str) ++ (ssWrapper (tail str) [])
 
 s :: String -> [String]
 s []   = []
-s item = ss "" item []
+s item = ss "" item [""]
   where 
-    ss [] [] acc = [""] ++ acc
-    ss [] therest acc = ss [(head therest)] (tail therest) []
+    ss [] [] acc = acc
+    ss [] therest acc = ss [(head therest)] (tail therest) acc
     ss save [] acc = save : acc 
     ss save therest acc = ss (save ++ [(head therest)]) (tail therest) (save : acc)
 
