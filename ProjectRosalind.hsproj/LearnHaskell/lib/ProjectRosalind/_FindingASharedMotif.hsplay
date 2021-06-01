@@ -19,6 +19,15 @@ ss "" "gatta" []
 ss "" "gattac" []
 ss "" "gattaca" []
 
+--ss' DNAChar () DNAChar () []
+ss' [] [DNAChar ('A')] []
+ss' [] [DNAChar ('G') "ga" []
+ss' "" "gat" []
+ss "" "gatt" []
+ss "" "gatta" []
+ss "" "gattac" []
+ss "" "gattaca" []
+
 ss "gattaca" "" []
 
 ssWrapper "" []

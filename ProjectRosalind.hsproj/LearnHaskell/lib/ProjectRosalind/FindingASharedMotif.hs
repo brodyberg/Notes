@@ -1,5 +1,27 @@
 module ProjectRosalind.FindingASharedMotif where
 
+
+import Data.Char
+import Test.QuickCheck
+
+newtype DNAChar = DNAChar Char deriving (Eq, Show)
+
+instance Arbitrary DNAChar where
+  arbitrary = fmap DNAChar (choose ('G', 'A'))
+--  arbitrary = fmap DNAChar (choose ('G', 'A', 'T', 'C'))
+--    arbitrary = fmap DNAChar ['G', 'A', 'T', 'C']
+--    arbitrary = fmap DNAChar "GATC"
+
+ss' :: [DNAChar] 
+    -> [DNAChar]
+    -> [[DNAChar]] 
+    -> [[DNAChar]]
+ss' [] [] found = found
+ss' [] therest found = ss' [(head therest)] (tail therest) []
+ss' save [] found = save : found 
+ss' save therest found = ss' (save ++ [(head therest)]) (tail therest) (save : found)
+
+
 --Problem
 --A common substring of a collection of strings is a substring of every member of the collection. We say that a common substring is a longest common substring if there does not exist a longer common substring. For example, "CG" is a common substring of "ACGTACGT" and "AACCGTATA", but it is not as long as possible; in this case, "CGTA" is a longest common substring of "ACGTACGT" and "AACCGTATA".
 
@@ -48,7 +70,10 @@ ss [] therest found = ss [(head therest)] (tail therest) []
 ss save [] found = save : found 
 ss save therest found = ss (save ++ [(head therest)]) (tail therest) (save : found)
 
+
+
 -- implement all the fasta stuff
+
 
 
 -- getAllPossibleSubstrings g attaca
