@@ -31,14 +31,14 @@ substrings "gattaca"
 quickCheck prop_allPossibleSubstringCount
 
 
-ssWrapper "" []
-ssWrapper "a" []
-ssWrapper "ga" []
-ssWrapper "gat" []
-ssWrapper "gatt" []
-ssWrapper "gatta" []
-ssWrapper "gattac" []
-ssWrapper "gattaca" []
+allSubstrings "" []
+allSubstrings "a" []
+allSubstrings "ga" []
+allSubstrings "gat" []
+allSubstrings "gatt" []
+allSubstrings "gatta" []
+allSubstrings "gattac" []
+allSubstrings "gattaca" []
 
 length (ssWrapper "gat" [])
 
