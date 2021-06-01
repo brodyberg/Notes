@@ -13,17 +13,20 @@ append "f" []
 [""] ++ []
 [""] ++ ["b"]
 
-s "aa"
-s "aaa"
+substrings "a"
+substrings "aa"
+substrings "aaa"
+substrings "aaaa"
 
-s ""
-s "a"
-s "ga"
-s "gat"
-s "gatt"
-s "gatta"
-s "gattac"
-s "gattaca"
+
+substrings ""
+substrings "a"
+substrings "ga"
+substrings "gat"
+substrings "gatt"
+substrings "gatta"
+substrings "gattac"
+substrings "gattaca"
 
 quickCheck prop_allPossibleSubstringCount
 
@@ -36,6 +39,8 @@ ssWrapper "gatt" []
 ssWrapper "gatta" []
 ssWrapper "gattac" []
 ssWrapper "gattaca" []
+
+length (ssWrapper "gat" [])
 
 x = ssWrapper "gattaca" []
 y = ssWrapper "tagacca" []

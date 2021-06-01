@@ -25,11 +25,11 @@ import Test.QuickCheck
 
 ssWrapper :: String -> [String] -> [String]
 ssWrapper [] acc = acc
-ssWrapper str acc = (s str) ++ (ssWrapper (tail str) [])
+ssWrapper str acc = (substrings str) ++ (ssWrapper (tail str) [])
 
-s :: String -> [String]
-s []   = []
-s item = ss "" item [""]
+substrings :: String -> [String]
+substrings []   = []
+substrings item = ss "" item []
   where 
     ss [] [] acc = acc
     ss [] therest acc = ss [(head therest)] (tail therest) acc
@@ -40,12 +40,16 @@ s item = ss "" item [""]
 -- https://stackoverflow.com/questions/12418590/finding-substrings-of-a-string
 prop_allPossibleSubstringCount :: String -> Bool
 prop_allPossibleSubstringCount str = 
-  length (s str) == (n * (n + 1)) `div` 2
+  length (ssWrapper str []) == (n * (n + 1)) `div` 2
   where n = length str
 
 -- implement all the fasta stuff
 
--- 2 * (2 + 1) / 2
+-- 4 * (4 + 1) / 2 == 10
+-- 3 * (3 + 1) / 2 == 6
+-- 2 * (2 + 1) / 2 == 3
+-- 1 * (1 + 1) / 2 == 1
+
 
 -- getAllPossibleSubstrings g attaca
 -- []
