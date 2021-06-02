@@ -23,6 +23,8 @@ import Test.QuickCheck
 -- Sample Output
 -- AC
 
+strings = ["GATTACA", "TAGACCA", "ATACA"]
+
 -- make it so we don't have to pass in [String] 
 allSubstrings :: String -> [String] -> [String]
 allSubstrings [] acc = acc
@@ -36,6 +38,9 @@ substrings item = ss "" item []
     ss [] therest acc = ss [(head therest)] (tail therest) acc
     ss save [] acc = save : acc 
     ss save therest acc = ss (save ++ [(head therest)]) (tail therest) (save : acc)
+
+results = foldr allSubstrings [] strings
+
 
 -- Formula from
 -- https://stackoverflow.com/questions/12418590/finding-substrings-of-a-string
