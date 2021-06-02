@@ -31,27 +31,13 @@ substrings "gattaca"
 quickCheck prop_allPossibleSubstringCount
 
 
-allSubstrings "" []
-allSubstrings "a" []
-allSubstrings "ga" []
-allSubstrings "gat" []
-allSubstrings "gatt" []
-allSubstrings "gatta" []
-allSubstrings "gattac" []
-allSubstrings "gattaca" []
+allSubstrings ""
+allSubstrings "a"
+allSubstrings "ga"
+allSubstrings "gat"
+allSubstrings "gatt"
+allSubstrings "gatta"
+allSubstrings "gattac"
+allSubstrings "gattaca"
 
-import Data.List (intersect, maximumBy)
-import Data.Function (on)
-
-length results
-
-
---q = intersect x y
---r = intersect q z
---
---maximumBy (compare `on` length) r
-
---sortBy (\(a, _) (b, _) -> compare a b) r
-
-
-
+getLongestSubstring strings

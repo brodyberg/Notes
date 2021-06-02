@@ -1,6 +1,8 @@
 module ProjectRosalind.FindingASharedMotif where
 
 import Test.QuickCheck
+import Data.List (intersect, maximumBy)
+import Data.Function (on)
 
 --Problem
 --A common substring of a collection of strings is a substring of every member of the collection. We say that a common substring is a longest common substring if there does not exist a longer common substring. For example, "CG" is a common substring of "ACGTACGT" and "AACCGTATA", but it is not as long as possible; in this case, "CGTA" is a longest common substring of "ACGTACGT" and "AACCGTATA".
@@ -25,10 +27,12 @@ import Test.QuickCheck
 
 strings = ["GATTACA", "TAGACCA", "ATACA"]
 
--- make it so we don't have to pass in [String] 
-allSubstrings :: String -> [String] -> [String]
-allSubstrings [] acc = acc
-allSubstrings str acc = (substrings str) ++ (allSubstrings (tail str) [])
+allSubstrings :: String -> [String]
+allSubstrings [] = []
+allSubstrings strings = allSubstrings' strings []
+  where 
+    allSubstrings' [] acc = acc
+    allSubstrings' str acc = (substrings str) ++ (allSubstrings' (tail str) [])
 
 substrings :: String -> [String]
 substrings []   = []
@@ -39,14 +43,18 @@ substrings item = ss "" item []
     ss save [] acc = save : acc 
     ss save therest acc = ss (save ++ [(head therest)]) (tail therest) (save : acc)
 
-results = foldr allSubstrings [] strings
-
+getLongestSubstring :: [String] -> String
+getLongestSubstring strings = 
+  maximumBy (compare `on` length) resultsOfIntersections
+  where 
+    resultsAsListOfLists = fmap allSubstrings strings
+    resultsOfIntersections = foldr intersect (head resultsAsListOfLists) (tail resultsAsListOfLists)
 
 -- Formula from
 -- https://stackoverflow.com/questions/12418590/finding-substrings-of-a-string
 prop_allPossibleSubstringCount :: String -> Bool
 prop_allPossibleSubstringCount str = 
-  length (allSubstrings str []) == (n * (n + 1)) `div` 2
+  length (allSubstrings str) == (n * (n + 1)) `div` 2
   where n = length str
 
 -- implement all the fasta stuff
