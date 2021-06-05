@@ -8,89 +8,96 @@ x-last-ide-version: HfM1.8.2
 library
     hs-source-dirs: lib
     other-modules:
+        HaskellBook.CasePractice
+        HaskellBook.DeconstructingChapter11
+        HaskellBook.GuardDuty
+        HaskellBook.Arith2
+        HaskellBook.Chapter3
+        HaskellBook.PalindromeChapter13
+        HaskellBook.TypeInference1
+        HaskellBook.UnfoldsChapter12
+        HaskellBook.Learn
+        HaskellBook.YesMonomorphism
+        HaskellBook.MoreBottomChapter9
+        HaskellBook.ValidateTheWordChapter12
+        HaskellBook.GoatsDerivingChapter11
+        HaskellBook.DogTypesChapter11
+        HaskellBook.AsPatternsChapter11
+        HaskellBook.Practice
+        HaskellBook.RegisteredUser1
+        HaskellBook.Chapter5
+        HaskellBook.SmallLibraryForEitherChapter12
+        HaskellBook.SquareCubeChapter9
+        HaskellBook.TypeDistributivePropertyChapter11
+        HaskellBook.UnfoldsAgainChapter12
+        HaskellBook.ProductTypesChapter11
+        HaskellBook.WaxOn
+        HaskellBook.CipherChapter9
+        HaskellBook.Arith4
+        HaskellBook.StandardChapter9
+        HaskellBook.DatabaseProcessing
+        HaskellBook.Case
+        HaskellBook.WriteATypeSignature
+        HaskellBook.PartiallyAppliedDataConstructorsChapter11
+        HaskellBook.TypeInference2
+        HaskellBook.Chapter17_Applicative
+        HaskellBook.LogicGoatsChapter11
+        HaskellBook.LanguageExercisesChapter11
+        HaskellBook.HuttonsRazorChapter11
+        HaskellBook.WhereDoesYourGardenGrowChapter11
+        HaskellBook.Chapter6
+        HaskellBook.Blank
+        HaskellBook.Dodgy
+        HaskellBook.DivideThenAdd
+        HaskellBook.MyLinesChapter9
+        HaskellBook.DayOfWeek
+        HaskellBook.Matching
+        HaskellBook.NoMonomorphism
         HaskellBook.ProgrammersChapter11
+        HaskellBook.SymmetryChapter9
+        HaskellBook.VehiclesChapter11
+        HaskellBook.EqInstances
+        HaskellBook.MakePersonChapter13
         HaskellBook.Compose
         HaskellBook.PityTheBoolChapter11
-        HaskellBook.LogicGoatsChapter11
-        HaskellBook.TypeInference2
-        HaskellBook.CasePractice
-        HaskellBook.ItsOnlyNaturalChapter12
-        HaskellBook.MakePersonChapter13
-        HaskellBook.EftChapter9
-        HaskellBook.EqInstances
-        HaskellBook.SmallLibraryForMaybeChapter12
-        HaskellBook.AsPatternsChapter11
+        HaskellBook.FilteringChapter9
         HaskellBook.FoldingExample
-        HaskellBook.VigenereCipherChapter11
-        HaskellBook.WriteATypeSignature
         HaskellBook.Chapter10Exercises
-        HaskellBook.Matching
-        HaskellBook.Penguin
-        HaskellBook.RegisteredUser1
-        HaskellBook.Blank
-        HaskellBook.PartiallyAppliedDataConstructorsChapter11
-        HaskellBook.Learn
-        HaskellBook.GoatsChapter11
-        HaskellBook.MoreBottomChapter9
-        HaskellBook.MoodSwing
-        HaskellBook.DayOfWeek
-        HaskellBook.DeconstructingChapter11
-        HaskellBook.Dodgy
-        HaskellBook.BinaryTreeChapter11
-        HaskellBook.SquareCubeChapter9
-        HaskellBook.StandardChapter9
-        HaskellBook.NoMonomorphism
-        HaskellBook.Arith4
-        HaskellBook.Chapter7Exercises
-        HaskellBook.WhereDoesYourGardenGrowChapter11
-        HaskellBook.Chapter5
-        HaskellBook.RegisteredUser2
-        HaskellBook.SymmetryChapter9
-        HaskellBook.YesMonomorphism
-        HaskellBook.MatchingTuples1
-        HaskellBook.HuttonsRazorChapter11
-        HaskellBook.Chapter4
-        HaskellBook.NotAListChapter12
-        HaskellBook.ValidateTheWordChapter12
-        HaskellBook.DatabaseProcessing
-        HaskellBook.Chapter6
-        HaskellBook.GuardDuty
-        HaskellBook.PhoneExercise
-        HaskellBook.LanguageExercisesChapter11
-        HaskellBook.DogTypesChapter11
-        HaskellBook.ProductTypesChapter11
-        HaskellBook.Practice
         HaskellBook.GreetIfCool3
-        HaskellBook.MyLinesChapter9
+        HaskellBook.Penguin
+        HaskellBook.DeconstructingValuesChapter11
+        HaskellBook.SmallLibraryForMaybeChapter12
+        HaskellBook.VigenereCipherChapter11
+        HaskellBook.BinaryTreeChapter11
+        HaskellBook.AcrosChapter9
+        HaskellBook.ZippingChapter9
+        HaskellBook.Chapter7GrabBag
         HaskellBook.GoatsNotDerivingChapter11
         HaskellBook.Chapter9
-        HaskellBook.DeconstructingValuesChapter11
-        HaskellBook.Arith2
-        HaskellBook.SmallLibraryForEitherChapter12
-        HaskellBook.StringProcessingChapter12
-        HaskellBook.Chapter7GrabBag
-        HaskellBook.FilteringChapter9
-        HaskellBook.TypeInference1
-        HaskellBook.DivideThenAdd
-        HaskellBook.Case
-        HaskellBook.AcrosChapter9
-        HaskellBook.GoatsDerivingChapter11
-        HaskellBook.PalindromeChapter13
+        HaskellBook.MatchingTuples1
+        HaskellBook.Chapter4
+        HaskellBook.Chapter7Exercises
+        HaskellBook.MoodSwing
+        HaskellBook.ItsOnlyNaturalChapter12
+        HaskellBook.NotAListChapter12
         HaskellBook.Reverse
-        HaskellBook.UnfoldsAgainChapter12
-        HaskellBook.VehiclesChapter11
-        HaskellBook.TypeDistributivePropertyChapter11
-        HaskellBook.Chapter17_Applicative
-        HaskellBook.Chapter3
-        HaskellBook.UnfoldsChapter12
+        HaskellBook.StringProcessingChapter12
+        HaskellBook.PhoneExercise
+        HaskellBook.GoatsChapter11
         HaskellBook.Chapter5DetermineTheType
-        HaskellBook.WaxOn
-        HaskellBook.ZippingChapter9
-        HaskellBook.CipherChapter9
+        HaskellBook.EftChapter9
+        HaskellBook.RegisteredUser2
+        ProjectRosalind.Fasta_Types
+        ProjectRosalind.Fasta
+        ProjectRosalind.FindingAProteinMotif
+        ProjectRosalind.SharedMotifActual
         ProjectRosalind.FindingASharedMotif
     default-language: Haskell2010
     build-depends:
-        base -any,
         mtl -any,
+        QuickCheck -any,
+        parsec -any,
+        base -any,
         time -any,
-        containers -any
+        containers -any,
+        pipes -any

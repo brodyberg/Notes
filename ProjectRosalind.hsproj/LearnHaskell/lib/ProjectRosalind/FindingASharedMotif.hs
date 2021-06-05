@@ -4,6 +4,11 @@ import Test.QuickCheck
 import Data.List (intersect, maximumBy)
 import Data.Function (on)
 
+import ProjectRosalind.Fasta (parseFasta)
+import ProjectRosalind.Fasta_Types 
+
+
+
 --Problem
 --A common substring of a collection of strings is a substring of every member of the collection. We say that a common substring is a longest common substring if there does not exist a longer common substring. For example, "CG" is a common substring of "ACGTACGT" and "AACCGTATA", but it is not as long as possible; in this case, "CGTA" is a longest common substring of "ACGTACGT" and "AACCGTATA".
 
@@ -15,6 +20,21 @@ import Data.Function (on)
 
 --Sample Dataset
 
+y = ">Rosalind_1\nGATTACA"
+
+x = ">Rosalind_1\
+\\nGATTACA\
+\\n>Rosalind_2\
+\\nTAGACCA\
+\\n>Rosalind_3\
+\\nATACA"
+
+q = "\
+\\
+\"
+
+z = parseFasta y
+z' = parseFasta x
 -- >Rosalind_1
 -- GATTACA
 -- >Rosalind_2
@@ -24,6 +44,9 @@ import Data.Function (on)
 
 -- Sample Output
 -- AC
+
+n = fmap fastaHeader z
+n' = fmap fastaSeq z
 
 strings = ["GATTACA", "TAGACCA", "ATACA"]
 
