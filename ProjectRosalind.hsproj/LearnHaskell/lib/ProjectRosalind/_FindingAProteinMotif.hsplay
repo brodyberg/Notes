@@ -1,14 +1,8 @@
 -- Haskell Playground 1.0
-{-# LANGUAGE OverloadedStrings #-}
 import qualified Data.ByteString.Lazy.Char8 as L8
---import Network.HTTP.Client.TLS
---import           Network.HTTP.Simple
-
--- https://hackage.haskell.org/package/http-client-0.7.8/docs/Network-HTTP-Client.html#g:1
 
 import Network.HTTP.Client
 import Network.HTTP.Client.TLS
--- import Network.HTTP.Simple
 
 main = do
     manager <- newManager tlsManagerSettings
@@ -18,37 +12,4 @@ main = do
 
     L8.putStrLn $ responseBody response
 
-
-
 main
-
-
---    let request = setRequestManager manager "https://www.uniprot.org/uniprot/P07204.fasta"
---    response <- httpLbs request
---    
---    putStrLn $ "The status code was: " ++
---               show (getResponseStatusCode response)
---    print $ getResponseHeader "Content-Type" response
---    L8.putStrLn $ getResponseBody response
---
-----main :: IO ()
---main = do
---  
---
---    response <- httpLBS "http://httpbin.org/get"
---
---    putStrLn $ "The status code was: " ++
---               show (getResponseStatusCode response)
---    print $ getResponseHeader "Content-Type" response
---    L8.putStrLn $ getResponseBody response
---
---import Network.HTTP
---
---
----- https://www.stackage.org/haddock/lts-17.14/HTTP-4000.3.16/Network-HTTP.html
---main = do
---  rsp <- simpleHTTP (getRequest "https://www.uniprot.org/uniprot/P07204.fasta")
---  -- fetch document and return it (as a 'String'.)
---  fmap (take 100) (getResponseBody rsp)
---  
---main
