@@ -1,4 +1,6 @@
 module ProjectRosalind.FindingAProteinMotif where
+
+-- http://rosalind.info/problems/mprt/
   
 -- make a dfa that recognizes a DSL for motifs
 -- we could easily take the Fasta lib and learn from 
@@ -20,6 +22,33 @@ import Network.HTTP.Client.TLS
 -- retrieve list of docs
 -- read each doc for match string indexes
 -- print name and indexes
+
+-- https://stackoverflow.com/questions/36078405/parsec-getting-start-and-end-source-positions-of-expressions
+
+import Data.Char
+import Text.Parsec
+import Control.Monad (void)
+import qualified Data.Map as Map
+import qualified System.IO as IO
+
+-- Algebraic
+data NGlycosylationMotif = NGlycosylationMotif { proteinId :: String
+                                   , locations    :: [Int]
+                                   } deriving (Eq, Ord, Show)
+
+a = NGlycosylationMotif { proteinId = "AB5ZC00"
+                        , locations = [85, 118, 142, 306, 395] } 
+
+-- Classes
+class ShowNGlycosylationMotif a where
+    showResults :: a -> String
+
+-- Instances
+instance ShowNGlycosylationMotif NGlycosylationMotif where
+    showResults NGlycosylationMotif {proteinId = x, locations = xs} = 
+      concat [ x
+             , "\n"
+             , foldr (++) "" $ fmap (\n -> (show n) ++ " ") xs ]
 
 main = do
     manager <- newManager tlsManagerSettings
