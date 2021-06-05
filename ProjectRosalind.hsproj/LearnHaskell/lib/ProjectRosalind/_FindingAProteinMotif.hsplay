@@ -1,15 +1,2 @@
 -- Haskell Playground 1.0
-import qualified Data.ByteString.Lazy.Char8 as L8
-
-import Network.HTTP.Client
-import Network.HTTP.Client.TLS
-
-main = do
-    manager <- newManager tlsManagerSettings
-
-    request <- parseRequest "https://www.uniprot.org/uniprot/P07204.fasta"
-    response <- httpLbs request manager  
-
-    L8.putStrLn $ responseBody response
-
-main
+-- main
