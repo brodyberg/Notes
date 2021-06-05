@@ -6,6 +6,8 @@ import Data.Function (on)
 
 import ProjectRosalind.Fasta (parseFasta)
 import ProjectRosalind.Fasta_Types 
+import System.IO  
+import Control.Monad
 
 
 
@@ -80,7 +82,13 @@ prop_allPossibleSubstringCount str =
   length (allSubstrings str) == (n * (n + 1)) `div` 2
   where n = length str
 
--- implement all the fasta stuff
+readLocalFile = do  
+        handle <- openFile "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/NewText.txt" ReadMode
+        contents <- hGetContents handle
+        putStrLn contents
+
+
+
 
 -- 4 * (4 + 1) / 2 == 10
 -- 3 * (3 + 1) / 2 == 6

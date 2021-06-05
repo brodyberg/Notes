@@ -12,6 +12,7 @@ main = do
        -- hClose handle  
         putStrLn "foo"
 
+readLocalFile
 --main
 
 
