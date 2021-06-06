@@ -56,3 +56,46 @@ main = do
     request <- parseRequest "https://www.uniprot.org/uniprot/P07204.fasta"
     response <- httpLbs request manager  
     L8.putStrLn $ responseBody response
+    
+--`N{P}[ST]{P}`. Or, the N amino acid, any amino acid except P followed by either S or T amino acids and finally any amino acid except P. 
+
+-- Parser: 
+-- N, any but P, either S or T, and finally any but P
+-- Combinators: 
+--  N
+--  any but P
+--  S or T
+-- Combined such that: 
+--  N
+--  any but P
+--  S or T
+--  any but P
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
