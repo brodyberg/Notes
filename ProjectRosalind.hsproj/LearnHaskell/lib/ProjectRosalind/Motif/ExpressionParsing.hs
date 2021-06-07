@@ -49,19 +49,23 @@ spanned p = do
 -- > parseTest (spanned (many1 (char 'a'))) "aaaaafff"
 --((line 1, column 1),(line 1, column 6),"aaaaa")
 
-glycosylation :: Parser (SourcePos, SourcePos, String )
+glycosylation :: Parser String-- (SourcePos, SourcePos, String )
 glycosylation = do 
-  pos1 <- getPosition
+--  pos1 <- getPosition
   n <- char 'N'
   notP1 <- noneOf ['P']
   sOrt <- oneOf ['S', 'T']    
   notP2 <- noneOf ['P']
-  pos2 <- getPosition
+  --pos2 <- getPosition
 --  return "foo"
-  pure (pos1, pos2, foldr (\x acc ->  n ++ acc) "" [n, notP1, sOrt, notP2]
+  return "foo"
+  -- return foldr (\x acc ->  n ++ acc) "" [n, notP1, sOrt, notP2]
+  --pure (pos1, pos2, foldr (\x acc ->  n ++ acc) "" [n, notP1, sOrt, notP2]
 
+q = regularParse (spanned glycosylation) "QEWRQEWRLLELE"
+r = regularParse (spanned glycosylation) "NRTX"
   
-x = regularParse glycosylation "EREWRLLKJE"
+--x = regularParse glycosylation "EREWRLLKJE"
 
 
 
