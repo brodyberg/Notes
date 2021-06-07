@@ -1,2 +1,21 @@
 -- Haskell Playground 1.0
 x
+
+:t regularParse
+
+e = regularParse anyChar ""
+
+e
+
+regularParse (many1 digit) "1"
+regularParse (many1 digit) "1234234236466788090"
+regularParse (many1 digit) "1234234236s466788090"
+
+regularParse (char 'N') "N"
+regularParse (oneOf ['S', 'T']) "S"
+regularParse (oneOf ['S', 'T']) "N"
+regularParse (noneOf ['N']) "N"
+regularParse (noneOf ['N']) "V"
+
+regularParse spaces ""
+regularParse spaces "n"

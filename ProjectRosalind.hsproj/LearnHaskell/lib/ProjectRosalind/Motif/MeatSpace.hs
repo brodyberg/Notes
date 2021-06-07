@@ -14,3 +14,13 @@ x = regularParse anyChar "a"
 -- this file demonstrates that we can bring in all the files required in order to read this tutorial on Parsec: 
 
 -- https://jakewheat.github.io/intro_to_parsing/#_overview
+
+--regularParse (many1 digit) "1"
+--regularParse (many1 digit) "1234234236466788090"
+--regularParse (many1 digit) "1234234236s466788090"
+--
+--regularParse (char 'N') "N"
+--regularParse (oneOf ['S', 'T']) "S"
+--regularParse (oneOf ['S', 'T']) "N"
+--regularParse (noneOf ['N']) "N"
+--regularParse (noneOf ['N']) "V"
