@@ -1,13 +1,3 @@
 -- Haskell Playground 1.0
--- main
-putStr $ showResults a
 
-
-import Text.Parsec.String (Parser)
-import Text.Parsec.Char (anyChar)
-import Text.Parsec.Char
-import FunctionsAndTypesForParsing (regularParse, parseWithEof, parseWithLeftOver)
-import Data.Char
-import Text.Parsec.Combinator (many1)
--- regularParse
 

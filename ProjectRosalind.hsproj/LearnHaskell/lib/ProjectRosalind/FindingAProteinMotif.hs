@@ -1,5 +1,14 @@
 module ProjectRosalind.FindingAProteinMotif where
 
+import qualified Data.ByteString.Lazy.Char8 as L8
+
+import Network.HTTP.Client
+import Network.HTTP.Client.TLS
+import qualified Data.Map as Map
+import qualified System.IO as IO
+
+-- [N][^P](S|T)[^P]
+
 -- http://rosalind.info/problems/mprt/
   
 -- make a dfa that recognizes a DSL for motifs
@@ -12,11 +21,6 @@ module ProjectRosalind.FindingAProteinMotif where
 -- https://www.uniprot.org/uniprot/A2Z669.fasta
 -- https://www.uniprot.org/uniprot/P07204.fasta
 -- 
-import qualified Data.ByteString.Lazy.Char8 as L8
-
-import Network.HTTP.Client
-import Network.HTTP.Client.TLS
-
 -- we get list of ids
 -- make list of urls
 -- retrieve list of docs
@@ -24,12 +28,6 @@ import Network.HTTP.Client.TLS
 -- print name and indexes
 
 -- https://stackoverflow.com/questions/36078405/parsec-getting-start-and-end-source-positions-of-expressions
-
-import Data.Char
-import Text.Parsec
-import Control.Monad (void)
-import qualified Data.Map as Map
-import qualified System.IO as IO
 
 -- Algebraic
 data NGlycosylationMotif = NGlycosylationMotif { proteinId :: String

@@ -4,7 +4,7 @@ import Text.Parsec (ParseError, SourcePos, getPosition)
 import Text.Parsec.String (Parser)
 import ProjectRosalind.Motif.Parsec (try)
 import ProjectRosalind.Motif.Char (oneOf, noneOf, char, digit, satisfy)
-import ProjectRosalind.Motif.Combinator (many1, choice, chainl1)
+import ProjectRosalind.Motif.Combinator (eof, many1, manyTill, choice, chainl1, count)
 import Control.Applicative ((<|>), many)
 import Control.Monad (void)
 import Data.Char (isLetter, isDigit)
@@ -38,12 +38,11 @@ var = do
     firstChar = satisfy (\a -> isLetter a || a == '_')
     nonFirstChar = satisfy (\a -> isDigit a || isLetter a || a == '_')
     
-spanned :: Parser a -> Parser (SourcePos, SourcePos, a)
+spanned :: Parser a -> Parser (SourcePos, a)
 spanned p = do
-  pos1 <- getPosition
+  pos <- getPosition
   a <- p
-  pos2 <- getPosition
-  pure (pos1, pos2, a)
+  pure (pos, a)
 
 -- > parseTest (spanned (many1 (char 'a'))) "aaaaafff"
 --((line 1, column 1),(line 1, column 6),"aaaaa")
@@ -54,16 +53,29 @@ glycosylation = do
   notP1 <- noneOf ['P']
   sOrt <- oneOf ['S', 'T']    
   notP2 <- noneOf ['P']
-  return "foo"
+  return [n, notP1, sOrt, notP2]
 
 q = regularParse (spanned glycosylation) "QEWRQEWRLLELE"
 r = regularParse (spanned glycosylation) "NRTX"
 
 
+nnn = "MKNKFKTQEELVNHLKTVGFVFANSEIYNGLANAWDYGPLGVLLKNNLKNLWWKEFVTKQ\
+\KDVVGLDSAIILNPLVWKASGHLDNFSDPLIDCKNCKARYRADKLIESFDENIHIAENSS\
+\NEEFAKVLNDYEISCPTCKQFNWTEIRHFNLMFKTYQGVIEDAKNVVYLRPETAQGIFVN\
+\FKNVQRSMRLHLPFGIAQIGKSFRNEITPGNFIFRTREFEQMEIEFFLKEESAYDIFDKY\
+\LNQIENWLVSACGLSLNNLRKHEHPKEELSHYSKKTIDFEYNFLHGFSELYGIAYRTNYD\
+\LSVHMNLSKKDLTYFDEQTKEKYVPHVIEPSVGVERLLYAILTEATFIEKLENDDERILM\
+\DLKYDLAPYKIAVMPLVNKLKDKAEEIYGKILDLNISATFDNSGSIGKRYRRQDAIGTIY\
+\CLTIDFDSLDDQQDPSFTIRERNSMAQKRIKLSELPLYLNQKAHEDFQRQCQK"
 
+-- regularParse -- 
+xx = manyTill (spanned glycosylation) eof
 
+xxx = count 100 (spanned glycosylation)
+xxxx = regularParse xxx nnn
 
-
+qqqq = regularParse xx nnn
+-- manyTill (spanned glycosylation) eof
 
 
 
