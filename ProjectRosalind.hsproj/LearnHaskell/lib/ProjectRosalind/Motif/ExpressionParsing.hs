@@ -1,6 +1,5 @@
 module ProjectRosalind.Motif.ExpressionParsing where 
 
---import Text.Parsec (ParseError)
 import Text.Parsec (ParseError, SourcePos, getPosition)
 import Text.Parsec.String (Parser)
 import ProjectRosalind.Motif.Parsec (try)
@@ -51,21 +50,14 @@ spanned p = do
 
 glycosylation :: Parser String-- (SourcePos, SourcePos, String )
 glycosylation = do 
---  pos1 <- getPosition
   n <- char 'N'
   notP1 <- noneOf ['P']
   sOrt <- oneOf ['S', 'T']    
   notP2 <- noneOf ['P']
-  --pos2 <- getPosition
---  return "foo"
   return "foo"
-  -- return foldr (\x acc ->  n ++ acc) "" [n, notP1, sOrt, notP2]
-  --pure (pos1, pos2, foldr (\x acc ->  n ++ acc) "" [n, notP1, sOrt, notP2]
 
 q = regularParse (spanned glycosylation) "QEWRQEWRLLELE"
 r = regularParse (spanned glycosylation) "NRTX"
-  
---x = regularParse glycosylation "EREWRLLKJE"
 
 
 
