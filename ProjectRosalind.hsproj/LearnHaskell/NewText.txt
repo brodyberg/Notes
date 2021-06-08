@@ -1,0 +1,13 @@
+cabal v1-install --ghc-option=-haddock regex-tdfa-1.2.3.1 [in temporary directory]
+cd /var/folders/23/f9jzgvns23jgmdt5v42sj00000gn/T/runcli.mBE7Wyvm
+/usr/local/lib/HaskellCLI.6.4-13.14-3/bin/cabal v1-install --ghc-option=-haddock regex-tdfa-1.2.3.1
+clang: warning: argument unused during compilation: '-no-pie' [-Wunused-command-line-argument]
+Warning: the --global flag is deprecated -- it is generally considered a bad
+idea to install packages into the global store
+Resolving dependencies...
+Downloading  regex-tdfa-1.2.3.1
+Downloaded   regex-tdfa-1.2.3.1
+Starting     regex-tdfa-1.2.3.1
+Building     regex-tdfa-1.2.3.1
+Completed    regex-tdfa-1.2.3.1
+«End of 'cabal v1-install --ghc-option=-haddock regex-tdfa-1.2.3.1 [in temporary directory]'»
