@@ -98,7 +98,7 @@ urlsToContent urls = do
 
 regex = "[N][^P](S|T)[^P]"
 
-
+-- http://blog.sigfpe.com/2007/11/io-monad-for-people-who-simply-dont.html
 main = do
 --    manager <- newManager tlsManagerSettings
 
