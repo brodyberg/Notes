@@ -6,3 +6,9 @@ import Text.Regex.TDFA
 getAllMatches ("john anne yifan" =~ "[a-z]+") :: [(Int, Int)]
 
 getAllMatches (nnn =~ "[N][^P](S|T)[^P]")  :: [(Int, Int)]
+
+--main
+
+"foo" ++ "bar" 
+
+idsToFastaUrl ids

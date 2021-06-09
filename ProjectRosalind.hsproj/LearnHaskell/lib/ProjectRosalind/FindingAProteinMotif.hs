@@ -38,11 +38,6 @@ qqqn = getAllMatches (nnn =~ "[N][^P](S|T)[^P]")  :: [(Int, Int)]
 -- https://www.uniprot.org/uniprot/A2Z669.fasta
 -- https://www.uniprot.org/uniprot/P07204.fasta
 -- 
--- we get list of ids
--- make list of urls
--- retrieve list of docs
--- read each doc for match string indexes
--- print name and indexes
 
 -- https://stackoverflow.com/questions/36078405/parsec-getting-start-and-end-source-positions-of-expressions
 
@@ -65,12 +60,56 @@ instance ShowNGlycosylationMotif NGlycosylationMotif where
              , "\n"
              , foldr (++) "" $ fmap (\n -> (show n) ++ " ") xs ]
 
+ids = ["A2Z669", "B5ZC00", "P07204_TRBM_HUMAN", "P20840_SAG1_YEAST"]
+
+-- we get list of ids
+-- make list of urls
+-- read from net
+-- read text into fasta
+-- search fasta text
+-- retrieve list of docs
+-- read each doc for match string indexes
+-- print name and indexes
+urlBase = "https://www.uniprot.org/uniprot/" -- B5ZC00.fasta
+urlExt  = ".fasta"
+
+idsToFastaUrl :: [String] -> [String]
+idsToFastaUrl = map (\s -> urlBase ++ s ++ urlExt)
+
+urlsActual = idsToFastaUrl ids
+
+pullFastaFromWeb :: String -> IO String
+pullFastaFromWeb s = do
+  manager <- newManager tlsManagerSettings
+  request <- parseRequest s
+  response <- httpLbs request manager  
+  pure $ L8.unpack $ responseBody response
+ 
+
+
+
+ 
 main = do
     manager <- newManager tlsManagerSettings
 
-    request <- parseRequest "https://www.uniprot.org/uniprot/P07204.fasta"
-    response <- httpLbs request manager  
-    L8.putStrLn $ responseBody response
+    payloads <- map (\s -> 
+                            do 
+                              request <- parseRequest s
+                              response <- httpLbs request manager  
+                              L8.unpack $ responseBody response) urlsActual
+    
+    putStr "foo"
+
+--    request <- parseRequest "https://www.uniprot.org/uniprot/P07204.fasta"
+--    response <- httpLbs request manager  
+--    
+--    let x = L8.unpack $ responseBody response
+
+--    putStr x
+    
+--    putStr $ L8.unpack response
+
+--    L8.putStrLn $ responseBody response
     
 --`N{P}[ST]{P}`. Or, the N amino acid, any amino acid except P followed by either S or T amino acids and finally any amino acid except P. 
 
