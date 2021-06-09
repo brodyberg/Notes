@@ -9,6 +9,11 @@ import qualified System.IO as IO
 
 import Text.Regex.TDFA (getAllMatches, (=~))
 
+import ProjectRosalind.Fasta (parseFasta)
+import ProjectRosalind.Fasta_Types (FastaSequence, fastaSeq, fastaHeader)
+
+import Data.List.Split (splitOn)
+
 --xn = getAllMatches ("john anne yifan" =~ "[a-z]+") :: [(Int, Int)]
 
 -- [N][^P](S|T)[^P]
@@ -73,32 +78,70 @@ ids = ["A2Z669", "B5ZC00", "P07204_TRBM_HUMAN", "P20840_SAG1_YEAST"]
 urlBase = "https://www.uniprot.org/uniprot/" -- B5ZC00.fasta
 urlExt  = ".fasta"
 
+fullEx = urlBase ++ "B5ZC00" ++ urlExt
+
 idsToFastaUrl :: [String] -> [String]
 idsToFastaUrl = map (\s -> urlBase ++ s ++ urlExt)
 
 urlsActual = idsToFastaUrl ids
 
-pullFastaFromWeb :: String -> IO String
-pullFastaFromWeb s = do
+pullFromWeb :: String -> IO String
+pullFromWeb s = do
   manager <- newManager tlsManagerSettings
   request <- parseRequest s
   response <- httpLbs request manager  
-  pure $ L8.unpack $ responseBody response
+  return $ L8.unpack $ responseBody response
  
+urlsToContent :: [String] -> [IO String]
+urlsToContent urls = do 
+  map pullFromWeb urls
+
+regex = "[N][^P](S|T)[^P]"
 
 
-
- 
 main = do
-    manager <- newManager tlsManagerSettings
+--    manager <- newManager tlsManagerSettings
 
-    payloads <- map (\s -> 
-                            do 
-                              request <- parseRequest s
-                              response <- httpLbs request manager  
-                              L8.unpack $ responseBody response) urlsActual
+--    content <- urlsToContent urlsActual
+    --payload <- pullFromWeb "A2Z669"
+    payload <- pullFromWeb fullEx
     
+    let n = parseFasta payload
+    
+    let nameActual = (splitOn "|" $ fastaHeader $ n !! 0) !! 1
+
+    let q = getAllMatches ((fastaSeq $ n !! 0) =~ regex)  :: [(Int, Int)]
+
+    let qq = foldr (\(a, b) acc -> show a ++ " " ++ acc) "" q
+
+--    putStrLn $ fastaHeader $ n !! 0
+    -- huh, their indexes are 1-based
+
+    putStrLn nameActual
+    putStrLn qq
+
+
+
+    let rando = urlsToContent urlsActual
+
+    
+
+    --x <- parseFasta rando
+
+    -- can we print rando?
+    
+    
+
     putStr "foo"
+
+
+
+--    payloads <- map (\s -> 
+--                            do 
+--                              request <- parseRequest s
+--                              response <- httpLbs request manager  
+--                              L8.unpack $ responseBody response) urlsActual
+    
 
 --    request <- parseRequest "https://www.uniprot.org/uniprot/P07204.fasta"
 --    response <- httpLbs request manager  

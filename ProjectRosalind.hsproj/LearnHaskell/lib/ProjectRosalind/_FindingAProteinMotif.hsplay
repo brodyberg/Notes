@@ -11,4 +11,9 @@ getAllMatches (nnn =~ "[N][^P](S|T)[^P]")  :: [(Int, Int)]
 
 "foo" ++ "bar" 
 
-idsToFastaUrl ids
+--idsToFastaUrl ids
+
+-- putStr $ pullFromWeb fullEx
+
+main 
+
