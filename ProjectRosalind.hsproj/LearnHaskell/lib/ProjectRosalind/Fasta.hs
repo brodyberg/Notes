@@ -9,12 +9,17 @@ type.
 {-# LANGUAGE NoMonomorphismRestriction #-}
 {-# LANGUAGE BangPatterns #-}
 
-module ProjectRosalind.Fasta ( parseFasta
-                               , parseCLIPFasta
-                               , pipesFasta
-                               , removeNs
-                               , removeN
-                               , removeCLIPNs ) where
+module ProjectRosalind.Fasta ( eoe, eol ) --fasta
+--                               regularParse )
+
+
+-- parseFasta )
+--                               , parseCLIPFasta
+--                               , pipesFasta
+--                               , removeNs
+--                               , removeN
+--                               , removeCLIPNs ) 
+                               where
 
 -- Built-in
 import Data.Char
@@ -22,6 +27,7 @@ import Text.Parsec
 import Control.Monad (void)
 import qualified Data.Map as Map
 import qualified System.IO as IO
+import Text.Parsec.String (Parser)
 
 -- Cabal
 import Pipes
@@ -35,6 +41,10 @@ eol = choice . map (try . string) $ ["\n\r", "\r\n", "\n", "\r"]
 eoe :: Parsec String u ()
 eoe  = do
     lookAhead (void $ char '>') <|> eof
+
+-- from https://raw.githubusercontent.com/JakeWheat/intro_to_parsing/
+--regularParse :: String -> Either ParseError FastaSequence
+--regularParse = parse fasta "error"
 
 fasta :: Parsec String u FastaSequence
 fasta = do
@@ -65,9 +75,15 @@ fastaCLIPFile = do
     spaces
     many fastaCLIP
 
+parseFasta :: String -> FastaSequence
+parseFasta = eToV . parse fasta "error"
+  where
+    eToV (Right x) = x
+    eToV (Left x)  = error ("Unable to parse fasta file\n" ++ show x)
+
 -- | Parse a standard fasta file into string sequences
-parseFasta :: String -> [FastaSequence]
-parseFasta = eToV . parse fastaFile "error"
+parseFasta' :: String -> [FastaSequence]
+parseFasta' = eToV . parse fastaFile "error"
   where
     eToV (Right x) = x
     eToV (Left x)  = error ("Unable to parse fasta file\n" ++ show x)
