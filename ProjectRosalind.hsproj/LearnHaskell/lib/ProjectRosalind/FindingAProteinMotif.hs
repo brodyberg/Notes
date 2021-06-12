@@ -7,11 +7,32 @@ import Network.HTTP.Client
 import Network.HTTP.Client.TLS
 import qualified Data.Map as Map
 import qualified System.IO as IO
-import Text.Regex.TDFA (getAllMatches, (=~))
+import Text.Regex.TDFA (getAllMatches, getAllTextMatches, (=~))
 import ProjectRosalind.Fasta (eoe, eol)
 import Data.List.Split (splitOn)
+import Data.String (lines)
 import Control.Monad (mapM)
 
+-- clearly we need to
+-- read a file
+-- each line is an id
+-- do the rest of the algorithm
+
+import System.IO  
+import Control.Monad
+
+readLocalFile :: String -> IO String
+readLocalFile path = do  
+        handle <- openFile path ReadMode
+        contents <- hGetContents handle
+        return contents
+--        putStrLn contents
+
+filepathToIds :: String -> IO [String]
+filepathToIds path = do
+  contents <- readLocalFile path
+  return $ lines contents
+  
 -- http://rosalind.info/problems/mprt/
 -- https://www.uniprot.org/uniprot/B5ZC00.fasta
 -- https://www.uniprot.org/uniprot/A2Z669.fasta
@@ -20,6 +41,13 @@ import Control.Monad (mapM)
 -- https://www.uniprot.org/uniprot/P07204_TRBM_HUMAN.fasta
 
 ---ids = ["A2Z669", "B5ZC00", "P07204_TRBM_HUMAN", "P20840_SAG1_YEAST"]
+regex = "[N][^P](S|T)[^P]"
+
+-- my work: 1
+-- probable answer: 1 4
+example = "NXSNXSN"
+
+-- Parsec is back on the menu: https://stackoverflow.com/questions/20020350/parsec-difference-between-try-and-lookahead
 
 --ids = ["Q05865", "A5A3H2", "P12630_BAR1_YEAST", "B4S2L7", "Q4FZD7", "Q8CE94", "P02725_GLP_PIG", "P01045_KNH2_BOVIN", "Q05557", "P31096_OSTP_BOVIN", "P80195_MPP3_BOVIN", "P01876_ALC1_HUMAN", "P11279_LMP1_HUMAN", "Q3T0C9"] 
 

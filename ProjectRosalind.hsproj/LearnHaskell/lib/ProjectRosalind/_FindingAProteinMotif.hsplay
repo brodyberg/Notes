@@ -1,2 +1,15 @@
 -- Haskell Playground 1.0
-main
+---- main
+--
+--getAllMatches (example =~ regex)  :: [(Int, Int)]
+--
+--getAllMatches (example =~ "[N](?=u)")  :: [(Int, Int)]
+--
+--
+--getAllTextMatches (example =~ regex)  :: [String]
+--
+----getAllMatches (example =~ "[N]") :: [String]
+--
+--readLocalFile "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingAMotif/rosalind_mprt_1.txt"
+
+filepathToIds "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingAMotif/rosalind_mprt_1.txt"
