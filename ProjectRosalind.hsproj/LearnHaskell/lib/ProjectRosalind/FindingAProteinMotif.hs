@@ -134,8 +134,8 @@ mainSubstrings = do
           possibleMatches = filter (\(ix, str) -> length str == 4) $ allSubstrings fs
           matches = filter (\(ix, str) -> str =~ glycosylationRegex) possibleMatches
 
-          glycosylationRegex :: String
-          glycosylationRegex = "[N][^P](S|T)[^P]"
+glycosylationRegex :: String
+glycosylationRegex = "[N][^P](S|T)[^P]"
 
 allSubstrings :: String -> [(Int, String)]
 allSubstrings [] = []
@@ -182,6 +182,3 @@ mainREGEX = do
           findLocations fs = map (\(ix, _) -> ix + 1) matches
             where 
               matches = getAllMatches (fs =~ glycosylationRegex)  :: [(Int, Int)]
-
-              glycosylationRegex :: String
-              glycosylationRegex = "[N][^P](S|T)[^P]"
