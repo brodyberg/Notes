@@ -146,9 +146,9 @@ allSubstrings [] = []
 allSubstrings strings = allSubstrings' 0 strings []
   where 
     allSubstrings' :: Int -> String -> [(Int, String)] -> [(Int, String)]
-    allSubstrings'    _      []        acc       = acc
-                                        -- ix                       -- ix + 1
-    allSubstrings' ix str acc = (substringsIx ix str) ++ (allSubstrings' (ix + 1) (tail str) [])      
+    allSubstrings'    _      []        acc = acc
+    allSubstrings'    ix     str       acc = (substringsIx ix str) ++ (allSubstrings' (ix + 1) (tail str) [])      
+
     substringsIx :: Int -> String -> [(Int, String)]
     substringsIx    _      []      = []
     substringsIx    ix     item    = ss ix (0, "") item []
