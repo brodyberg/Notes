@@ -93,7 +93,7 @@ hasHits :: Fasta -> Bool
 hasHits Fasta { locations = ls } = length ls > 0
 
 results :: [String] -> [String] -> (String -> [Int]) -> [Fasta]
-results content givenIdentifiers findLocations = map (\x -> fastaFromContent findLocations x) $ zip content givenIdentifiers
+results content givenIdentifiers findLocations = map (fastaFromContent findLocations) $ zip content givenIdentifiers
 
 fastaFromContent :: (String -> [Int]) -> (String, String) -> Fasta
 fastaFromContent findLocations (content, givenId) = parseFasta content findLocations givenId
@@ -123,26 +123,22 @@ mainSubstrings = do
 
     contents <- urlsToContent' $ idsToFastaUrl ids
     putStr $ toString $ resultsWithHits contents ids
-    -- putStr $ toString $ resultsWithHits contents ids    
 
     where 
       resultsWithHits :: [String] -> [String] -> [Fasta]
       resultsWithHits contents givenIdentifiers = filter hasHits (results contents givenIdentifiers findLocations)
       findLocations :: String -> [Int]
       -- hack + 1 is because Project Rosalind is using 1-indexes
-      findLocations fs = []
-          -- find all possible substrings
-          -- criterion
-          -- run regex on strings of length == 4
---            where 
---              matches = getAllMatches (fs =~ regex)  :: [(Int, Int)]
+      findLocations fs = map (\(ix, _) -> ix + 1) matches
+        where 
+          possibleMatches = filter (\(ix, str) -> length str == 4) $ allSubstrings fs
+          matches = filter (\(ix, str) -> str =~ glycosylationRegex) possibleMatches
+
+          glycosylationRegex :: String
+          glycosylationRegex = "[N][^P](S|T)[^P]"
 
 allSubstrings :: String -> [(Int, String)]
 allSubstrings [] = []
-                                       -- when allSubstrings 
-                                       -- calls internal allSubstrings' it knows 
-                                       -- our starting index, which is: 
-                                       -- 0 or, ix
 allSubstrings strings = allSubstrings' 0 strings []
   where 
     allSubstrings' :: Int -> String -> [(Int, String)] -> [(Int, String)]
@@ -169,9 +165,6 @@ prop_allPossibleSubstringCount str =
   length (allSubstrings str) == (n * (n + 1)) `div` 2
   where n = length str
 
-
-
-          
 -- http://blog.sigfpe.com/2007/11/io-monad-for-people-who-simply-dont.html
 mainREGEX = do
     ids <- filepathToIds "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingAMotif/rosalind_mprt_1.txt"
