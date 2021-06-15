@@ -13,6 +13,8 @@ import Data.List.Split (splitOn)
 import Data.String (lines)
 import Control.Monad (mapM)
 
+import Test.QuickCheck
+
 -- clearly we need to
 -- read a file
 -- each line is an id
@@ -26,34 +28,17 @@ readLocalFile path = do
         handle <- openFile path ReadMode
         contents <- hGetContents handle
         return contents
---        putStrLn contents
 
 filepathToIds :: String -> IO [String]
 filepathToIds path = do
   contents <- readLocalFile path
   return $ lines contents
   
--- http://rosalind.info/problems/mprt/
--- https://www.uniprot.org/uniprot/B5ZC00.fasta
--- https://www.uniprot.org/uniprot/A2Z669.fasta
--- https://www.uniprot.org/uniprot/P07204.fasta
--- https://www.uniprot.org/uniprot/P20840_SAG1_YEAST.fasta
--- https://www.uniprot.org/uniprot/P07204_TRBM_HUMAN.fasta
-
----ids = ["A2Z669", "B5ZC00", "P07204_TRBM_HUMAN", "P20840_SAG1_YEAST"]
-regex = "[N][^P](S|T)[^P]"
-
 -- my work: 1
 -- probable answer: 1 4
 example = "NXSNXSN"
 
 -- Parsec is back on the menu: https://stackoverflow.com/questions/20020350/parsec-difference-between-try-and-lookahead
-
---ids = ["Q05865", "A5A3H2", "P12630_BAR1_YEAST", "B4S2L7", "Q4FZD7", "Q8CE94", "P02725_GLP_PIG", "P01045_KNH2_BOVIN", "Q05557", "P31096_OSTP_BOVIN", "P80195_MPP3_BOVIN", "P01876_ALC1_HUMAN", "P11279_LMP1_HUMAN", "Q3T0C9"] 
-
---ids = ["P09136", "P0AF66", "P01046_KNL1_BOVIN", "P36913_EBA3_FLAME", "Q5WFN0", "P28653_PGS1_MOUSE", "P72173", "P17967", "P04441_HG2A_MOUSE", "P04921_GLPC_HUMAN", "P37803", "Q0SU18", "P01878_ALC_MOUSE"]
-
-ids = ["P02725_GLP_PIG", "P39873_RNBR_BOVIN", "B9LIC8", "P36912_EBA2_FLAME", "P11171_41_HUMAN", "O14977", "P21810_PGS1_HUMAN", "P12763_A2HS_BOVIN", "Q8P5E4", "Q16775", "P20840_SAG1_YEAST", "B5ZC00", "P19835_BAL_HUMAN", "P08198_CSG_HALHA", "P19827_ITH1_HUMAN"]
 
 -- Algebraic
 data Fasta = Fasta { givenId   :: String
@@ -73,8 +58,8 @@ instance ShowFasta Fasta where
              , foldr (++) "" $ fmap (\n -> (show n) ++ " ") xs
              , "\n" ]
 
-parseFasta :: String -> String -> String -> Fasta
-parseFasta s regex givenId = (eToV . parse fasta "error") s
+parseFasta :: String -> (String -> [Int]) -> String -> Fasta
+parseFasta s findLocations givenId = (eToV . parse fasta "error") s
   where
     eToV (Right x) = x
     eToV (Left x)  = error ("Unable to parse fasta file\n" ++ show x)
@@ -99,50 +84,111 @@ parseFasta s regex givenId = (eToV . parse fasta "error") s
         
         makeProteinList :: String -> String
         makeProteinList = removeWhitespace
-        
-        findLocations :: String -> [Int]
-        -- hack + 1 is because Project Rosalind is using 1-indexes
-        findLocations fs = map (\(ix, _) -> ix + 1) matches
-          where 
-            matches = getAllMatches (fs =~ regex)  :: [(Int, Int)]
 
--- http://blog.sigfpe.com/2007/11/io-monad-for-people-who-simply-dont.html
-main = do
+        -- findLocations should be a parameter
+        --         
+        
+-- https://stackoverflow.com/questions/38052553/haskell-record-pattern-matching
+hasHits :: Fasta -> Bool
+hasHits Fasta { locations = ls } = length ls > 0
+
+results :: [String] -> [String] -> (String -> [Int]) -> [Fasta]
+results content givenIdentifiers findLocations = map (\x -> fastaFromContent findLocations x) $ zip content givenIdentifiers
+
+fastaFromContent :: (String -> [Int]) -> (String, String) -> Fasta
+fastaFromContent findLocations (content, givenId) = parseFasta content findLocations givenId
+
+toString :: [Fasta] -> String
+toString = foldr (\g acc -> (showResults g) ++ acc) ""
+      
+idsToFastaUrl :: [String] -> [String]
+idsToFastaUrl = map (\s -> urlBase ++ s ++ urlExt)
+  where 
+    urlBase = "https://www.uniprot.org/uniprot/"
+    urlExt  = ".fasta"
+
+urlsToContent' :: [String] -> IO [String]
+urlsToContent' urls = do 
+  mapM pullFromWeb urls
+  where
+    pullFromWeb :: String -> IO String
+    pullFromWeb s = do
+      manager <- newManager tlsManagerSettings
+      request <- parseRequest s
+      response <- httpLbs request manager  
+      return $ L8.unpack $ responseBody response
+
+mainSubstrings = do 
+    ids <- filepathToIds "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingAMotif/rosalind_mprt_1.txt"
+
     contents <- urlsToContent' $ idsToFastaUrl ids
     putStr $ toString $ resultsWithHits contents ids
+    -- putStr $ toString $ resultsWithHits contents ids    
+
     where 
-      toString :: [Fasta] -> String
-      toString = foldr (\g acc -> (showResults g) ++ acc) ""
-      
-      idsToFastaUrl :: [String] -> [String]
-      idsToFastaUrl = map (\s -> urlBase ++ s ++ urlExt)
-        where 
-          urlBase = "https://www.uniprot.org/uniprot/"
-          urlExt  = ".fasta"
-
-      urlsToContent' :: [String] -> IO [String]
-      urlsToContent' urls = do 
-        mapM pullFromWeb urls
-        where
-          pullFromWeb :: String -> IO String
-          pullFromWeb s = do
-            manager <- newManager tlsManagerSettings
-            request <- parseRequest s
-            response <- httpLbs request manager  
-            return $ L8.unpack $ responseBody response
-
       resultsWithHits :: [String] -> [String] -> [Fasta]
-      resultsWithHits contents givenIdentifiers = filter hasHits (results contents givenIdentifiers)
-        where
-          -- https://stackoverflow.com/questions/38052553/haskell-record-pattern-matching
-          hasHits :: Fasta -> Bool
-          hasHits Fasta { locations = ls } = length ls > 0
+      resultsWithHits contents givenIdentifiers = filter hasHits (results contents givenIdentifiers findLocations)
+      findLocations :: String -> [Int]
+      -- hack + 1 is because Project Rosalind is using 1-indexes
+      findLocations fs = []
+          -- find all possible substrings
+          -- criterion
+          -- run regex on strings of length == 4
+--            where 
+--              matches = getAllMatches (fs =~ regex)  :: [(Int, Int)]
 
-          results :: [String] -> [String] -> [Fasta]
-          results content givenIdentifiers = map fastaFromContent $ zip content givenIdentifiers
+allSubstrings :: String -> [(Int, String)]
+allSubstrings [] = []
+                                       -- when allSubstrings 
+                                       -- calls internal allSubstrings' it knows 
+                                       -- our starting index, which is: 
+                                       -- 0 or, ix
+allSubstrings strings = allSubstrings' 0 strings []
+  where 
+    allSubstrings' :: Int -> String -> [(Int, String)] -> [(Int, String)]
+    allSubstrings'    _      []        acc       = acc
+                                        -- ix                       -- ix + 1
+    allSubstrings' ix str acc = (substringsIx ix str) ++ (allSubstrings' (ix + 1) (tail str) [])      
+    substringsIx :: Int -> String -> [(Int, String)]
+    substringsIx    _      []      = []
+    substringsIx    ix     item    = ss ix (0, "") item []
+      where 
+        ss :: Int -> (Int, String) -> String -> [(Int, String)] -> [(Int, String)]
+        -- save and the rest are empty
+        ss    ix     (_,"")           []        acc              = acc
+        -- save is empty
+        ss    ix     (_,"")           therest   acc = ss ix (ix, [(head therest)]) (tail therest) acc
+        -- the rest is empty
+        ss    ix     save             []        acc = save : acc 
+        ss    ix     (ix', save)      therest   acc = ss ix (ix, save ++ [(head therest)]) (tail therest) ((ix', save) : acc)
 
-          fastaFromContent :: (String, String) -> Fasta
-          fastaFromContent (content, givenId) = parseFasta content glycosylationRegex givenId
+-- Formula from
+-- https://stackoverflow.com/questions/12418590/finding-substrings-of-a-string
+prop_allPossibleSubstringCount :: String -> Bool
+prop_allPossibleSubstringCount str = 
+  length (allSubstrings str) == (n * (n + 1)) `div` 2
+  where n = length str
 
-          glycosylationRegex :: String
-          glycosylationRegex = "[N][^P](S|T)[^P]"
+
+
+          
+-- http://blog.sigfpe.com/2007/11/io-monad-for-people-who-simply-dont.html
+mainREGEX = do
+    ids <- filepathToIds "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingAMotif/rosalind_mprt_1.txt"
+
+    contents <- urlsToContent' $ idsToFastaUrl ids
+    putStr $ toString $ resultsWithHits contents ids
+    -- putStr $ toString $ resultsWithHits contents ids    
+
+    where 
+      resultsWithHits :: [String] -> [String] -> [Fasta]
+      resultsWithHits contents givenIdentifiers = filter hasHits (results contents givenIdentifiers findLocations)
+        where          
+          findLocations :: String -> [Int]
+          -- hack + 1 is because Project Rosalind is using 1-indexes
+          findLocations fs = map (\(ix, _) -> ix + 1) matches
+            where 
+              matches = getAllMatches (fs =~ glycosylationRegex)  :: [(Int, Int)]
+
+              glycosylationRegex :: String
+              glycosylationRegex = "[N][^P](S|T)[^P]"

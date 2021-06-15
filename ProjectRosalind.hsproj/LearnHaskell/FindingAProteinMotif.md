@@ -33,3 +33,12 @@ Sample Output
     47 115 116 382 409
     P20840_SAG1_YEAST
     79 109 135 248 306 348 364 402 485 501 614
+    
+---
+
+- http://rosalind.info/problems/mprt/
+- https://www.uniprot.org/uniprot/B5ZC00.fasta
+- https://www.uniprot.org/uniprot/A2Z669.fasta
+- https://www.uniprot.org/uniprot/P07204.fasta
+- https://www.uniprot.org/uniprot/P20840_SAG1_YEAST.fasta
+- https://www.uniprot.org/uniprot/P07204_TRBM_HUMAN.fasta

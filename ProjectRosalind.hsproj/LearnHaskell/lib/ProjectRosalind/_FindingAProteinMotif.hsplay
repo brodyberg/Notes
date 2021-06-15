@@ -1,5 +1,5 @@
 -- Haskell Playground 1.0
----- main
+-- main
 --
 --getAllMatches (example =~ regex)  :: [(Int, Int)]
 --
@@ -12,4 +12,8 @@
 --
 --readLocalFile "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingAMotif/rosalind_mprt_1.txt"
 
-filepathToIds "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingAMotif/rosalind_mprt_1.txt"
+--filepathToIds "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingAMotif/rosalind_mprt_1.txt"
+
+quickCheck prop_allPossibleSubstringCount
+
+allSubstrings "ABC"
