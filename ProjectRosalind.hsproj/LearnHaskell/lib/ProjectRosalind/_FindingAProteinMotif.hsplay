@@ -17,3 +17,7 @@
 quickCheck prop_allPossibleSubstringCount
 
 allSubstrings "ABC"
+
+mainREGEX
+
+mainSubstrings
