@@ -1,23 +1,6 @@
 -- Haskell Playground 1.0
--- main
---
---getAllMatches (example =~ regex)  :: [(Int, Int)]
---
---getAllMatches (example =~ "[N](?=u)")  :: [(Int, Int)]
---
---
---getAllTextMatches (example =~ regex)  :: [String]
---
-----getAllMatches (example =~ "[N]") :: [String]
---
---readLocalFile "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingAMotif/rosalind_mprt_1.txt"
+--quickCheck prop_allPossibleSubstringCount
 
---filepathToIds "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingAMotif/rosalind_mprt_1.txt"
-
-quickCheck prop_allPossibleSubstringCount
-
-allSubstrings "ABC"
-
-mainREGEX
+-- mainREGEX
 
 mainSubstrings

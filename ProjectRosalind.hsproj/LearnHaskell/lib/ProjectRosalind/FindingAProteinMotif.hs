@@ -34,12 +34,6 @@ filepathToIds path = do
   contents <- readLocalFile path
   return $ lines contents
   
--- my work: 1
--- probable answer: 1 4
-example = "NXSNXSN"
-
--- Parsec is back on the menu: https://stackoverflow.com/questions/20020350/parsec-difference-between-try-and-lookahead
-
 -- Algebraic
 data Fasta = Fasta { givenId   :: String
                    , name      :: String
@@ -84,9 +78,6 @@ parseFasta s findLocations givenId = (eToV . parse fasta "error") s
         
         makeProteinList :: String -> String
         makeProteinList = removeWhitespace
-
-        -- findLocations should be a parameter
-        --         
         
 -- https://stackoverflow.com/questions/38052553/haskell-record-pattern-matching
 hasHits :: Fasta -> Bool
@@ -119,7 +110,7 @@ urlsToContent' urls = do
       return $ L8.unpack $ responseBody response
 
 mainSubstrings = do 
-    ids <- filepathToIds "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingAMotif/rosalind_mprt_1.txt"
+    ids <- filepathToIds filePath
 
     contents <- urlsToContent' $ idsToFastaUrl ids
     putStr $ toString $ resultsWithHits contents ids
@@ -165,9 +156,12 @@ prop_allPossibleSubstringCount str =
   length (allSubstrings str) == (n * (n + 1)) `div` 2
   where n = length str
 
+filePath = "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingAMotif/rosalind_mprt_4.txt"
+
 -- http://blog.sigfpe.com/2007/11/io-monad-for-people-who-simply-dont.html
+mainREGEX :: IO ()
 mainREGEX = do
-    ids <- filepathToIds "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingAMotif/rosalind_mprt_1.txt"
+    ids <- filepathToIds filePath
 
     contents <- urlsToContent' $ idsToFastaUrl ids
     putStr $ toString $ resultsWithHits contents ids
