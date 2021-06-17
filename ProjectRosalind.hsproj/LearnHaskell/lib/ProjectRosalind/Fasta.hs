@@ -9,11 +9,12 @@ type.
 {-# LANGUAGE NoMonomorphismRestriction #-}
 {-# LANGUAGE BangPatterns #-}
 
-module ProjectRosalind.Fasta ( eoe, eol ) --fasta
+module ProjectRosalind.Fasta ( eoe
+                             , eol  --fasta
 --                               regularParse )
 
 
--- parseFasta )
+                             , parseFasta' )
 --                               , parseCLIPFasta
 --                               , pipesFasta
 --                               , removeNs
