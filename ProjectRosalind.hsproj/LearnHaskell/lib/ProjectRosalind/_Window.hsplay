@@ -1,0 +1,10 @@
+-- Haskell Playground 1.0
+:t tails
+:t getZipList
+:t sequenceA
+
+windows 4 example
+
+:t getZipList
+
+getZipList $ ZipList [1]
