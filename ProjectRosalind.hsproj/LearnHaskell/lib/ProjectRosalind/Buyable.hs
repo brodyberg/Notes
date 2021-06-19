@@ -23,6 +23,14 @@ y' = subCount $ length y
 --   f[i] = f[i-1] + f[i - 2];
 -- }
 
+-- Start left at 0
+-- Right at length - 1
+--
+-- Count down right pointer
+-- When right pointer “touches” left, increment left by one, reset right to length -1
+-- Nested comprehensions?
+
+
 ss :: String -> [String] 
 -- GHC.Arr.Array Int String -- [String] -- Array Int String
 ss string = lst

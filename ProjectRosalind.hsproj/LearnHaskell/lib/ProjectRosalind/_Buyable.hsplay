@@ -1,34 +1,51 @@
 -- Haskell Playground 1.0
---buyable 10
---buyable 100
---buyable 1000
---buyable 10000
---buyable 100000000
-:t (head "foo")
-
-"f" ++ []
-["f"] ++ ["o"]
-
-z = []
-z
-z' = z ++ ["x"]
-z'
-z'' = z' ++ ["y"]
-z''
-
-n = length x
-n
-l = (n * (n + 1)) `div` 2
-
-
-
-subCount n = (n * (n + 1)) `div` 2
-
-x = "MSRVGKYPVEVPAGVQVSVADGFFKAKGKLGELTVPVSRHVEVKIEGSNVSVAPVGRRS"
+----buyable 10
+----buyable 100
+----buyable 1000
+----buyable 10000
+----buyable 100000000
+-- :t (head "foo")
+--
+--"f" ++ []
+--["f"] ++ ["o"]
+--
+--z = []
+--z
+--z' = z ++ ["x"]
+--z'
+--z'' = z' ++ ["y"]
+--z''
+--
+--n = length x
+--n
+--l = (n * (n + 1)) `div` 2
 
 y = "GATTACA"
 y' = subCount $ length y
 y'
+
+-- just do this and then reverse the output 
+-- so rather than counting from nothing we're counting
+-- from maximum?
+slices = [(left,right) | left <- [1..(length y)],
+                         right <- [(length y), ((length y) - 1) ..1]]
+
+slices
+
+length slices
+
+slices' = [(left,right) | left <- [1..(length y)],
+                          right <- [(length y), ((length y) - 1) ..1],
+                          left < right]
+
+slices'
+
+length slices'
+
+subCount n = (n * (n + 1)) `div` 2
+
+--x = "MSRVGKYPVEVPAGVQVSVADGFFKAKGKLGELTVPVSRHVEVKIEGSNVSVAPVGRRS"
+
 
 -- WE'VE GOT THIS
 -- we have two pointers, one to the left
