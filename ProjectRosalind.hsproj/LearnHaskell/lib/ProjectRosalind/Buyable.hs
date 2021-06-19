@@ -31,17 +31,17 @@ y' = subCount $ length y
 -- Nested comprehensions?
 
 
-ss :: String -> [String] 
--- GHC.Arr.Array Int String -- [String] -- Array Int String
-ss string = lst
-  where
-    l = (n * (n + 1)) `div` 2
-    n = length string
-    lst = listArray (0,l) (map f [0..l])
-
-    f :: Int -> String
-    f 0 = show $ head string
-    f i = ""
+--ss :: String -> [String] 
+---- GHC.Arr.Array Int String -- [String] -- Array Int String
+--ss string = lst
+--  where
+--    l = (n * (n + 1)) `div` 2
+--    n = length string
+--    lst = listArray (0,l) (map f [0..l])
+--
+--    f :: Int -> String
+--    f 0 = show $ head string
+--    f i = ""
 
 allSubstrings :: String -> [String]
 allSubstrings [] = []

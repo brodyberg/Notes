@@ -24,6 +24,10 @@ y = "GATTACA"
 y' = subCount $ length y
 y'
 
+xk = "foo"
+
+foldr (\item (subStr, l, r, ix) -> if (ix >= l && ix <= r) then (item : subStr, l, r, ix + 1)  else (subStr, l, r, ix + 1)) ("", 2, 4, 0) y
+
 -- just do this and then reverse the output 
 -- so rather than counting from nothing we're counting
 -- from maximum?
@@ -36,11 +40,62 @@ length slices
 
 slices' = [(left,right) | left <- [1..(length y)],
                           right <- [(length y), ((length y) - 1) ..1],
-                          left < right]
+                          (left /= right)]
 
 slices'
 
 length slices'
+
+--filter (\(l,r) -> ) slices'
+
+y' = allSubstrings y
+y'
+length y'
+
+slices_ = [(left,right) | left <- [1..(length y)],
+                          right <- [(length y), ((length y) - 1) ..1],
+                          (right > left)]
+
+slices_
+
+length slices_
+
+
+slices''' = [(left,right) | left <- [1..(length y)],
+                          right <- [(length y), ((length y) - 1) ..1],
+                          (left /= right && right > left)]
+
+slices'''
+
+length slices'''
+
+a
+
+
+
+-- foldr (\i -> i) [] a
+
+range 
+
+-- make the slice list
+-- cut up the array
+-- print each piece paired with it's slice instruction
+
+len = length y
+len
+slices'' = [ [ (l,r) | l <- [1..len] ] | 
+                       r <- [len, (len - 1)..1] ]
+                  
+slices''
+     
+filter (\(l,r) -> l /= r) $ concat slices''
+
+-- , (l /= r)
+--take 5 [ [ (i,j) | i <- [1,2] ] | j <- [1..] ]
+
+slices''
+
+length slices''
 
 subCount n = (n * (n + 1)) `div` 2
 
