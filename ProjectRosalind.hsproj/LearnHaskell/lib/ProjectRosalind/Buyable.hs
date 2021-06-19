@@ -11,9 +11,12 @@ buyable n = r!n
     r = listArray (0,n) (map f [0..n])
     f i = i == 0 || i >= 6 && r!(i-6) || i >= 9 && r!(i-9) || i >= 20 && r!(i-20)
     
+subCount n = (n * (n + 1)) `div` 2
+
 x = "MSRVGKYPVEVPAGVQVSVADGFFKAKGKLGELTVPVSRHVEVKIEGSNVSVAPVGRRS"
 
-
+y = "GATTACA"
+y' = subCount $ length y
 -- f[0] = 0
 -- f[1] = 1
 -- for (i = 2; i <= n; i++) {

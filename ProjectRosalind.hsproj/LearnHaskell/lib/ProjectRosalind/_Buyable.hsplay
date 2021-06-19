@@ -19,8 +19,22 @@ z''
 n = length x
 n
 l = (n * (n + 1)) `div` 2
-l
 
+
+
+subCount n = (n * (n + 1)) `div` 2
+
+x = "MSRVGKYPVEVPAGVQVSVADGFFKAKGKLGELTVPVSRHVEVKIEGSNVSVAPVGRRS"
+
+y = "GATTACA"
+y' = subCount $ length y
+y'
+
+-- WE'VE GOT THIS
+-- we have two pointers, one to the left
+-- edge, one to the right edge and we 
+-- start the whole jam with the string 
+-- itself
 
 -- the string: GATTACA
 -- G
