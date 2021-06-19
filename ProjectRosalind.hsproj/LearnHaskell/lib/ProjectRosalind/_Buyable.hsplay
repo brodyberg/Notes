@@ -1,0 +1,81 @@
+-- Haskell Playground 1.0
+--buyable 10
+--buyable 100
+--buyable 1000
+--buyable 10000
+--buyable 100000000
+:t (head "foo")
+
+"f" ++ []
+["f"] ++ ["o"]
+
+z = []
+z
+z' = z ++ ["x"]
+z'
+z'' = z' ++ ["y"]
+z''
+
+n = length x
+n
+l = (n * (n + 1)) `div` 2
+l
+
+
+-- the string: GATTACA
+-- G
+-- 06
+-- GA
+-- 0 5
+-- GAT
+-- 0 4
+-- GATT
+-- 0  3
+-- GATTA
+-- 0   2
+-- GATTAC
+-- 0    1
+-- GATTACA
+-- 0     0
+-- read up
+
+--  A
+--  1
+--  AT
+--  11
+--  ATT
+--  1 2
+--  ATTA
+--  1  3
+--  ATTAC
+--  1   4
+--  ATTACA
+--  1    5
+-- read up
+-- so the idea is: 
+-- you put the whole string in to start
+-- for line: 38
+-- that means, the previous string
+-- without the last item is our string
+-- previous string without last item is our
+-- string
+-- left counts UP and reads RIGHT
+--                    from head
+-- right counts UP and reads LEFT
+--                    from tail
+
+--   T
+--   TT
+--   TTA
+--   TTAC
+--   TTACA
+--    T
+--    TA
+--    TAC
+--    TACA
+--     A
+--     AC
+--     ACA
+--      C
+--      CA
+--       A
