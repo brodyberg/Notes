@@ -1,32 +1,143 @@
 -- Haskell Playground 1.0
-----buyable 10
-----buyable 100
-----buyable 1000
-----buyable 10000
-----buyable 100000000
--- :t (head "foo")
---
---"f" ++ []
---["f"] ++ ["o"]
---
---z = []
---z
---z' = z ++ ["x"]
---z'
---z'' = z' ++ ["y"]
---z''
---
---n = length x
---n
---l = (n * (n + 1)) `div` 2
-
 y = "GATTACA"
 y' = subCount $ length y
 y'
 
 xk = "foo"
 
+-- so theoretically we shouldn't need this if we pull from the previous computation along with index
+-- straight into the source string
 foldr (\item (subStr, l, r, ix) -> if (ix >= l && ix <= r) then (item : subStr, l, r, ix + 1)  else (subStr, l, r, ix + 1)) ("", 2, 4, 0) y
+
+
+
+maker "a"
+maker "ab"
+x = "foo"
+
+
+-- one by one, knock tail off
+-- knock head off
+-- one by one, knock tail off
+-- until there's no more list
+
+
+-- l is 0
+-- r is length - 1
+-- head is at l, remove tail (length - 1) times | length is 
+-- head is at 1, remove tail (length - 1) times
+
+
+
+
+-- START
+
+-- length is length
+
+-- l is 0
+-- r is length - 1
+-- list of results is set to [string]
+-- ix into list of results is 1 (representing we're now past that step)
+
+-- LOOP
+
+-- grab previous string: results !! (ix - 1) 
+
+-- if l == length - 1
+--   return results
+
+-- if l == r
+--   l + 1
+--   r is length - 1
+--   REPEAT
+-- else
+--   r - 1
+--   REPEAT
+
+--maker :: String -> [String]
+--maker str = construct len 0 (len - 1) [str] 1
+--  where 
+--    len = length str    
+--
+--               --length l      r      results     ix
+--    construct :: Int -> Int -> Int -> [String] -> Int -> [String]
+--    construct len l r results ix = 
+--      if l == (len - 1)
+--      then results
+--      else if (l == r)
+--        then construct len (l + 1) (len - 1) results' (ix + 1)
+--      else
+--        construct len l (r + 1) results' (ix + 1)
+--        
+--      where 
+--        results' :: [String]
+--        results' = (results !! (ix - 1)) : results 
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- l /= r to drop last item
+-- r - 1
+
+
+
+
+
+
+-- head is at l, remove tail until r == l
+-- bump l by 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- head is at 1, remove tail (length - 1) times
+
+
+
+
+s :: String -> [String]
+s str = run str []
+  where
+    run str [] = run str [str] 
+    run str (x:xs) =  
+
 
 -- just do this and then reverse the output 
 -- so rather than counting from nothing we're counting
