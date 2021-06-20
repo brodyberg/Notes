@@ -1,15 +1,15 @@
 module ProjectRosalind.Buyable where
   
-import Data.Array((!), listArray)
+--import Data.Array((!), listArray)
 --import qualified Data.Array as A ((!), listArray)
 
-a = listArray (0,1) ["Hello", "World"]
+--a = listArray (0,1) ["Hello", "World"]
 
-buyable :: Int -> Bool
-buyable n = r!n
-  where
-    r = listArray (0,n) (map f [0..n])
-    f i = i == 0 || i >= 6 && r!(i-6) || i >= 9 && r!(i-9) || i >= 20 && r!(i-20)
+--buyable :: Int -> Bool
+--buyable n = r!n
+--  where
+--    r = listArray (0,n) (map f [0..n])
+--    f i = i == 0 || i >= 6 && r!(i-6) || i >= 9 && r!(i-9) || i >= 20 && r!(i-20)
     
 subCount n = (n * (n + 1)) `div` 2
 
@@ -19,36 +19,78 @@ y = "GATTACA"
 y' = subCount $ length y
 
 maker :: String -> [String]
-maker str = construct len 0 (len - 1) [str] 1
+maker str = construct len 0 (len - 1) [str] 1 0
   where 
     len = length str    
 
-               --length l      r      results     ix
-    construct :: Int -> Int -> Int -> [String] -> Int -> [String]
-    construct len l r results ix = 
+               --length l      r      results     ix     vlook
+    construct :: Int -> Int -> Int -> [String] -> Int -> Int -> [String]
+    construct len l r results ix vlook = 
       if l == (len - 1)
       then results
       else if (l == r)
-        then construct len (l + 1) (len - 1) results' (ix + 1)
+        then construct len (l + 1) (len - 1) results' (ix + 1) vlook
       else
-        construct len l (r + 1) results' (ix + 1)
+        construct len l (r - 1) results' (ix + 1) (vlook + 1)
         
+      -- we need to use vlook to pull back a string to build from here
+      -- we need to zero it out when we do that
+
       where 
+        
+        -- needs to knock one off the back
         results' :: [String]
         results' = (results !! (ix - 1)) : results 
+        
+        substring :: Int -> Int -> String -> String
+        substring l r s = result
+
+          where 
+            (result, _, _, _) = foldr slice ("", l, r, 0) s            
+
+            slice :: Char -> (String, Int, Int, Int) -> (String, Int, Int, Int)
+            slice item (subStr, l, r, ix) = 
+              if (ix >= l && ix <= r) 
+              then (item : subStr, l, r, ix + 1) 
+              else (subStr, l, r, ix + 1)
+
+--foldr (\item (subStr, l, r, ix) -> if (ix >= l && ix <= r) then (item : subStr, l, r, ix + 1)  else (subStr, l, r, ix + 1)) ("", 2, 4, 0) y
 
 
 
+-- WHEN WE INCREMENT L THE COUNT OF LAST PRODUCED
+-- SUBSTRINGS IS OUR LOOKBACK TO GET THE FOUNDATION 
+-- STRING FOR NEXT ROUND
 
-
-
-
-
-
-
-
-
-
+-- GATTACA
+-- GATTAC
+-- GATTA
+-- GATT
+-- GAT
+-- GA
+-- G
+--  ATTACA
+--  ATTAC
+--  ATTA
+--  ATT
+--  AT
+--  A
+--   TTACA
+--   TTAC
+--   TTA
+--   TT
+--   T
+--    TACA
+--    TAC
+--    TA
+--    T
+--     ACA
+--     AC
+--     A
+--      CA
+--      C
+--       A
+ 
 
 
 -- f[0] = 0
@@ -77,28 +119,28 @@ maker str = construct len 0 (len - 1) [str] 1
 --    f 0 = show $ head string
 --    f i = ""
 
-allSubstrings :: String -> [String]
-allSubstrings [] = []
-allSubstrings strings = allSubstrings' strings []
-  where 
-    allSubstrings' [] acc = acc
-    allSubstrings' str acc = (substrings str) ++ (allSubstrings' (tail str) [])
-
--- do everything here: https://wiki.haskell.org/Dynamic_programming_example
-
-substrings :: String -> [String]
-substrings []   = []
-substrings item = ss "" item []
-  where 
-    ss [] [] acc = acc
-    ss [] therest acc = ss [(head therest)] (tail therest) acc
-    ss save [] acc = save : acc 
-    ss save therest acc = ss (save ++ [(head therest)]) (tail therest) (save : acc)
-
-
--- Formula from
--- https://stackoverflow.com/questions/12418590/finding-substrings-of-a-string
-prop_allPossibleSubstringCount :: String -> Bool
-prop_allPossibleSubstringCount str = 
-  length (allSubstrings str) == (n * (n + 1)) `div` 2
-  where n = length str
+--allSubstrings :: String -> [String]
+--allSubstrings [] = []
+--allSubstrings strings = allSubstrings' strings []
+--  where 
+--    allSubstrings' [] acc = acc
+--    allSubstrings' str acc = (substrings str) ++ (allSubstrings' (tail str) [])
+--
+---- do everything here: https://wiki.haskell.org/Dynamic_programming_example
+--
+--substrings :: String -> [String]
+--substrings []   = []
+--substrings item = ss "" item []
+--  where 
+--    ss [] [] acc = acc
+--    ss [] therest acc = ss [(head therest)] (tail therest) acc
+--    ss save [] acc = save : acc 
+--    ss save therest acc = ss (save ++ [(head therest)]) (tail therest) (save : acc)
+--
+--
+---- Formula from
+---- https://stackoverflow.com/questions/12418590/finding-substrings-of-a-string
+--prop_allPossibleSubstringCount :: String -> Bool
+--prop_allPossibleSubstringCount str = 
+--  length (allSubstrings str) == (n * (n + 1)) `div` 2
+--  where n = length str
