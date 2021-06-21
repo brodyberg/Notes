@@ -61,14 +61,18 @@ build str = create (V.fromList str) (V.fromList str) []
     create :: (V.Vector Char) -> (V.Vector Char) -> [String] -> [String]
     
     create carry block acc = 
-      if (V.length carry) == 0 && (V.length block) == 0
+      if carryLen == 0 && blockLen == 0
       then
         acc
-      else if (V.length block) == 0 
+      else if blockLen == 0 
       then 
         create (V.tail carry) (V.tail carry) []
       else
         create carry (V.init block) 
+        
+      where 
+        carryLen = V.length carry
+        blockLen = V.length block
         
   
 
