@@ -1,5 +1,7 @@
 module ProjectRosalind.Buyable where
   
+import Data.Vector as V
+
 --import Data.Array((!), listArray)
 --import qualified Data.Array as A ((!), listArray)
 
@@ -16,12 +18,110 @@ subCount n = (n * (n + 1)) `div` 2
 x = "MSRVGKYPVEVPAGVQVSVADGFFKAKGKLGELTVPVSRHVEVKIEGSNVSVAPVGRRS"
 
 y = "GATTACA"
-y' = subCount $ length y
+y' = subCount $ Prelude.length y
+
+--x = fmap (y !!) [0..3]
+--x
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Carry string 
+-- Copy of carry (block)
+-- Next is that without last item
+-- Continue while there’s any more of copy 
+-- None left? Knock first from carry, loop
+
+build :: String -> [String]
+build str = create (V.fromList str) (V.fromList str) []
+
+  where 
+    create :: (V.Vector Char) -> (V.Vector Char) -> [String] -> [String]
+    
+    create carry block acc = 
+      if (V.length carry) == 0 && (V.length block) == 0
+      then
+        acc
+      else if (V.length block) == 0 
+      then 
+        create (V.tail carry) (V.tail carry) []
+      else
+        create carry (V.init block) 
+        
+  
+
+
+--    -- Carry string 
+--    vstr :: V.Vector Char
+--    vstr = V.fromList str
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 maker :: String -> [String]
 maker str = construct len 0 (len - 1) [str] 1 0
   where 
-    len = length str    
+    len = Prelude.length str    
 
                --length l      r      results     ix     vlook
     construct :: Int -> Int -> Int -> [String] -> Int -> Int -> [String]
@@ -46,7 +146,7 @@ maker str = construct len 0 (len - 1) [str] 1 0
         substring l r s = result
 
           where 
-            (result, _, _, _) = foldr slice ("", l, r, 0) s            
+            (result, _, _, _) = Prelude.foldr slice ("", l, r, 0) s            
 
             slice :: Char -> (String, Int, Int, Int) -> (String, Int, Int, Int)
             slice item (subStr, l, r, ix) = 

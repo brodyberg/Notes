@@ -1,10 +1,33 @@
 -- Haskell Playground 1.0
+x = V.fromList "abc"
+y = V.toList x
+
+y
+
+
 --putStrLn "foo"
 --
 --maker "a"
 --maker "ab"
 
 --y = "GATTACA"
+--y
+--
+--x = fmap (y !!) [0..3]
+--x
+--
+--
+--
+--import Data.Vector
+--
+--n = fromList "abcd"
+--n
+
+
+--slices = [(left,right) | left <- [1..(length y)],
+--                         right <- [(length y), ((length y) - 1) ..1]]
+
+
 --y' = subCount $ length y
 --y'
 --
@@ -15,7 +38,7 @@
 --foldr (\item (subStr, l, r, ix) -> if (ix >= l && ix <= r) then (item : subStr, l, r, ix + 1)  else (subStr, l, r, ix + 1)) ("", 2, 4, 0) y
 --
 
-"f" : ["bar"]
+--"f" : ["bar"]
 
 --maker "a"
 --maker "ab"
