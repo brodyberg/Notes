@@ -61,24 +61,25 @@ build str = create (V.fromList str) (V.fromList str) []
     create carry block acc = 
       -- No more carry
       -- No more block:
-      --   return acc
+      --   1. return acc
       if carryLen == 0 && blockLen == 0
       then
         fmap (V.toList) acc
       -- There is more carry
       -- No more of this block:
-      --   bump one off head of carry
-      --   copy that to block
-      --   add nothing to block
+      --   1. bump one off tail of carry
+      --   2. copy that to block
+      --   3. add nothing to block
       else if blockLen == 0 
       then 
-        create (V.tail carry) (V.tail carry) acc
+        create (V.init carry) (V.init carry) acc
       -- There is more carry
       -- There is more of this block: 
-      --   Bump one off the tail of this block
-      --   and save that to acc
+      --   1. do not touch carry
+      --   2. bump one off tail of block
+      --   3. save that to acc
       else
-        create carry (V.init block) ((V.init block) : acc) 
+        create carry (V.init block) (block : acc) 
         
       where 
         carryLen :: Int
