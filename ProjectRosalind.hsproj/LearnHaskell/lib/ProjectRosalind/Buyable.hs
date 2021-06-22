@@ -72,14 +72,14 @@ build str = create (V.fromList str) (V.fromList str) []
       --   3. add nothing to block
       else if blockLen == 0 
       then 
-        create (V.init carry) (V.init carry) acc
+        create (V.init carry) (V.init carry) ((V.fromList ">") : acc)
       -- There is more carry
       -- There is more of this block: 
       --   1. do not touch carry
       --   2. bump one off tail of block
-      --   3. save that to acc
+      --   3. save block to acc
       else
-        create carry (V.init block) (block : acc) 
+        create carry (V.init block) ((V.fromList "^") : (block : acc))
         
       where 
         carryLen :: Int
@@ -87,18 +87,9 @@ build str = create (V.fromList str) (V.fromList str) []
 
         blockLen :: Int
         blockLen = V.length block
-        
-  
 
 
---    -- Carry string 
---    vstr :: V.Vector Char
---    vstr = V.fromList str
-  
-    
-
-
-
+      -- we never march the HEAD of carry forward
 
 
 

@@ -1,7 +1,12 @@
 -- Haskell Playground 1.0
 build "a"
 build "ab"
+
+
 build "abc"
+
+
+
 build "abcd"
 
 
@@ -10,8 +15,11 @@ import Data.Vector as V
 
 
 x = V.fromList "abc"
-V.length x
 V.init x
+V.init(V.init x)
+V.init(V.init(V.init x))
+V.length $ V.init(V.init(V.init x))
+
 V.tail x
 
 
