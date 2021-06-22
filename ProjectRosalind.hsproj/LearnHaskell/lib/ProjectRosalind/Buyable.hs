@@ -56,22 +56,35 @@ y' = subCount $ Prelude.length y
 
 build :: String -> [String]
 build str = create (V.fromList str) (V.fromList str) []
-
   where 
-    create :: (V.Vector Char) -> (V.Vector Char) -> [String] -> [String]
-    
+    create :: (V.Vector Char) -> (V.Vector Char) -> [V.Vector Char] -> [String]
     create carry block acc = 
+      -- No more carry
+      -- No more block:
+      --   return acc
       if carryLen == 0 && blockLen == 0
       then
-        acc
+        fmap (V.toList) acc
+      -- There is more carry
+      -- No more of this block:
+      --   bump one off head of carry
+      --   copy that to block
+      --   add nothing to block
       else if blockLen == 0 
       then 
-        create (V.tail carry) (V.tail carry) []
+        create (V.tail carry) (V.tail carry) acc
+      -- There is more carry
+      -- There is more of this block: 
+      --   Bump one off the tail of this block
+      --   and save that to acc
       else
-        create carry (V.init block) 
+        create carry (V.init block) ((V.init block) : acc) 
         
       where 
+        carryLen :: Int
         carryLen = V.length carry
+
+        blockLen :: Int
         blockLen = V.length block
         
   

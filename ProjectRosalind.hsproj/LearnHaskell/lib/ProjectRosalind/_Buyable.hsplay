@@ -1,8 +1,31 @@
 -- Haskell Playground 1.0
-x = V.fromList "abc"
-y = V.toList x
+build "a"
+build "ab"
+build "abc"
 
-y
+
+
+
+import Data.Vector as V
+
+
+x = V.fromList "abc"
+V.length x
+V.init x
+V.tail x
+
+
+
+
+
+
+
+--x = V.fromList "abc"
+--y = V.toList x
+--
+--y
+--
+--
 
 
 --putStrLn "foo"
