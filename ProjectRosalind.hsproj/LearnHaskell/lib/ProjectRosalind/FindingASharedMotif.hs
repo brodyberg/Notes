@@ -1,8 +1,8 @@
 module ProjectRosalind.FindingASharedMotif where
-
-import Test.QuickCheck
   
+import Data.Set as S
 import Data.Vector as V
+import Data.List as L
 
 import ProjectRosalind.Fasta (parseFasta')
 import ProjectRosalind.Fasta_Types 
@@ -11,36 +11,29 @@ import Control.Monad
 
 import Data.Time
 
--- Formula from
--- https://stackoverflow.com/questions/12418590/finding-substrings-of-a-string
-prop_buildCount :: String -> Bool
-prop_buildCount str = 
-  Prelude.length (build str) == (n * (n + 1)) `div` 2
-  where n = Prelude.length str
-
 -- Carry string 
 -- Copy of carry (block)
 -- Next is that without last item
 -- Continue while there’s any more of copy 
 -- None left? Knock first from carry, loop
 
-build :: String -> [String]
-build str = create (V.fromList str) (V.fromList str) []
+build :: String -> Set (V.Vector Char)
+build str = create (V.fromList str) (V.fromList str) S.empty
   where 
-    create :: (V.Vector Char) -> (V.Vector Char) -> [V.Vector Char] -> [String]
+    create :: (Vector Char) -> (Vector Char) -> Set (Vector Char) -> Set (Vector Char)
     create carry block acc = 
       -- No more carry
       -- No more block:
       --   1. return acc
       if carryLen == 0 && blockLen == 0
       then
-        fmap (V.toList) acc
+        acc
       -- There is more carry
       -- No more of this block:
-      --   1. bump one off tail of carry
-      --   2. copy that to block
-      --   3. add nothing to block
-      else if blockLen == 0 
+      --   1. bump one off head of carry
+      --   2. new carry value placed as new block
+      --   3. insert that carry value into acc
+      else if blockLen == 0
       then 
         create (V.tail carry) (V.tail carry) acc
       -- There is more carry
@@ -49,12 +42,12 @@ build str = create (V.fromList str) (V.fromList str) []
       --   2. bump one off tail of block
       --   3. save block to acc
       else
-        create carry (V.init block) (block : acc)
+        create carry (V.init block) (S.insert block acc)
         
       where 
         carryLen :: Int
         carryLen = V.length carry
-
+        
         blockLen :: Int
         blockLen = V.length block
 
@@ -102,6 +95,16 @@ filePathToFastas path = do
   contents <- readLocalFile path
   return $ parseFasta' contents
   
+--prop_allPossibleSubstringCount :: String -> Bool
+--prop_allPossibleSubstringCount str = 
+--  length (allSubstrings str) == (n * (n + 1)) `div` 2
+--  where n = length str
+
+theoreticalSubstringCount :: String -> Int 
+theoreticalSubstringCount s = (n * (n + 1)) `div` 2
+  where n = Prelude.length s
+
+
 mainBuild :: IO ()
 mainBuild = do
     now <- getZonedTime  
@@ -115,18 +118,40 @@ mainBuild = do
     putStrLn $ show $ Prelude.length fastas
 
     now <- getZonedTime  
-    putStrLn "START: all substrings on one"
+    putStrLn "START: all substrings on two"
     putStrLn $ show now
 
-    let first = fastas !! 0
-    let dna = fastaSeq first
+    let twoFastas = L.take 2 fastas
+    let twoDnas = fmap fastaSeq twoFastas
 
-    let allSubs = build dna
+    let allSubs1 = build $ twoDnas !! 0
+    let allSubs2 = build $ twoDnas !! 1
     
-    putStrLn $ show allSubs
+    let isection = S.intersection allSubs1 allSubs2
+
+    let size = S.size isection
+--    let tSize = theoreticalSubstringCount dna
+--    let tSize = theoreticalSize dna
+
+    putStrLn "size 1: "
+    putStrLn $ show $ S.size allSubs1    
+
+
+    putStrLn "size 2: "
+    putStrLn $ show $ S.size allSubs2
+  
+--    putStrLn "Count savings: " 
+--    putStrLn $ show (size - tSize)
+
+--    putStrLn $ show allSubs
+  
+    putStrLn "Intersection size: " 
+    putStrLn $ show size
+
+--    putStrLn $ show $ size allSubs
 
     now <- getZonedTime  
-    putStrLn "END: all substrings on one"
+    putStrLn "END: all substrings on two"
     putStrLn $ show now
     
 --    putStrLn "START: Making list of all fastas" 
