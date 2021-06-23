@@ -1,65 +1,94 @@
 module ProjectRosalind.FindingASharedMotif where
 
 import Test.QuickCheck
-import Data.List (intersect, maximumBy, take)
-import Data.Function (on)
+  
+import Data.Vector as V
 
 import ProjectRosalind.Fasta (parseFasta')
 import ProjectRosalind.Fasta_Types 
-import System.IO  
+import System.IO (openFile, hGetContents, IOMode(ReadMode))
 import Control.Monad
-
-import Text.Regex.TDFA ((=~))
 
 import Data.Time
 
--- speed ideas: 
--- do the usual common substring approach for the first n
--- but then, convert over to a simple search using those
-
--- take first
--- make all common substrings
--- continually search each for the previously matched
---   substrings
--- but after the first string, you don't make all common substrings
---   again
-
-allSubstrings :: String -> [String]
-allSubstrings [] = []
-allSubstrings strings = allSubstrings' strings []
-  where 
-    allSubstrings' [] acc = acc
-    allSubstrings' str acc = (substrings str) ++ (allSubstrings' (tail str) [])
-
--- do everything here: https://wiki.haskell.org/Dynamic_programming_example
-
-substrings :: String -> [String]
-substrings []   = []
-substrings item = ss "" item []
-  where 
-    ss [] [] acc = acc
-    ss [] therest acc = ss [(head therest)] (tail therest) acc
-    ss save [] acc = save : acc 
-    ss save therest acc = ss (save ++ [(head therest)]) (tail therest) (save : acc)
-
-getLongestSubstring :: [String] -> String
-getLongestSubstring strings = 
-  maximumBy (compare `on` length) resultsOfIntersections
-  where 
-    resultsAsListOfLists :: [[String]]
-    resultsAsListOfLists = fmap allSubstrings strings
-
-    resultsOfIntersections = foldr intersect (head resultsAsListOfLists) (tail resultsAsListOfLists)
-
--- longest run: 5:20
-
 -- Formula from
 -- https://stackoverflow.com/questions/12418590/finding-substrings-of-a-string
-prop_allPossibleSubstringCount :: String -> Bool
-prop_allPossibleSubstringCount str = 
-  length (allSubstrings str) == (n * (n + 1)) `div` 2
-  where n = length str
+prop_buildCount :: String -> Bool
+prop_buildCount str = 
+  Prelude.length (build str) == (n * (n + 1)) `div` 2
+  where n = Prelude.length str
 
+-- Carry string 
+-- Copy of carry (block)
+-- Next is that without last item
+-- Continue while there’s any more of copy 
+-- None left? Knock first from carry, loop
+
+build :: String -> [String]
+build str = create (V.fromList str) (V.fromList str) []
+  where 
+    create :: (V.Vector Char) -> (V.Vector Char) -> [V.Vector Char] -> [String]
+    create carry block acc = 
+      -- No more carry
+      -- No more block:
+      --   1. return acc
+      if carryLen == 0 && blockLen == 0
+      then
+        fmap (V.toList) acc
+      -- There is more carry
+      -- No more of this block:
+      --   1. bump one off tail of carry
+      --   2. copy that to block
+      --   3. add nothing to block
+      else if blockLen == 0 
+      then 
+        create (V.tail carry) (V.tail carry) acc
+      -- There is more carry
+      -- There is more of this block: 
+      --   1. do not touch carry
+      --   2. bump one off tail of block
+      --   3. save block to acc
+      else
+        create carry (V.init block) (block : acc)
+        
+      where 
+        carryLen :: Int
+        carryLen = V.length carry
+
+        blockLen :: Int
+        blockLen = V.length block
+
+-- Image of what build does: 
+
+-- GATTACA
+-- GATTAC
+-- GATTA
+-- GATT
+-- GAT
+-- GA
+-- G
+--  ATTACA
+--  ATTAC
+--  ATTA
+--  ATT
+--  AT
+--  A
+--   TTACA
+--   TTAC
+--   TTA
+--   TT
+--   T
+--    TACA
+--    TAC
+--    TA
+--    T
+--     ACA
+--     AC
+--     A
+--      CA
+--      C
+--       A
+ 
 fileName = "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingASharedMotif/rosalind_lcsm_2.txt"
 
 readLocalFile :: String -> IO String
@@ -73,14 +102,17 @@ filePathToFastas path = do
   contents <- readLocalFile path
   return $ parseFasta' contents
   
-mainSubstrings :: IO ()
-mainSubstrings = do
+mainBuild :: IO ()
+mainBuild = do
     now <- getZonedTime  
 
-    putStrLn "START: prestart " 
+    putStrLn "START: just one " 
     putStrLn $ show now
 
     fastas <- filePathToFastas fileName
+
+    putStrLn "fasta count: " 
+    putStrLn $ show $ Prelude.length fastas
 
     now <- getZonedTime  
     putStrLn "START: all substrings on one"
@@ -89,7 +121,7 @@ mainSubstrings = do
     let first = fastas !! 0
     let dna = fastaSeq first
 
-    let allSubs = allSubstrings dna
+    let allSubs = build dna
     
     putStrLn $ show allSubs
 
@@ -97,69 +129,24 @@ mainSubstrings = do
     putStrLn "END: all substrings on one"
     putStrLn $ show now
     
-    putStrLn "START: Making list of all fastas" 
-    now <- getZonedTime
-    putStrLn $ show now
-   
-    let fastaList = fmap fastaSeq fastas
-    now <- getZonedTime
-    putStrLn "DONE: Making list of all fastas" 
-    putStrLn $ show now
-
-    now <- getZonedTime
-    putStrLn "START: allSubstrings on all fastas" 
-    putStrLn $ show now
-
-    let resultsAsListOfLists = fmap allSubstrings fastaList
-
-    now <- getZonedTime
-    putStrLn "END: allSubstrings on all fastas" 
-    putStrLn $ show now
-
-   
-    let no = foldr intersect (head resultsAsListOfLists) []
-    
-    putStrLn "foo"
-    
-    let shortList = take 2 resultsAsListOfLists
-
-    let nope = foldr intersect (head shortList) (tail shortList)
-
-    putStrLn $ show nope
-    
-    let bar = maximumBy (compare `on` length) nope
-   
-    putStrLn "bar"
-
-    -- ok, so this forced computation that wasn't otherwise happening
-    putStrLn bar
-    
-    -- put all substrings into a dictionary where the substring is the key
-    -- but what's the value? how to check it's the substring of all fasta?
- 
---    putStrLn "START: getLongestSubstring 2 fastas" 
+--    putStrLn "START: Making list of all fastas" 
 --    now <- getZonedTime
 --    putStrLn $ show now
 --   
---    let longest = getLongestSubstring fastaList
---
---    putStrLn longest
+--    let fastaList = fmap fastaSeq fastas
+--    now <- getZonedTime
+--    putStrLn "DONE: Making list of all fastas" 
+--    putStrLn $ show now
 --
 --    now <- getZonedTime
---    putStrLn "END: getLongestSubstring 2 fastas" 
+--    putStrLn "START: allSubstrings on all fastas" 
+--    putStrLn $ show now
+--
+--    let resultsAsListOfLists = fmap allSubstrings fastaList
+--
+--    now <- getZonedTime
+--    putStrLn "END: allSubstrings on all fastas" 
 --    putStrLn $ show now
 
+   
     putStrLn "Done"
-
-    
---
---    let longest = getLongestSubstring $ fmap fastaSeq fastas
---
---    putStrLn longest
---
---    end <- getZonedTime
---
---    putStrLn "end: "     
---    putStrLn $ show end
-    
-
