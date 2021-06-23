@@ -12,3 +12,5 @@ build "abcd"
 --quickCheck prop_buildCount
 
 build x
+
+(V.init (V.fromList "a"))

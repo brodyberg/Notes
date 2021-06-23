@@ -70,18 +70,19 @@ build str = create (V.fromList str) (V.fromList str) S.empty
         acc
       -- There is more carry
       -- No more of this block:
-      --   1. bump one off tail of carry
+      --   1. bump one off head of carry
       --   2. new carry value placed as new block
+      --   3. insert that carry value into acc
       else if blockLen == 0
       then 
-        create (V.tail carry) (V.tail carry) (S.insert (V.tail carry) acc)
+        create (V.tail carry) (V.tail carry) acc
       -- There is more carry
       -- There is more of this block: 
       --   1. do not touch carry
       --   2. bump one off tail of block
       --   3. save block to acc
       else
-        create carry (V.init block) (S.insert (V.init block) acc)
+        create carry (V.init block) (S.insert block acc)
         
       where 
         carryLen :: Int
