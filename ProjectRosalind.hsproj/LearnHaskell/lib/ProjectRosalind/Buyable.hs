@@ -72,14 +72,16 @@ build str = create (V.fromList str) (V.fromList str) []
       --   3. add nothing to block
       else if blockLen == 0 
       then 
-        create (V.init carry) (V.init carry) ((V.fromList ">") : acc)
+--        create (V.tail carry) (V.tail carry) ((V.fromList ">") : acc)
+        create (V.tail carry) (V.tail carry) acc
       -- There is more carry
       -- There is more of this block: 
       --   1. do not touch carry
       --   2. bump one off tail of block
       --   3. save block to acc
       else
-        create carry (V.init block) ((V.fromList "^") : (block : acc))
+--        create carry (V.init block) ((V.fromList "^") : (block : acc))
+        create carry (V.init block) (block : acc)
         
       where 
         carryLen :: Int
@@ -94,11 +96,7 @@ build str = create (V.fromList str) (V.fromList str) []
 
 
 
-
-
-
-
-
+      -- missing case is: more of block no more carry      
 
 
 
