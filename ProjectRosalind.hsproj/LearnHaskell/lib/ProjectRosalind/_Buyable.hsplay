@@ -1,16 +1,16 @@
 -- Haskell Playground 1.0
-build "a"
-build "ab"
-
-
-build "abc"
-
-
-
-build "abcd"
-
---quickCheck prop_buildCount
-
-build x
-
-(V.init (V.fromList "a"))
+--build "a"
+--build "ab"
+--
+--
+--build "abc"
+--
+--
+--
+--build "abcd"
+--
+----quickCheck prop_buildCount
+--
+--build x
+--
+--(V.init (V.fromList "a"))

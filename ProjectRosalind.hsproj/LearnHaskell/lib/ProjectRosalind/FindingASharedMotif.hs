@@ -109,69 +109,92 @@ mainBuild :: IO ()
 mainBuild = do
     now <- getZonedTime  
 
-    putStrLn "START: just one " 
+    -- do the full thing, time it
+
+--    putStrLn "START: just one " 
+--    putStrLn $ show now
+--
+--    fastas <- filePathToFastas fileName
+--
+--    putStrLn "fasta count: " 
+--    putStrLn $ show $ Prelude.length fastas
+--
+--    now <- getZonedTime  
+--    putStrLn "START: all substrings on two"
+--    putStrLn $ show now
+--
+--    let twoFastas = L.take 2 fastas
+--    let twoDnas = fmap fastaSeq twoFastas
+--
+--    let allSubs1 = build $ twoDnas !! 0
+--    let allSubs2 = build $ twoDnas !! 1
+--    
+--    let isection = S.intersection allSubs1 allSubs2
+--
+--    let size = S.size isection
+----    let tSize = theoreticalSubstringCount dna
+----    let tSize = theoreticalSize dna
+--
+--    putStrLn "size 1: "
+--    putStrLn $ show $ S.size allSubs1    
+--
+--
+--    putStrLn "size 2: "
+--    putStrLn $ show $ S.size allSubs2
+--  
+----    putStrLn "Count savings: " 
+----    putStrLn $ show (size - tSize)
+--
+----    putStrLn $ show allSubs
+--  
+--    putStrLn "Intersection size: " 
+--    putStrLn $ show size
+--
+----    putStrLn $ show $ size allSubs
+--
+--    now <- getZonedTime  
+--    putStrLn "END: all substrings on two"
+--    putStrLn $ show now
+    
+    putStrLn "START: Making list of all fastas" 
+    now <- getZonedTime
     putStrLn $ show now
-
+   
     fastas <- filePathToFastas fileName
-
-    putStrLn "fasta count: " 
+    putStrLn "length: "
     putStrLn $ show $ Prelude.length fastas
 
-    now <- getZonedTime  
-    putStrLn "START: all substrings on two"
-    putStrLn $ show now
-
-    let twoFastas = L.take 2 fastas
-    let twoDnas = fmap fastaSeq twoFastas
-
-    let allSubs1 = build $ twoDnas !! 0
-    let allSubs2 = build $ twoDnas !! 1
-    
-    let isection = S.intersection allSubs1 allSubs2
-
-    let size = S.size isection
---    let tSize = theoreticalSubstringCount dna
---    let tSize = theoreticalSize dna
-
-    putStrLn "size 1: "
-    putStrLn $ show $ S.size allSubs1    
-
-
-    putStrLn "size 2: "
-    putStrLn $ show $ S.size allSubs2
-  
---    putStrLn "Count savings: " 
---    putStrLn $ show (size - tSize)
-
---    putStrLn $ show allSubs
-  
-    putStrLn "Intersection size: " 
-    putStrLn $ show size
-
---    putStrLn $ show $ size allSubs
-
-    now <- getZonedTime  
-    putStrLn "END: all substrings on two"
+    now <- getZonedTime
+    putStrLn "DONE: Making list of all fastas" 
     putStrLn $ show now
     
---    putStrLn "START: Making list of all fastas" 
---    now <- getZonedTime
---    putStrLn $ show now
---   
---    let fastaList = fmap fastaSeq fastas
---    now <- getZonedTime
---    putStrLn "DONE: Making list of all fastas" 
---    putStrLn $ show now
---
---    now <- getZonedTime
---    putStrLn "START: allSubstrings on all fastas" 
---    putStrLn $ show now
---
---    let resultsAsListOfLists = fmap allSubstrings fastaList
---
---    now <- getZonedTime
---    putStrLn "END: allSubstrings on all fastas" 
---    putStrLn $ show now
+--    let dnas = Prelude.take 10 $ fmap fastaSeq fastas
+    let dnas = fmap fastaSeq fastas
 
-   
+    putStrLn $ show $ fmap Prelude.length dnas
+
+    now <- getZonedTime
+    putStrLn "START: allSubstrings on all fastas" 
+    putStrLn $ show now
+    
+    let sets = fmap build dnas
+
+    now <- getZonedTime
+    putStrLn "END: allSubstrings on all fastas" 
+    putStrLn $ show now
+
+    now <- getZonedTime
+    putStrLn "START: intersecting all dna" 
+    putStrLn $ show now
+
+
+--    let final = Prelude.foldr S.intersection (Prelude.head sets) (Prelude.tail sets) 
+  
+    putStrLn "result: " 
+--    putStrLn $ show $ Prelude.length final
+    
+    now <- getZonedTime
+    putStrLn "END: intersecting all dna" 
+    putStrLn $ show now
+
     putStrLn "Done"

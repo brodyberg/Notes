@@ -38,6 +38,42 @@ prop_buildCount str =
 
 
 
+-- l = 0, count down from length to l + 1
+-- increment l by one, count down from length to l+1
+
+-- do all our dna strings have exactly the same length?
+-- if they do, we could calculate the cuts once
+
+-- indeed, they are all exactly 1000 characters long: 
+--[1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000]
+
+-- so, if we calculate the slices once
+-- and then slice dna-count times 
+-- how fast are we?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
