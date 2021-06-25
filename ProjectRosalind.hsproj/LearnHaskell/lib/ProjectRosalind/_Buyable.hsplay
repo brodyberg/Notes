@@ -1,59 +1,63 @@
 -- Haskell Playground 1.0
---build "a"
---build "ab"
+slices "GATTACA"
+
+
+
+----build "a"
+----build "ab"
+----
+----
+----build "abc"
+----
+----
+----
+----build "abcd"
+----
+------quickCheck prop_buildCount
+----
+----build x
+----
+----(V.init (V.fromList "a"))
+--y = "GATTACA"
+----
+--
+--lengthToSlices $ length y
+--
+--z' = concat [ [ (l,r) | l <- [0..((length y) - 1)], l <= r ] | r <- [((length y) - 1),((length y) - 2)..0] ]
+--z'
+--length z'
+--
+---- now, given 
+---- a map from 0 to (n * (n + 1)) `div` 2
+---- where n is length str
+---- we can index into z to get slices
+---- for all possible substrings of str
+---- linearly with no recursion
 --
 --
---build "abc"
+--x = [(0, 6), (0, 5), (0, 4), (0, 3), (0, 2), (0, 1), (0, 0), (1, 6), (1, 5), (1, 4), (1, 3), (1, 2), (1, 1), (2, 6), (2, 5), (2, 4), (2, 3), (2, 2), (3, 6), (3, 5),(3, 4), (3, 3), (4, 6),(4, 5), (4, 4), (5, 6), (5, 5), (6, 6)]
+--
+--x
+--
+--z' == x
 --
 --
+--nZ' = [(0,6),(1,6),(2,6),(3,6),(4,6),(5,6),(6,6),(0,5),(1,5),(2,5),(3,5),(4,5),(5,5),(0,4),(1,4),(2,4),(3,4),(4,4),(0,3),(1,3),(2,3),(3,3),(0,2),(1,2),(2,2),(0,1),(1,1),(0,0)]
 --
---build "abcd"
+--nX = [(0,6),(0,5),(0,4),(0,3),(0,2),(0,1),(0,0),(1,6),(1,5),(1,4),(1,3),(1,2),(1,1),(2,6),(2,5),(2,4),(2,3),(2,2),(3,6),(3,5),(3,4),(3,3),(4,6),(4,5),(4,4),(5,6),(5,5),(6,6)]
+--
+--import Data.List (sort)
+--
+--nn' = lengthToStartAndRun $ length y
+--length nn'
+--
+--
+--areEqual a b = sort a == sort b
+--
+--areEqual x z'
+--
+--length x
+--
+--subCount $ length y
 --
 ----quickCheck prop_buildCount
---
---build x
---
---(V.init (V.fromList "a"))
-y = "GATTACA"
---
-
-lengthToSlices $ length y
-
-z' = concat [ [ (l,r) | l <- [0..((length y) - 1)], l <= r ] | r <- [((length y) - 1),((length y) - 2)..0] ]
-z'
-length z'
-
--- now, given 
--- a map from 0 to (n * (n + 1)) `div` 2
--- where n is length str
--- we can index into z to get slices
--- for all possible substrings of str
--- linearly with no recursion
-
-
-x = [(0, 6), (0, 5), (0, 4), (0, 3), (0, 2), (0, 1), (0, 0), (1, 6), (1, 5), (1, 4), (1, 3), (1, 2), (1, 1), (2, 6), (2, 5), (2, 4), (2, 3), (2, 2), (3, 6), (3, 5),(3, 4), (3, 3), (4, 6),(4, 5), (4, 4), (5, 6), (5, 5), (6, 6)]
-
-x
-
-z' == x
-
-
-nZ' = [(0,6),(1,6),(2,6),(3,6),(4,6),(5,6),(6,6),(0,5),(1,5),(2,5),(3,5),(4,5),(5,5),(0,4),(1,4),(2,4),(3,4),(4,4),(0,3),(1,3),(2,3),(3,3),(0,2),(1,2),(2,2),(0,1),(1,1),(0,0)]
-
-nX = [(0,6),(0,5),(0,4),(0,3),(0,2),(0,1),(0,0),(1,6),(1,5),(1,4),(1,3),(1,2),(1,1),(2,6),(2,5),(2,4),(2,3),(2,2),(3,6),(3,5),(3,4),(3,3),(4,6),(4,5),(4,4),(5,6),(5,5),(6,6)]
-
-import Data.List (sort)
-
-nn' = lengthToStartAndRun $ length y
-length nn'
-
-
-areEqual a b = sort a == sort b
-
-areEqual x z'
-
-length x
-
-subCount $ length y
-
---quickCheck prop_buildCount

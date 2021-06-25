@@ -19,12 +19,12 @@ lengthToSlices len = Prelude.concat [ [ (l, r) | l <- [0..(len - 1)], l <= r ] |
 
 -- 1. compute all possible substrings
 --   in terms of: start and run (not as we currently have it: left and right)
-lengthToStartAndRun :: Int -> [(Int, Int)]
-lengthToStartAndRun len = Prelude.concat [ [ (l, (r - l) + 1) | l <- [0..(len - 1)], l <= r ] | r <- [(len - 1), (len - 2)..0] ]
+--lengthToStartAndRun :: Int -> [(Int, Int)]
+--lengthToStartAndRun len = Prelude.concat [ [ (l, (r - l) + 1) | l <- [0..(len - 1)], l <= r ] | r <- [(len - 1), (len - 2)..0] ]
 
 -- 2. convert string to vector
-str = "GATTACA"
-vstr = V.fromList str
+--str = "GATTACA"
+--vstr = V.fromList str
 
 -- 3. use the vector generate function: 
 --   Int: subCount $ length str
@@ -33,7 +33,7 @@ vstr = V.fromList str
 --     a is the slice out of str vector of that particular substring
 --     slice: 
 slices :: String -> V.Vector (V.Vector Char)
-slices str = V.generate (subCount len) f
+slices str = V.generate (substringsForLength len) f
   where 
     f :: Int -> (V.Vector Char)
     f ix = V.slice start run vstr
@@ -44,14 +44,20 @@ slices str = V.generate (subCount len) f
     len = Prelude.length str
     
     startRunList :: [(Int, Int)]
-    startRunList = lengthToStartAndRun len
+    startRunList = lengthToStartRunList len
     
     vstr :: (V.Vector Char)
     vstr = V.fromList str
     
-    subCount :: Int -> Int
-    subCount n = (n * (n + 1)) `div` 2
+    substringsForLength :: Int -> Int
+    substringsForLength n = (n * (n + 1)) `div` 2
 
+    lengthToStartRunList :: Int -> [(Int, Int)]
+    lengthToStartRunList len = 
+      Prelude.concat 
+        [[ (l, (r - l) + 1) 
+          | l <- [0..(len - 1)], l <= r ] 
+          | r <- [(len - 1), (len - 2)..0] ]
 
 
 -- is this fast?
@@ -102,10 +108,10 @@ slices str = V.generate (subCount len) f
 --
 -- Formula from
 -- https://stackoverflow.com/questions/12418590/finding-substrings-of-a-string
-prop_buildCount :: String -> Bool
-prop_buildCount str = 
-  Prelude.length (lengthToSlices $ length str) == (n * (n + 1)) `div` 2
-  where n = Prelude.length str
+--prop_buildCount :: String -> Bool
+--prop_buildCount str = 
+--  Prelude.length (lengthToSlices $ length str) == (n * (n + 1)) `div` 2
+--  where n = Prelude.length str
 --
 --
 --
