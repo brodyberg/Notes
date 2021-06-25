@@ -10,8 +10,41 @@ import Control.Monad
 
 import Data.Time
 
-slices :: String -> V.Vector (V.Vector Char)
-slices str = V.generate (substringsForLength len) f
+slices :: String -> Set (Vector Char)
+slices str = vectorToSet $ generateVector len f
+  where 
+    vectorToSet :: (Vector (Vector Char)) -> Set (Vector Char)
+    vectorToSet = V.foldr (\i acc -> S.insert i acc) S.empty
+    
+    generateVector :: Int -> (Int -> (Vector Char)) -> (Vector (Vector Char))
+    generateVector len = V.generate (substringsForLength len)
+
+    f :: Int -> (V.Vector Char)
+    f ix = V.slice start run vstr
+      where
+        (start, run) = startRunList !! ix
+
+    len :: Int    
+    len = Prelude.length str
+    
+    startRunList :: [(Int, Int)]
+    startRunList = lengthToStartRunList len
+    
+    vstr :: (V.Vector Char)
+    vstr = V.fromList str
+    
+    substringsForLength :: Int -> Int
+    substringsForLength n = (n * (n + 1)) `div` 2
+
+    lengthToStartRunList :: Int -> [(Int, Int)]
+    lengthToStartRunList len = 
+      Prelude.concat 
+        [[ (l, (r - l) + 1) 
+          | l <- [0..(len - 1)], l <= r ] 
+          | r <- [(len - 1), (len - 2)..0] ]
+
+slices' :: String -> V.Vector (V.Vector Char)
+slices' str = V.generate (substringsForLength len) f
   where 
     f :: Int -> (V.Vector Char)
     f ix = V.slice start run vstr
@@ -36,6 +69,7 @@ slices str = V.generate (substringsForLength len) f
         [[ (l, (r - l) + 1) 
           | l <- [0..(len - 1)], l <= r ] 
           | r <- [(len - 1), (len - 2)..0] ]
+
 
 fileName = "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingASharedMotif/rosalind_lcsm_2.txt"
 
@@ -116,7 +150,7 @@ mainSlices = do
     putStrLn "DONE: Making list of 10 fastas" 
     putStrLn $ show now
     
-    let dnas = Prelude.take 10 $ fmap fastaSeq fastas
+    let dnas = Prelude.take 100 $ fmap fastaSeq fastas
 --    let dnas = fmap fastaSeq fastas
 
     putStrLn $ show $ fmap Prelude.length dnas
@@ -125,15 +159,29 @@ mainSlices = do
     putStrLn "START: allSubstrings on 10 fastas" 
     putStrLn $ show now
     
-    let vectors = fmap slices dnas
+    let vectors = fmap slices' dnas
 
-    let xcount = V.length $ vectors !! 0
+    let x = fmap V.length vectors
 
-    putStrLn "count of substrings from first: " 
-    putStrLn $ show xcount
+--    let x = fmap S.size sets
     
-    putStrLn "first substring of each: " 
+    putStrLn "length of each: " 
+    putStrLn $ show x
+
+--    let results = Prelude.foldr S.intersection (Prelude.head sets) (Prelude.tail sets) 
+
+--    let xcount = V.length $ vectors !! 0
+
+--    putStrLn "count of substrings from first: " 
+--    putStrLn $ show xcount
+    
+--    putStrLn "first substring of each: " 
   
+--    let size = S.size results
+    
+    putStrLn "size of results: "
+--    putStrLn $ show size
+
     now <- getZonedTime
     putStrLn "END: allSubstrings on 10 fastas" 
     putStrLn $ show now
