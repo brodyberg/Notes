@@ -3,30 +3,56 @@ module ProjectRosalind.Buyable where
 import Test.QuickCheck
 --
 --import Data.Set as S
---import Data.Vector as V
+import Data.Vector as V
 --
 --
 
 -- achievement: list comprehension to compute slices of all possible substrings
 lengthToSlices :: Int -> [(Int, Int)]
-lengthToSlices len = concat [ [ (l, r) | l <- [0..(len - 1)], l <= r ] | r <- [(len - 1), (len - 2)..0] ]
+lengthToSlices len = Prelude.concat [ [ (l, r) | l <- [0..(len - 1)], l <= r ] | r <- [(len - 1), (len - 2)..0] ]
 
--- achievement: list comprehension to compute start and run of all possible substrings
-lengthToStartAndRun :: Int -> [(Int, Int)]
-lengthToStartAndRun len = concat [ [ (l, (r - l) + 1) | l <- [0..(len - 1)], l <= r ] | r <- [(len - 1), (len - 2)..0] ]
+---- achievement: list comprehension to compute start and run of all possible substrings
+--lengthToStartAndRun :: Int -> [(Int, Int)]
+--lengthToStartAndRun len = concat [ [ (l, (r - l) + 1) | l <- [0..(len - 1)], l <= r ] | r <- [(len - 1), (len - 2)..0] ]
 
-subCount :: Int -> Int
-subCount n = (n * (n + 1)) `div` 2
 
--- compute all possible substrings
+
+-- 1. compute all possible substrings
 --   in terms of: start and run (not as we currently have it: left and right)
--- convert string to vector
--- use the vector generate function: 
+lengthToStartAndRun :: Int -> [(Int, Int)]
+lengthToStartAndRun len = Prelude.concat [ [ (l, (r - l) + 1) | l <- [0..(len - 1)], l <= r ] | r <- [(len - 1), (len - 2)..0] ]
+
+-- 2. convert string to vector
+str = "GATTACA"
+vstr = V.fromList str
+
+-- 3. use the vector generate function: 
 --   Int: subCount $ length str
 --   (Int -> a) 
 --     Int is index into all possible substrings list
 --     a is the slice out of str vector of that particular substring
 --     slice: 
+slices :: String -> V.Vector (V.Vector Char)
+slices str = V.generate (subCount len) f
+  where 
+    f :: Int -> (V.Vector Char)
+    f ix = V.slice start run vstr
+      where
+        (start, run) = startRunList !! ix
+
+    len :: Int    
+    len = Prelude.length str
+    
+    startRunList :: [(Int, Int)]
+    startRunList = lengthToStartAndRun len
+    
+    vstr :: (V.Vector Char)
+    vstr = V.fromList str
+    
+    subCount :: Int -> Int
+    subCount n = (n * (n + 1)) `div` 2
+
+
 
 -- is this fast?
 -- is it fast enough?
