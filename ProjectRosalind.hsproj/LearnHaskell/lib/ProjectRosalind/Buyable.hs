@@ -7,8 +7,13 @@ import Test.QuickCheck
 --
 --
 
+-- achievement: list comprehension to compute slices of all possible substrings
 lengthToSlices :: Int -> [(Int, Int)]
-lengthToSlices len = concat [ [ (l,r) | l <- [0..(len - 1)], l <= r ] | r <- [(len - 1),(len - 2)..0] ]
+lengthToSlices len = concat [ [ (l, r) | l <- [0..(len - 1)], l <= r ] | r <- [(len - 1), (len - 2)..0] ]
+
+-- achievement: list comprehension to compute start and run of all possible substrings
+lengthToStartAndRun :: Int -> [(Int, Int)]
+lengthToStartAndRun len = concat [ [ (l, (r - l) + 1) | l <- [0..(len - 1)], l <= r ] | r <- [(len - 1), (len - 2)..0] ]
 
 subCount :: Int -> Int
 subCount n = (n * (n + 1)) `div` 2
@@ -21,6 +26,7 @@ subCount n = (n * (n + 1)) `div` 2
 --   (Int -> a) 
 --     Int is index into all possible substrings list
 --     a is the slice out of str vector of that particular substring
+--     slice: 
 
 -- is this fast?
 -- is it fast enough?
