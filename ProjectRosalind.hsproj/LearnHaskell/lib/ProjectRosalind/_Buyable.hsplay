@@ -16,34 +16,8 @@
 --(V.init (V.fromList "a"))
 y = "GATTACA"
 --
---reverse [r | r <- [0..(length x)]]
---
---[l | l <- [0..(length x)]]
---
---take 5 
---  [ 
---    [ (l,r) | l <- [0..(length x)] ] 
---            | r <- [1..] 
---  ]
---  
 
---[30,29..0]
-
---[(i,j) | i <- [1..6],
---         j <- [6,5..1] ]
---         
---[ [ (i,j) | i <- [1..6] ] | j <- [6,5..1] ]
---
---
---
---[ [ (i,j) | i <- [1..6], i /= j ] | j <- [6,5..1] ]
-
-
---length $ concat [ [ (i,j) | i <- [1..6], i < j ] | j <- [6,5..1] ]
---
---z = concat [ [ (l,r) | l <- [0..(length y)], l < r ] | r <- [(length y),((length y) - 1)..1] ]
---z
---length z
+lengthToSlices $ length y
 
 z' = concat [ [ (l,r) | l <- [0..((length y) - 1)], l <= r ] | r <- [((length y) - 1),((length y) - 2)..0] ]
 z'
@@ -80,20 +54,4 @@ length x
 
 subCount $ length y
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+quickCheck prop_buildCount

@@ -1,11 +1,14 @@
 module ProjectRosalind.Buyable where
 --
---import Test.QuickCheck
+import Test.QuickCheck
 --
 --import Data.Set as S
 --import Data.Vector as V
 --
 --
+
+lengthToSlices :: Int -> [(Int, Int)]
+lengthToSlices len = concat [ [ (l,r) | l <- [0..(len - 1)], l <= r ] | r <- [(len - 1),(len - 2)..0] ]
 
 subCount :: Int -> Int
 subCount n = (n * (n + 1)) `div` 2
@@ -51,12 +54,12 @@ subCount n = (n * (n + 1)) `div` 2
 --y = "GATTACA"
 --y' = subCount $ Prelude.length y
 --
----- Formula from
----- https://stackoverflow.com/questions/12418590/finding-substrings-of-a-string
---prop_buildCount :: String -> Bool
---prop_buildCount str = 
---  Prelude.length (build str) == (n * (n + 1)) `div` 2
---  where n = Prelude.length str
+-- Formula from
+-- https://stackoverflow.com/questions/12418590/finding-substrings-of-a-string
+prop_buildCount :: String -> Bool
+prop_buildCount str = 
+  Prelude.length (lengthToSlices $ length str) == (n * (n + 1)) `div` 2
+  where n = Prelude.length str
 --
 --
 --
