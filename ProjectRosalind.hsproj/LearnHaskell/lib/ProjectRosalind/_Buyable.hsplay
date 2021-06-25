@@ -54,4 +54,4 @@ length x
 
 subCount $ length y
 
-quickCheck prop_buildCount
+--quickCheck prop_buildCount

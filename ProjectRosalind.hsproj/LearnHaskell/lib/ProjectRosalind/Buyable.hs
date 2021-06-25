@@ -13,6 +13,20 @@ lengthToSlices len = concat [ [ (l,r) | l <- [0..(len - 1)], l <= r ] | r <- [(l
 subCount :: Int -> Int
 subCount n = (n * (n + 1)) `div` 2
 
+-- compute all possible substrings
+--   in terms of: start and run (not as we currently have it: left and right)
+-- convert string to vector
+-- use the vector generate function: 
+--   Int: subCount $ length str
+--   (Int -> a) 
+--     Int is index into all possible substrings list
+--     a is the slice out of str vector of that particular substring
+
+-- is this fast?
+-- is it fast enough?
+
+
+
 -- Image of what build does: 
 -- 0     6
 -- GATTACA    0, 6
