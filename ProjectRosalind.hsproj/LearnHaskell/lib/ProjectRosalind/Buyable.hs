@@ -2,7 +2,7 @@ module ProjectRosalind.Buyable where
 --
 import Test.QuickCheck
 --
---import Data.Set as S
+import Data.Set as S
 import Data.Vector as V
 --
 --
@@ -35,6 +35,39 @@ lengthToSlices len = Prelude.concat [ [ (l, r) | l <- [0..(len - 1)], l <= r ] |
 slices :: String -> V.Vector (V.Vector Char)
 slices str = V.generate (substringsForLength len) f
   where 
+    f :: Int -> (V.Vector Char)
+    f ix = V.slice start run vstr
+      where
+        (start, run) = startRunList !! ix
+
+    len :: Int    
+    len = Prelude.length str
+    
+    startRunList :: [(Int, Int)]
+    startRunList = lengthToStartRunList len
+    
+    vstr :: (V.Vector Char)
+    vstr = V.fromList str
+    
+    substringsForLength :: Int -> Int
+    substringsForLength n = (n * (n + 1)) `div` 2
+
+    lengthToStartRunList :: Int -> [(Int, Int)]
+    lengthToStartRunList len = 
+      Prelude.concat 
+        [[ (l, (r - l) + 1) 
+          | l <- [0..(len - 1)], l <= r ] 
+          | r <- [(len - 1), (len - 2)..0] ]
+
+slicesSet :: String -> Set (Vector Char)
+slicesSet str = vectorToSet $ generateVector len f
+  where 
+    vectorToSet :: (Vector (Vector Char)) -> Set (Vector Char)
+    vectorToSet = V.foldr (\i acc -> S.insert i acc) S.empty
+    
+    generateVector :: Int -> (Int -> (Vector Char)) -> (Vector (Vector Char))
+    generateVector len = V.generate (substringsForLength len)
+
     f :: Int -> (V.Vector Char)
     f ix = V.slice start run vstr
       where
@@ -96,6 +129,48 @@ slices str = V.generate (substringsForLength len) f
 --      C     5, 6
 --       A    6, 6
  
+
+-- Older work: 
+
+-- Carry string 
+-- Copy of carry (block)
+-- Next is that without last item
+-- Continue while there’s any more of copy 
+-- None left? Knock first from carry, loop
+build :: String -> Set (V.Vector Char)
+build str = create (V.fromList str) (V.fromList str) S.empty
+  where 
+    create :: (Vector Char) -> (Vector Char) -> Set (Vector Char) -> Set (Vector Char)
+    create carry block acc = 
+      -- No more carry
+      -- No more block:
+      --   1. return acc
+      if carryLen == 0 && blockLen == 0
+      then
+        acc
+      -- There is more carry
+      -- No more of this block:
+      --   1. bump one off head of carry
+      --   2. new carry value placed as new block
+      --   3. insert that carry value into acc
+      else if blockLen == 0
+      then 
+        create (V.tail carry) (V.tail carry) acc
+      -- There is more carry
+      -- There is more of this block: 
+      --   1. do not touch carry
+      --   2. bump one off tail of block
+      --   3. save block to acc
+      else
+        create carry (V.init block) (S.insert block acc)
+        
+      where 
+        carryLen :: Int
+        carryLen = V.length carry
+        
+        blockLen :: Int
+        blockLen = V.length block
+
 
 
 

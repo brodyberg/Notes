@@ -2,7 +2,6 @@ module ProjectRosalind.FindingASharedMotif where
   
 import Data.Set as S
 import Data.Vector as V
-import Data.List as L
 
 import ProjectRosalind.Fasta (parseFasta')
 import ProjectRosalind.Fasta_Types 
@@ -11,77 +10,33 @@ import Control.Monad
 
 import Data.Time
 
--- Carry string 
--- Copy of carry (block)
--- Next is that without last item
--- Continue while there’s any more of copy 
--- None left? Knock first from carry, loop
-
-build :: String -> Set (V.Vector Char)
-build str = create (V.fromList str) (V.fromList str) S.empty
+slices :: String -> V.Vector (V.Vector Char)
+slices str = V.generate (substringsForLength len) f
   where 
-    create :: (Vector Char) -> (Vector Char) -> Set (Vector Char) -> Set (Vector Char)
-    create carry block acc = 
-      -- No more carry
-      -- No more block:
-      --   1. return acc
-      if carryLen == 0 && blockLen == 0
-      then
-        acc
-      -- There is more carry
-      -- No more of this block:
-      --   1. bump one off head of carry
-      --   2. new carry value placed as new block
-      --   3. insert that carry value into acc
-      else if blockLen == 0
-      then 
-        create (V.tail carry) (V.tail carry) acc
-      -- There is more carry
-      -- There is more of this block: 
-      --   1. do not touch carry
-      --   2. bump one off tail of block
-      --   3. save block to acc
-      else
-        create carry (V.init block) (S.insert block acc)
-        
-      where 
-        carryLen :: Int
-        carryLen = V.length carry
-        
-        blockLen :: Int
-        blockLen = V.length block
+    f :: Int -> (V.Vector Char)
+    f ix = V.slice start run vstr
+      where
+        (start, run) = startRunList !! ix
 
--- Image of what build does: 
+    len :: Int    
+    len = Prelude.length str
+    
+    startRunList :: [(Int, Int)]
+    startRunList = lengthToStartRunList len
+    
+    vstr :: (V.Vector Char)
+    vstr = V.fromList str
+    
+    substringsForLength :: Int -> Int
+    substringsForLength n = (n * (n + 1)) `div` 2
 
--- GATTACA
--- GATTAC
--- GATTA
--- GATT
--- GAT
--- GA
--- G
---  ATTACA
---  ATTAC
---  ATTA
---  ATT
---  AT
---  A
---   TTACA
---   TTAC
---   TTA
---   TT
---   T
---    TACA
---    TAC
---    TA
---    T
---     ACA
---     AC
---     A
---      CA
---      C
---       A
- 
+    lengthToStartRunList :: Int -> [(Int, Int)]
+    lengthToStartRunList len = 
+      Prelude.concat 
+        [[ (l, (r - l) + 1) 
+          | l <- [0..(len - 1)], l <= r ] 
+          | r <- [(len - 1), (len - 2)..0] ]
+
 fileName = "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingASharedMotif/rosalind_lcsm_2.txt"
 
 readLocalFile :: String -> IO String
@@ -95,19 +50,12 @@ filePathToFastas path = do
   contents <- readLocalFile path
   return $ parseFasta' contents
   
---prop_allPossibleSubstringCount :: String -> Bool
---prop_allPossibleSubstringCount str = 
---  length (allSubstrings str) == (n * (n + 1)) `div` 2
---  where n = length str
-
 theoreticalSubstringCount :: String -> Int 
 theoreticalSubstringCount s = (n * (n + 1)) `div` 2
   where n = Prelude.length s
 
-
-mainBuild :: IO ()
-mainBuild = do
-    now <- getZonedTime  
+mainSlices :: IO ()
+mainSlices = do
 
     -- do the full thing, time it
 
@@ -165,36 +113,45 @@ mainBuild = do
     putStrLn $ show $ Prelude.length fastas
 
     now <- getZonedTime
-    putStrLn "DONE: Making list of all fastas" 
+    putStrLn "DONE: Making list of 10 fastas" 
     putStrLn $ show now
     
---    let dnas = Prelude.take 10 $ fmap fastaSeq fastas
-    let dnas = fmap fastaSeq fastas
+    let dnas = Prelude.take 10 $ fmap fastaSeq fastas
+--    let dnas = fmap fastaSeq fastas
 
     putStrLn $ show $ fmap Prelude.length dnas
 
     now <- getZonedTime
-    putStrLn "START: allSubstrings on all fastas" 
+    putStrLn "START: allSubstrings on 10 fastas" 
     putStrLn $ show now
     
-    let sets = fmap build dnas
+    let vectors = fmap slices dnas
 
-    now <- getZonedTime
-    putStrLn "END: allSubstrings on all fastas" 
-    putStrLn $ show now
+    let xcount = V.length $ vectors !! 0
 
-    now <- getZonedTime
-    putStrLn "START: intersecting all dna" 
-    putStrLn $ show now
-
-
---    let final = Prelude.foldr S.intersection (Prelude.head sets) (Prelude.tail sets) 
+    putStrLn "count of substrings from first: " 
+    putStrLn $ show xcount
+    
+    putStrLn "first substring of each: " 
   
-    putStrLn "result: " 
---    putStrLn $ show $ Prelude.length final
-    
     now <- getZonedTime
-    putStrLn "END: intersecting all dna" 
+    putStrLn "END: allSubstrings on 10 fastas" 
     putStrLn $ show now
 
+  
+
+--    now <- getZonedTime
+--    putStrLn "START: intersecting all dna" 
+--    putStrLn $ show now
+--
+--
+----    let final = Prelude.foldr S.intersection (Prelude.head sets) (Prelude.tail sets) 
+--  
+--    putStrLn "result: " 
+----    putStrLn $ show $ Prelude.length final
+--    
+--    now <- getZonedTime
+--    putStrLn "END: intersecting all dna" 
+--    putStrLn $ show now
+--
     putStrLn "Done"
