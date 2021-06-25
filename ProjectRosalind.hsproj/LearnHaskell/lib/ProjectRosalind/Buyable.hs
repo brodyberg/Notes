@@ -7,38 +7,39 @@ module ProjectRosalind.Buyable where
 --
 --
 
+subCount :: Int -> Int
 subCount n = (n * (n + 1)) `div` 2
 
 -- Image of what build does: 
-   0     6
--- GATTACA
--- GATTAC
--- GATTA
--- GATT
--- GAT
--- GA
--- G
---  ATTACA
---  ATTAC
---  ATTA
---  ATT
---  AT
---  A
---   TTACA
---   TTAC
---   TTA
---   TT
---   T
---    TACA
---    TAC
---    TA
---    T
---     ACA
---     AC
---     A
---      CA
---      C
---       A
+-- 0     6
+-- GATTACA    0, 6
+-- GATTAC     0, 5
+-- GATTA      0, 4
+-- GATT       0, 3
+-- GAT        0, 2
+-- GA         0, 1
+-- G          0, 0
+--  ATTACA    1, 6
+--  ATTAC     1, 5
+--  ATTA      1, 4
+--  ATT       1, 3
+--  AT        1, 2
+--  A         1, 1
+--   TTACA    2, 6
+--   TTAC     2, 5
+--   TTA      2, 4
+--   TT       2, 3
+--   T        2, 2
+--    TACA    3, 6
+--    TAC     3, 5
+--    TA      3, 4
+--    T       3, 3
+--     ACA    4, 6
+--     AC     4, 5
+--     A      4, 4
+--      CA    5, 6
+--      C     5, 6
+--       A    6, 6
  
 
 
