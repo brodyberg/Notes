@@ -1,7 +1,8 @@
 module ProjectRosalind.FindingASharedMotif where
   
 import Data.Vector as V
-import Data.IntMap.Strict as M
+import Data.Set as S
+--import Data.IntMap.Strict as M
 
 import Data.Hashable (hash)
 
@@ -43,37 +44,97 @@ substringsForLength1000 = substringsForLength 1000
 --     Int is index into all possible substrings list
 --     a is the slice out of str vector of that particular substring
 --     slice: 
-slices :: String -> IntMap String
-slices str = vectorToIntMap $ generateVector len f
-  where 
-    vectorToIntMap :: (Vector String) -> IntMap String
---    vectorToIntMap = V.foldr (\i acc -> M.insert (hash i) i acc) M.empty 
-    vectorToIntMap = V.foldr insert M.empty 
-    
-    insert i acc = 
-      if M.notMember hashed acc
-      then
-        M.insert hashed i acc
-      else
-        acc
-      where 
-        hashed = hash i
-  
-    -- we could do M.fromList
 
-    generateVector :: Int -> (Int -> String) -> (Vector String)
-    generateVector len = V.generate substringsForLength1000
+--
+--Observed: 
+--  Ss count for a 1k string is ~500k
+--  Intersecting two 500k sets is slow
+--  Intersection of two DNA’s results in ~1% the size 
+--
+--Hypothesis:
+--  If from after this “seed” intersection we can create very tiny sets but guarantee we get all ss of length equal or less than the longest item in the intersection we may have a path forward on improving the performance 
+--
+--Pseudo code: 
+--
+--Dna1 all ss into set
+--DNA 2 all ss into set
+--Intersect
+--Get longest string
+--Next dna: filter all ss slices to be <= longest string in intersection
+--Build vector of string based on the length of this filtered slice list
+--Add to set 
+--Intersect
+--Repeat
+--  Pass along progressively filtered slice list 
+
+
+slicesSet :: String -> Set String
+slicesSet str = vectorToSet $ generateVector len f
+  where 
+    vectorToSet :: Vector String -> Set String
+    vectorToSet = V.foldr (\i acc -> S.insert i acc) S.empty
+    
+    generateVector :: Int -> (Int -> String) -> Vector String
+    --                              FILTER
+    generateVector len = V.generate substringsForLength1000-- (substringsForLength len)
 
     f :: Int -> String
     f ix = V.toList $ V.slice start run vstr
       where
+                       -- USE CHAINED FILTERED
         (start, run) = startRunListForLength1000 !! ix
 
     len :: Int    
     len = Prelude.length str
-        
-    vstr :: (V.Vector Char)
+    
+--    startRunList :: [(Int, Int)]
+--    startRunList = lengthToStartRunList len
+--    
+    vstr :: Vector Char
     vstr = V.fromList str
+    
+--    substringsForLength :: Int -> Int
+--    substringsForLength n = (n * (n + 1)) `div` 2
+--
+--    lengthToStartRunList :: Int -> [(Int, Int)]
+--    lengthToStartRunList len = 
+--      Prelude.concat 
+--        [[ (l, (r - l) + 1) 
+--          | l <- [0..(len - 1)], l <= r ] 
+--          | r <- [(len - 1), (len - 2)..0] ]
+
+
+--slices :: String -> IntMap String
+--slices str = vectorToIntMap $ generateVector len f
+--  where 
+--    vectorToIntMap :: (Vector String) -> IntMap String
+----    vectorToIntMap = V.foldr (\i acc -> M.insert (hash i) i acc) M.empty 
+--    vectorToIntMap = V.foldr insert M.empty 
+--    
+--    insert i acc = 
+--      if M.notMember hashed acc
+--      then
+--        M.insert hashed i acc
+--      else
+--        acc
+--      where 
+--        hashed = hash i
+--  
+--    -- we could do M.fromList [(Key, a)]
+--
+--    generateVector :: Int -> (Int -> String) -> (Vector String)
+--    generateVector len = V.generate substringsForLength1000
+--
+--    f :: Int -> String
+--    f ix = V.toList $ V.slice start run vstr
+--      where
+--        (start, run) = startRunListForLength1000 !! ix
+--
+--    len :: Int    
+--    len = Prelude.length str
+--        
+--    vstr :: (V.Vector Char)
+--    vstr = V.fromList str
 
 
 fileName = "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingASharedMotif/rosalind_lcsm_2.txt"
@@ -117,14 +178,14 @@ mainSlices = do
     putStrLn "START: allSubstrings on 100 fastas" 
     putStrLn $ show now
       
-    let maps = fmap slices dnas
+--    let maps = fmap slices dnas
 
-    let sizes = fmap M.size maps
+--    let sizes = fmap M.size maps
 
 --    let x = fmap S.size sets
     
-    putStrLn "sizes of each: " 
-    putStrLn $ show sizes
+--    putStrLn "sizes of each: " 
+--    putStrLn $ show sizes
 
 --    let results = Prelude.foldr S.intersection (Prelude.head sets) (Prelude.tail sets) 
 

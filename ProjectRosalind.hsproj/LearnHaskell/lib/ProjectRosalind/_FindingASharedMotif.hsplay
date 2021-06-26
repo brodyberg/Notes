@@ -1,4 +1,4 @@
 -- Haskell Playground 1.0
 --mainBuild
 --quickCheck prop_buildCount
-mainSlices
+--mainSlices

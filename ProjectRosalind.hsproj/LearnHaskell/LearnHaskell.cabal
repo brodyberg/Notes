@@ -5,111 +5,111 @@ stability: experimental
 x-ghc-framework-version: 8.6.4-13.14-3
 x-last-ide-version: HfM1.8.2
 extra-source-files:
-    NewText.txt
-    FindingAProteinMotif.md
-    FindingASharedMotif/rosalind_lcsm_2.txt
-    FindingASharedMotif/rosalind_lcsm_1.txt
     FindingAMotif/rosalind_mprt_2.txt
-    FindingAMotif/rosalind_mprt_1.txt
     FindingAMotif/rosalind_mprt_3.txt
+    FindingAMotif/rosalind_mprt_1.txt
     FindingAMotif/rosalind_mprt_4.txt
+    FindingASharedMotif/rosalind_lcsm_1.txt
+    FindingASharedMotif/rosalind_lcsm_2.txt
+    FindingAProteinMotif.md
+    NewText.txt
     FindingASharedMotif.md
 
 library
     hs-source-dirs: lib
     other-modules:
-        ProjectRosalind.Buyable
-        ProjectRosalind.FindingASharedMotif
-        ProjectRosalind.Fasta
-        ProjectRosalind.Window
-        ProjectRosalind.Fasta_Types
-        ProjectRosalind.Motif.Parsec
-        ProjectRosalind.Motif.ExpressionParsing
-        ProjectRosalind.Motif.Combinator
-        ProjectRosalind.Motif.Expr
-        ProjectRosalind.Motif.MeatSpace
-        ProjectRosalind.Motif.FunctionsAndTypesForParsing
-        ProjectRosalind.Motif.Char
-        ProjectRosalind.FindingAProteinMotif
-        HaskellBook.Blank
-        HaskellBook.DogTypesChapter11
-        HaskellBook.Penguin
-        HaskellBook.TypeInference2
-        HaskellBook.ItsOnlyNaturalChapter12
-        HaskellBook.Chapter6
-        HaskellBook.Chapter5DetermineTheType
-        HaskellBook.GuardDuty
-        HaskellBook.Arith4
-        HaskellBook.GoatsDerivingChapter11
+        HaskellBook.GoatsNotDerivingChapter11
         HaskellBook.LanguageExercisesChapter11
-        HaskellBook.Matching
-        HaskellBook.PartiallyAppliedDataConstructorsChapter11
-        HaskellBook.StringProcessingChapter12
-        HaskellBook.MatchingTuples1
-        HaskellBook.MakePersonChapter13
-        HaskellBook.UnfoldsAgainChapter12
-        HaskellBook.GoatsChapter11
-        HaskellBook.DeconstructingChapter11
-        HaskellBook.PalindromeChapter13
-        HaskellBook.ProductTypesChapter11
-        HaskellBook.VehiclesChapter11
-        HaskellBook.ValidateTheWordChapter12
-        HaskellBook.MoreBottomChapter9
-        HaskellBook.CipherChapter9
-        HaskellBook.Chapter17_Applicative
-        HaskellBook.SquareCubeChapter9
-        HaskellBook.DivideThenAdd
-        HaskellBook.ZippingChapter9
+        HaskellBook.Chapter9
         HaskellBook.Case
+        HaskellBook.Arith4
+        HaskellBook.MoreBottomChapter9
+        HaskellBook.DeconstructingChapter11
+        HaskellBook.GuardDuty
+        HaskellBook.DeconstructingValuesChapter11
+        HaskellBook.PityTheBoolChapter11
+        HaskellBook.VehiclesChapter11
+        HaskellBook.VigenereCipherChapter11
+        HaskellBook.ProductTypesChapter11
+        HaskellBook.CipherChapter9
+        HaskellBook.Chapter4
+        HaskellBook.NotAListChapter12
+        HaskellBook.BinaryTreeChapter11
+        HaskellBook.AcrosChapter9
+        HaskellBook.Penguin
+        HaskellBook.SmallLibraryForMaybeChapter12
+        HaskellBook.CasePractice
+        HaskellBook.TypeDistributivePropertyChapter11
+        HaskellBook.UnfoldsChapter12
+        HaskellBook.FoldingExample
+        HaskellBook.WhereDoesYourGardenGrowChapter11
+        HaskellBook.MyLinesChapter9
+        HaskellBook.Dodgy
+        HaskellBook.ValidateTheWordChapter12
+        HaskellBook.UnfoldsAgainChapter12
+        HaskellBook.SquareCubeChapter9
+        HaskellBook.ZippingChapter9
+        HaskellBook.GoatsChapter11
+        HaskellBook.Compose
         HaskellBook.NoMonomorphism
         HaskellBook.YesMonomorphism
-        HaskellBook.GoatsNotDerivingChapter11
-        HaskellBook.Compose
-        HaskellBook.HuttonsRazorChapter11
-        HaskellBook.Practice
-        HaskellBook.StandardChapter9
-        HaskellBook.SymmetryChapter9
-        HaskellBook.VigenereCipherChapter11
-        HaskellBook.WaxOn
-        HaskellBook.FilteringChapter9
-        HaskellBook.LogicGoatsChapter11
-        HaskellBook.RegisteredUser1
-        HaskellBook.Chapter7GrabBag
-        HaskellBook.Chapter3
-        HaskellBook.Chapter10Exercises
-        HaskellBook.SmallLibraryForMaybeChapter12
-        HaskellBook.Reverse
-        HaskellBook.RegisteredUser2
-        HaskellBook.PityTheBoolChapter11
-        HaskellBook.FoldingExample
-        HaskellBook.DeconstructingValuesChapter11
-        HaskellBook.Arith2
-        HaskellBook.MoodSwing
-        HaskellBook.WhereDoesYourGardenGrowChapter11
-        HaskellBook.NotAListChapter12
-        HaskellBook.DatabaseProcessing
-        HaskellBook.Chapter7Exercises
-        HaskellBook.ProgrammersChapter11
-        HaskellBook.SmallLibraryForEitherChapter12
-        HaskellBook.AcrosChapter9
         HaskellBook.AsPatternsChapter11
-        HaskellBook.BinaryTreeChapter11
-        HaskellBook.TypeInference1
-        HaskellBook.UnfoldsChapter12
         HaskellBook.WriteATypeSignature
-        HaskellBook.CasePractice
-        HaskellBook.MyLinesChapter9
-        HaskellBook.Chapter4
+        HaskellBook.DatabaseProcessing
+        HaskellBook.PartiallyAppliedDataConstructorsChapter11
         HaskellBook.Learn
+        HaskellBook.Reverse
+        HaskellBook.WaxOn
+        HaskellBook.GoatsDerivingChapter11
+        HaskellBook.ProgrammersChapter11
         HaskellBook.EqInstances
-        HaskellBook.EftChapter9
-        HaskellBook.GreetIfCool3
-        HaskellBook.PhoneExercise
+        HaskellBook.Chapter10Exercises
+        HaskellBook.Arith2
+        HaskellBook.PalindromeChapter13
+        HaskellBook.RegisteredUser2
+        HaskellBook.Chapter17_Applicative
+        HaskellBook.Chapter7Exercises
+        HaskellBook.StandardChapter9
         HaskellBook.DayOfWeek
+        HaskellBook.PhoneExercise
+        HaskellBook.Chapter6
+        HaskellBook.HuttonsRazorChapter11
+        HaskellBook.TypeInference2
+        HaskellBook.LogicGoatsChapter11
+        HaskellBook.MatchingTuples1
+        HaskellBook.GreetIfCool3
+        HaskellBook.ItsOnlyNaturalChapter12
         HaskellBook.Chapter5
-        HaskellBook.Dodgy
-        HaskellBook.Chapter9
-        HaskellBook.TypeDistributivePropertyChapter11
+        HaskellBook.Chapter7GrabBag
+        HaskellBook.SmallLibraryForEitherChapter12
+        HaskellBook.Chapter5DetermineTheType
+        HaskellBook.Chapter3
+        HaskellBook.TypeInference1
+        HaskellBook.Practice
+        HaskellBook.StringProcessingChapter12
+        HaskellBook.DivideThenAdd
+        HaskellBook.RegisteredUser1
+        HaskellBook.SymmetryChapter9
+        HaskellBook.DogTypesChapter11
+        HaskellBook.FilteringChapter9
+        HaskellBook.Blank
+        HaskellBook.MoodSwing
+        HaskellBook.Matching
+        HaskellBook.MakePersonChapter13
+        HaskellBook.EftChapter9
+        ProjectRosalind.Window
+        ProjectRosalind.Motif.Char
+        ProjectRosalind.Motif.Parsec
+        ProjectRosalind.Motif.FunctionsAndTypesForParsing
+        ProjectRosalind.Motif.ExpressionParsing
+        ProjectRosalind.Motif.Expr
+        ProjectRosalind.Motif.Combinator
+        ProjectRosalind.Motif.MeatSpace
+        ProjectRosalind.Buyable
+        ProjectRosalind.Fasta_Types
+        ProjectRosalind.FindingASharedMotif
+        ProjectRosalind.FindingAProteinMotif
+        ProjectRosalind.Fasta
     default-language: Haskell2010
     build-depends:
         http-client -any,
