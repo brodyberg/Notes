@@ -67,6 +67,34 @@ substringsForLength1000 = substringsForLength 1000
 --Repeat
 --  Pass along progressively filtered slice list 
 
+dnasToCommonSubstrings :: [String] -> String -- Set String
+dnasToCommonSubstrings strs = longestXYsubstring
+  where
+    xSet = slicesSet $ strs !! 0
+    ySet = slicesSet $ strs !! 1
+    xyIntersection = S.intersection xSet ySet
+    -- what does findMax do really?
+    longestXYsubstring = S.findMax xyIntersection
+    
+
+ 
+  --Dna1 all ss into set
+  --DNA 2 all ss into set
+  --Intersect
+  --Get longest string
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 slicesSet :: String -> Set String
 slicesSet str = vectorToSet $ generateVector len f
@@ -169,15 +197,23 @@ mainSlices = do
     putStrLn "DONE: Making list of 100 fastas" 
     putStrLn $ show now
     
-    let dnas = Prelude.take 1 $ fmap fastaSeq fastas
---    let dnas = fmap fastaSeq fastas
+--    let dnas = Prelude.take 1 $ fmap fastaSeq fastas
+    let dnas = fmap fastaSeq fastas
 
 --    putStrLn $ show $ fmap Prelude.length dnas
 
     now <- getZonedTime
-    putStrLn "START: allSubstrings on 100 fastas" 
+    putStrLn "START: common substrings on 2 fastas" 
     putStrLn $ show now
       
+    -- https://stackoverflow.com/questions/3276240/tools-for-analyzing-performance-of-a-haskell-program 
+
+    let ll = dnasToCommonSubstrings dnas
+
+    putStrLn "item: " 
+    putStrLn ll
+
+
 --    let maps = fmap slices dnas
 
 --    let sizes = fmap M.size maps
@@ -202,7 +238,7 @@ mainSlices = do
 --    putStrLn $ show size
 
     now <- getZonedTime
-    putStrLn "END: allSubstrings on 10 fastas" 
+    putStrLn "END: common substrings on 2 fastas" 
     putStrLn $ show now
 
   
