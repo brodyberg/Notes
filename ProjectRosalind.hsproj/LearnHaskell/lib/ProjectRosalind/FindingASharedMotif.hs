@@ -47,7 +47,19 @@ slices :: String -> IntMap String
 slices str = vectorToIntMap $ generateVector len f
   where 
     vectorToIntMap :: (Vector String) -> IntMap String
-    vectorToIntMap = V.foldr (\i acc -> M.insert (hash i) i acc) M.empty 
+--    vectorToIntMap = V.foldr (\i acc -> M.insert (hash i) i acc) M.empty 
+    vectorToIntMap = V.foldr insert M.empty 
+    
+    insert i acc = 
+      if M.notMember hashed acc
+      then
+        M.insert hashed i acc
+      else
+        acc
+      where 
+        hashed = hash i
+  
+    -- we could do M.fromList
 
     generateVector :: Int -> (Int -> String) -> (Vector String)
     generateVector len = V.generate substringsForLength1000
@@ -99,7 +111,7 @@ mainSlices = do
     let dnas = Prelude.take 1 $ fmap fastaSeq fastas
 --    let dnas = fmap fastaSeq fastas
 
-    putStrLn $ show $ fmap Prelude.length dnas
+--    putStrLn $ show $ fmap Prelude.length dnas
 
     now <- getZonedTime
     putStrLn "START: allSubstrings on 100 fastas" 
