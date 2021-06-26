@@ -4,6 +4,17 @@ import Test.QuickCheck
 --
 import Data.Set as S
 import Data.Vector as V
+
+--import Data.Hashable
+
+--import Data.HamtMap
+
+-- huh: 
+-- https://hackage.haskell.org/package/containers-0.6.4.1/docs/Data-IntMap.html
+-- "This data structure performs especially well on binary operations like union and intersection. However, my benchmarks show that it is also (much) faster on insertions and deletions when compared to a generic size-balanced map implementation (see Data.Map)."
+-- https://hackage.haskell.org/package/containers-0.6.4.1/docs/Data-IntMap-Strict.html
+
+-- wowwwww: https://github.com/haskell-perf/dictionaries
 --
 --
 
@@ -59,38 +70,113 @@ slices str = V.generate (substringsForLength len) f
           | l <- [0..(len - 1)], l <= r ] 
           | r <- [(len - 1), (len - 2)..0] ]
 
-slicesSet :: String -> Set (Vector Char)
-slicesSet str = vectorToSet $ generateVector len f
-  where 
-    vectorToSet :: (Vector (Vector Char)) -> Set (Vector Char)
-    vectorToSet = V.foldr (\i acc -> S.insert i acc) S.empty
-    
-    generateVector :: Int -> (Int -> (Vector Char)) -> (Vector (Vector Char))
-    generateVector len = V.generate (substringsForLength len)
 
-    f :: Int -> (V.Vector Char)
-    f ix = V.slice start run vstr
-      where
-        (start, run) = startRunList !! ix
 
-    len :: Int    
-    len = Prelude.length str
-    
-    startRunList :: [(Int, Int)]
-    startRunList = lengthToStartRunList len
-    
-    vstr :: (V.Vector Char)
-    vstr = V.fromList str
-    
-    substringsForLength :: Int -> Int
-    substringsForLength n = (n * (n + 1)) `div` 2
 
-    lengthToStartRunList :: Int -> [(Int, Int)]
-    lengthToStartRunList len = 
-      Prelude.concat 
-        [[ (l, (r - l) + 1) 
-          | l <- [0..(len - 1)], l <= r ] 
-          | r <- [(len - 1), (len - 2)..0] ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- you have a Vector Char
+-- hash each item
+-- hash is key into Map, value is substring and hit count (defaults to 1)
+
+-- you have a Vector Char
+-- hash each item
+
+-- what you want is
+-- name each dna, 0..N
+-- a certain dna can write only its name into HIT
+-- you only ever HIT once
+
+
+-- finally, filter the Map 
+  -- hit list of length == length dnas
+
+
+------
+
+-- you have Vector Char
+-- you index into Map with this substring, 
+--   value is the name of this dna added to a list
+
+-- you use Data.IntMap.Strict the fastest datastructure in this table: 
+-- https://github.com/haskell-perf/dictionaries
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---- slow as death due to Set
+--slicesSet :: String -> Set (Vector Char)
+--slicesSet str = vectorToSet $ generateVector len f
+--  where 
+--    vectorToSet :: (Vector (Vector Char)) -> Set (Vector Char)
+--    vectorToSet = V.foldr (\i acc -> S.insert i acc) S.empty
+--    
+--    generateVector :: Int -> (Int -> (Vector Char)) -> (Vector (Vector Char))
+--    generateVector len = V.generate (substringsForLength len)
+--
+--    f :: Int -> (V.Vector Char)
+--    f ix = V.slice start run vstr
+--      where
+--        (start, run) = startRunList !! ix
+--
+--    len :: Int    
+--    len = Prelude.length str
+--    
+--    startRunList :: [(Int, Int)]
+--    startRunList = lengthToStartRunList len
+--    
+--    vstr :: (V.Vector Char)
+--    vstr = V.fromList str
+--    
+--    substringsForLength :: Int -> Int
+--    substringsForLength n = (n * (n + 1)) `div` 2
+--
+--    lengthToStartRunList :: Int -> [(Int, Int)]
+--    lengthToStartRunList len = 
+--      Prelude.concat 
+--        [[ (l, (r - l) + 1) 
+--          | l <- [0..(len - 1)], l <= r ] 
+--          | r <- [(len - 1), (len - 2)..0] ]
 
 
 -- is this fast?

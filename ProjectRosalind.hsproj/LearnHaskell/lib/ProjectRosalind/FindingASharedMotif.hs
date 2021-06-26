@@ -43,32 +43,35 @@ slices str = vectorToSet $ generateVector len f
           | l <- [0..(len - 1)], l <= r ] 
           | r <- [(len - 1), (len - 2)..0] ]
 
+startRunListForLength1000 = lengthToStartRunList 1000
+
+lengthToStartRunList :: Int -> [(Int, Int)]
+lengthToStartRunList len = 
+  Prelude.concat 
+    [[ (l, (r - l) + 1) 
+      | l <- [0..(len - 1)], l <= r ] 
+      | r <- [(len - 1), (len - 2)..0] ]
+
+
 slices' :: String -> V.Vector (V.Vector Char)
 slices' str = V.generate (substringsForLength len) f
   where 
     f :: Int -> (V.Vector Char)
     f ix = V.slice start run vstr
       where
-        (start, run) = startRunList !! ix
+        (start, run) = startRunListForLength1000 !! ix
 
     len :: Int    
     len = Prelude.length str
     
-    startRunList :: [(Int, Int)]
-    startRunList = lengthToStartRunList len
+--    startRunList :: [(Int, Int)]
+--    startRunList = lengthToStartRunList len
     
     vstr :: (V.Vector Char)
     vstr = V.fromList str
     
     substringsForLength :: Int -> Int
     substringsForLength n = (n * (n + 1)) `div` 2
-
-    lengthToStartRunList :: Int -> [(Int, Int)]
-    lengthToStartRunList len = 
-      Prelude.concat 
-        [[ (l, (r - l) + 1) 
-          | l <- [0..(len - 1)], l <= r ] 
-          | r <- [(len - 1), (len - 2)..0] ]
 
 
 fileName = "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingASharedMotif/rosalind_lcsm_2.txt"
