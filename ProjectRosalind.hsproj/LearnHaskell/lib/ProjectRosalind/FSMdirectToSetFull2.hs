@@ -1,4 +1,4 @@
-module ProjectRosalind.FSMdirectToSetFull where
+module ProjectRosalind.FSMdirectToSetFull2 where
   
 import Data.Vector as V
 import Data.Set as S
@@ -6,11 +6,8 @@ import Data.List as L
 
 import Data.Hashable (hash)
 
-
-import ProjectRosalind.Fasta (parseFasta')
 import ProjectRosalind.Fasta_Types 
-import System.IO (openFile, hGetContents, IOMode(ReadMode))
-import Control.Monad
+import ProjectRosalind.FileFasta (filePathToFastas)
 
 import Data.Time
 
@@ -65,17 +62,6 @@ slicesToSet str sliceInstructions =
 
 
 fileName = "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingASharedMotif/rosalind_lcsm_2.txt"
-
-readLocalFile :: String -> IO String
-readLocalFile path = do  
-        handle <- openFile path ReadMode
-        contents <- hGetContents handle
-        return contents
-
-filePathToFastas :: String -> IO [FastaSequence]
-filePathToFastas path = do
-  contents <- readLocalFile path
-  return $ parseFasta' contents
 
 mainToSet :: IO ()
 mainToSet = do
