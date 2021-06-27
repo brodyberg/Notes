@@ -1,4 +1,4 @@
-module ProjectRosalind.FSM where
+module ProjectRosalind.FSMRecursive where
   
 import Data.Set as S
 import Data.Vector as V
