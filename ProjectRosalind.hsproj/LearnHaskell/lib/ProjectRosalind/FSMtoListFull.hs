@@ -1,7 +1,6 @@
-module ProjectRosalind.FSMdirectToSetFull2 where
+module ProjectRosalind.FSMtoListFull where
   
 import Data.Vector as V
-import Data.Set as S
 import Data.List as L
 
 import Data.Hashable (hash)
@@ -49,58 +48,36 @@ substringsForLength1000 = substringsForLength 1000
 --Repeat
 --  Pass along progressively filtered slice list 
 
-slicesToSet :: String -> [(Int, Int)] -> Set (Vector Char)
-slicesToSet str sliceInstructions = 
-  Prelude.foldr f S.empty sliceInstructions
+slicesToList :: String -> [(Int, Int)] -> [Vector Char]
+slicesToList str sliceInstructions = 
+  Prelude.foldr f [] sliceInstructions
   
   where 
-    f :: (Int, Int) -> Set (Vector Char) -> Set (Vector Char)
-    f (start, run) acc = S.insert (V.slice start run vstr) acc
+    f :: (Int, Int) -> [Vector Char] -> [Vector Char]
+    f (start, run) acc = (V.slice start run vstr) : acc
 
     vstr :: Vector Char
     vstr = V.fromList str
 
-drawShrinkingSet :: [String] -> Set (Vector Char) -> [Vector Char]
-drawShrinkingSet dnas startSet = S.toList $ Prelude.foldr f startSet dnas
+drawShrinkingList :: [String] -> [Vector Char] -> [Vector Char]
+drawShrinkingList dnas startList = Prelude.foldr f startList dnas
   where 
-    f :: String -> Set (Vector Char) -> Set (Vector Char)
-    f dna prevSet = S.intersection prevSet thisSet
+    f :: String -> [Vector Char] -> [Vector Char]
+    f dna prevList = L.intersect prevList thisList
       where 
         filteredSlices :: [(Int, Int)]
-        filteredSlices = lengthToStartRunList $ lengthLongest prevSet
+        filteredSlices = lengthToStartRunList $ lengthLongest prevList
 
-        thisSet :: Set (Vector Char)
-        thisSet = slicesToSet dna filteredSlices
+        thisList :: [Vector Char]
+        thisList = slicesToList dna filteredSlices
 
-        lengthLongest :: Set (Vector Char) -> Int
-        lengthLongest = Prelude.length . L.maximumBy (compare `on` Prelude.length) . S.toList 
-
---drawShrinkingSet :: [String] -> Set (Vector Char) -> ([Vector Char], [Set (Vector Char)])
---drawShrinkingSet dnas startSet = (S.toList $ finalResult, intermediateResults)
---  where 
---    f :: String -> (Set (Vector Char), [Set (Vector Char)]) -> (Set (Vector Char), [Set (Vector Char)])
---    f dna (prevSet, acc) = (result, result : acc)
---    
---    (finalResult, intermediateResults) = Prelude.foldr f (startSet, []) dnas
---
---      where 
---        filteredSlices :: [(Int, Int)]
---        filteredSlices = lengthToStartRunList $ lengthLongest prevSet
---        
---        thisSet :: Set (Vector Char)
---        thisSet = slicesToSet dna filteredSlices
---        
---        result = S.intersection prevSet thisSet
-
-
-        
-lengthLongest :: Set (Vector Char) -> Int
-lengthLongest = Prelude.length . L.maximumBy (compare `on` Prelude.length) . S.toList 
+lengthLongest :: [Vector Char] -> Int
+lengthLongest = Prelude.length . L.maximumBy (compare `on` Prelude.length)
         
 fileName = "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingASharedMotif/rosalind_lcsm_2.txt"
 
-mainToSet :: IO ()
-mainToSet = do
+mainToList :: IO ()
+mainToList = do
     now <- getZonedTime  
 
     putStrLn "START: just one " 
@@ -118,21 +95,21 @@ mainToSet = do
 --    let twoFastas = L.take 2 fastas
     let dnas = fmap fastaSeq fastas
 
-    let allSubs1 = slicesToSet (dnas !! 0) startRunListForLength1000
-    let allSubs2 = slicesToSet (dnas !! 1) startRunListForLength1000
+    let allSubs1 = slicesToList (dnas !! 0) startRunListForLength1000
+    let allSubs2 = slicesToList (dnas !! 1) startRunListForLength1000
 
     putStrLn "size 1: "
-    putStrLn $ show $ S.size allSubs1    
+    putStrLn $ show $ L.length allSubs1    
 
 
     putStrLn "size 2: "
-    putStrLn $ show $ S.size allSubs2
+    putStrLn $ show $ L.length allSubs2
   
     now <- getZonedTime    
     putStrLn "START intersection of 2"
     putStrLn $ show now
         
-    let isection = S.intersection allSubs1 allSubs2
+    let isection = intersect allSubs1 allSubs2
 
     now <- getZonedTime    
     putStrLn "END intersection of 2"
@@ -141,8 +118,9 @@ mainToSet = do
   
     putStrLn "Intersection size: " 
     
-    let size = S.size isection
-    putStrLn $ show size
+--    let size = S.size isection
+--    putStrLn $ show size
+    putStrLn $ show $ L.length isection
 
     now <- getZonedTime  
     putStrLn "END: all substrings on 2"
@@ -153,8 +131,8 @@ mainToSet = do
     putStrLn $ show now
 
 --    let top10 = L.take 10 $ S.toDescList isection
-    let lst = S.toList isection
-    let top = L.maximumBy (compare `on` Prelude.length) lst
+--    let lst = S.toList isection
+    let top = L.maximumBy (compare `on` Prelude.length) isection
 
     putStrLn "top: " 
     putStrLn $ show top
@@ -162,22 +140,23 @@ mainToSet = do
     now <- getZonedTime    
     putStrLn "END toList: " 
     putStrLn $ show now
-    
-    now <- getZonedTime    
-    putStrLn "START draw 2: " 
-    putStrLn $ show now
 
-    let result = drawShrinkingSet (L.drop 96 dnas) isection
-    
-    putStrLn "result size: " 
-    putStrLn $ show $ Prelude.length result
-
-    putStrLn "result: " 
-    putStrLn $ show $ result
-
-    now <- getZonedTime    
-    putStrLn "END draw 2: " 
-    putStrLn $ show now
+-- do this next:     
+--    now <- getZonedTime    
+--    putStrLn "START draw 2: " 
+--    putStrLn $ show now
+--
+--    let result = drawShrinkingList (L.drop 96 dnas) isection
+--    
+--    putStrLn "result size: " 
+--    putStrLn $ show $ Prelude.length result
+--
+--    putStrLn "result: " 
+--    putStrLn $ show $ result
+--
+--    now <- getZonedTime    
+--    putStrLn "END draw 2: " 
+--    putStrLn $ show now
   
 
 
