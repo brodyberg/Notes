@@ -1,4 +1,4 @@
-module ProjectRosalind.FSMdirectToSet where
+module ProjectRosalind.Lcsm.DirectToSet where
   
 import Data.Vector as V
 import Data.Set as S

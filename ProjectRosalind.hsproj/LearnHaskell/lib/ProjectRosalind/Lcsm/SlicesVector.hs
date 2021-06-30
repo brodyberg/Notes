@@ -1,4 +1,4 @@
-module ProjectRosalind.FSMSlicesVector where
+module ProjectRosalind.Lcsm.SlicesVector where
   
 import Data.Vector as V
 import Data.Set as S

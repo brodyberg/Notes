@@ -1,4 +1,4 @@
-module ProjectRosalind.FSMString where
+module ProjectRosalind.Lcsm.String where
 --  
 --import Data.Set as S
 --import Data.Vector as V

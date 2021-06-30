@@ -1,4 +1,4 @@
-module ProjectRosalind.FSMdirectToSetFull where
+module ProjectRosalind.Lcsm.DirectToSetFull2 where
   
 import Data.Vector as V
 import Data.Set as S
@@ -6,11 +6,8 @@ import Data.List as L
 
 import Data.Hashable (hash)
 
-
-import ProjectRosalind.Fasta (parseFasta')
 import ProjectRosalind.Fasta_Types 
-import System.IO (openFile, hGetContents, IOMode(ReadMode))
-import Control.Monad
+import ProjectRosalind.FileFasta (filePathToFastas)
 
 import Data.Time
 
@@ -63,19 +60,44 @@ slicesToSet str sliceInstructions =
     vstr :: Vector Char
     vstr = V.fromList str
 
+drawShrinkingSet :: [String] -> Set (Vector Char) -> [Vector Char]
+drawShrinkingSet dnas startSet = S.toList $ Prelude.foldr f startSet dnas
+  where 
+    f :: String -> Set (Vector Char) -> Set (Vector Char)
+    f dna prevSet = S.intersection prevSet thisSet
+      where 
+        filteredSlices :: [(Int, Int)]
+        filteredSlices = lengthToStartRunList $ lengthLongest prevSet
 
+        thisSet :: Set (Vector Char)
+        thisSet = slicesToSet dna filteredSlices
+
+        lengthLongest :: Set (Vector Char) -> Int
+        lengthLongest = Prelude.length . L.maximumBy (compare `on` Prelude.length) . S.toList 
+
+--drawShrinkingSet :: [String] -> Set (Vector Char) -> ([Vector Char], [Set (Vector Char)])
+--drawShrinkingSet dnas startSet = (S.toList $ finalResult, intermediateResults)
+--  where 
+--    f :: String -> (Set (Vector Char), [Set (Vector Char)]) -> (Set (Vector Char), [Set (Vector Char)])
+--    f dna (prevSet, acc) = (result, result : acc)
+--    
+--    (finalResult, intermediateResults) = Prelude.foldr f (startSet, []) dnas
+--
+--      where 
+--        filteredSlices :: [(Int, Int)]
+--        filteredSlices = lengthToStartRunList $ lengthLongest prevSet
+--        
+--        thisSet :: Set (Vector Char)
+--        thisSet = slicesToSet dna filteredSlices
+--        
+--        result = S.intersection prevSet thisSet
+
+
+        
+lengthLongest :: Set (Vector Char) -> Int
+lengthLongest = Prelude.length . L.maximumBy (compare `on` Prelude.length) . S.toList 
+        
 fileName = "/Users/brodyberg/Documents/GitHub/Notes/ProjectRosalind.hsproj/LearnHaskell/FindingASharedMotif/rosalind_lcsm_2.txt"
-
-readLocalFile :: String -> IO String
-readLocalFile path = do  
-        handle <- openFile path ReadMode
-        contents <- hGetContents handle
-        return contents
-
-filePathToFastas :: String -> IO [FastaSequence]
-filePathToFastas path = do
-  contents <- readLocalFile path
-  return $ parseFasta' contents
 
 mainToSet :: IO ()
 mainToSet = do
@@ -93,11 +115,11 @@ mainToSet = do
     putStrLn "START: all substrings on 2"
     putStrLn $ show now
 
-    let twoFastas = L.take 2 fastas
-    let twoDnas = fmap fastaSeq twoFastas
+--    let twoFastas = L.take 2 fastas
+    let dnas = fmap fastaSeq fastas
 
-    let allSubs1 = slicesToSet (twoDnas !! 0) startRunListForLength1000
-    let allSubs2 = slicesToSet (twoDnas !! 1) startRunListForLength1000
+    let allSubs1 = slicesToSet (dnas !! 0) startRunListForLength1000
+    let allSubs2 = slicesToSet (dnas !! 1) startRunListForLength1000
 
     putStrLn "size 1: "
     putStrLn $ show $ S.size allSubs1    
@@ -127,24 +149,7 @@ mainToSet = do
     putStrLn $ show now
   
     now <- getZonedTime    
-    putStrLn "START get max item"
-    putStrLn $ show now
-
-    -- of intersection what is the longest string?
-
-    let sMax = S.findMax isection
-    
-    putStrLn "max item: " 
-    putStrLn $ show sMax
-
-
-    now <- getZonedTime    
-    putStrLn "END get max item"
-    putStrLn $ show now
-
-       
-    now <- getZonedTime    
-    putStrLn "START toDescList: " 
+    putStrLn "START toList: " 
     putStrLn $ show now
 
 --    let top10 = L.take 10 $ S.toDescList isection
@@ -155,11 +160,25 @@ mainToSet = do
     putStrLn $ show top
       
     now <- getZonedTime    
-    putStrLn "START toDescList: " 
+    putStrLn "END toList: " 
     putStrLn $ show now
     
+    now <- getZonedTime    
+    putStrLn "START draw 2: " 
+    putStrLn $ show now
 
+    let result = drawShrinkingSet (L.drop 96 dnas) isection
+    
+    putStrLn "result size: " 
+    putStrLn $ show $ Prelude.length result
 
+    putStrLn "result: " 
+    putStrLn $ show $ result
+
+    now <- getZonedTime    
+    putStrLn "END draw 2: " 
+    putStrLn $ show now
+  
 
 
 
